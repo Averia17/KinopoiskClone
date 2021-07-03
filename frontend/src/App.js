@@ -16,17 +16,19 @@ function App() {
       }, [])
       return (
           <div>
-                <h1>Hhhhhhh</h1>
-                <div>
+                <ul className="films">
                       {film.map((f) => {
                             return(
-                                <ul>
-                                      <li>{f.nameRu}</li>
-                                </ul>
+                                <div className="item">
+                                      <img src={f.posterUrl} className="img"></img>
+                                      <h1>{f.nameRu}</h1>
+                                      <h2 className="filmInfo">{f.year}</h2>
+                                      <h2 className="filmInfo">{f.rating}</h2>
+                                </div>
                             )
                       })}
 
-                </div>
+                </ul>
           </div>
       );
 }

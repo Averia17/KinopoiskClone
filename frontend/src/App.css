@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+.img {
+  display: flex;
+}
+.filmInfo {
+  display: inline-block;
+  margin-top: 10px;
+  margin-right: 50px;
+}
+.films {
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+.item {
+  flex: 3;
+}
