@@ -1,8 +1,11 @@
 from django.urls import path
+from rest_framework.routers import SimpleRouter
 
-from .views import MainPageView
+from .views import FilmsViewSet
 
+router = SimpleRouter()
 
-urlpatterns = [
-    path('top-films/', MainPageView.as_view(), name='top-films')
-]
+router.register('films', FilmsViewSet, basename='films')
+
+urlpatterns = []
+urlpatterns += router.urls

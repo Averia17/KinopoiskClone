@@ -1,15 +1,9 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework import viewsets
 
 from .serializers import FilmSerializer
-from .services import get_top_films
 from ..models import Film
 
 
-class MainPageView(APIView):
-
-    def get(self, request, *args, **kwargs):
-        films = get_top_films()
-
-        serializer = FilmSerializer(films, many=True)
-        return Response(serializer.data)
+class FilmsViewSet(viewsets.ModelViewSet):
+    queryset = Film.objects.all()
+    serializer_class = FilmSerializer
