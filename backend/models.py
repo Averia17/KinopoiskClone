@@ -9,7 +9,6 @@ class FilmManager(models.Manager):
 
     def all(self):
         if not self.get_queryset().exists():
-            print(get_top_films())
             for film in get_top_films():
                 f = Film(name=film.get('nameRu'),
                          year=film.get('year'),

@@ -7,6 +7,6 @@ from backend.models import Film
 class FilmSerializer(ModelSerializer):
     class Meta:
         model = Film
-        fields = ('name', 'year', 'rating', 'image', 'filmId')
+        fields = '__all__'
 
 
