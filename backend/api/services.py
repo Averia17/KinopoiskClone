@@ -1,6 +1,8 @@
 import requests
 from requests.structures import CaseInsensitiveDict
 
+from backend.models import Film
+
 
 def get_top_films():
     headers = CaseInsensitiveDict()
@@ -16,3 +18,15 @@ def get_top_films():
         response = response.json()
         films.extend(response['films'])
     return films
+
+
+def check_if_empty_films():
+    if not Film.objects.all().exists():
+        for film in get_top_films():
+            f = Film(name=film.get('nameRu'),
+                     year=film.get('year'),
+                     rating=film.get('rating'),
+                     image=film.get('posterUrl'),
+                     filmId=film.get('filmId')
+                     )
+            f.save()
