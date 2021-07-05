@@ -1,4 +1,6 @@
 import time
+from concurrent.futures.thread import ThreadPoolExecutor
+
 import requests
 from requests.structures import CaseInsensitiveDict
 
@@ -40,21 +42,28 @@ def check_if_empty_films():
 
 
 def get_full_information():
+
+    with ThreadPoolExecutor(max_workers=100) as executor:
+        for film in Film.objects.all():
+            executor.map(updating_film, [film])
+        executor.shutdown(wait=True)
+
+
+def updating_film(film):
     headers = CaseInsensitiveDict()
     headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
     headers["accept"] = "application/json"
-    for film in Film.objects.all():
-        response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v2.1/films/{film.filmId}',
-                                headers=headers)
-        response = response.json()['data']
-        Film.objects.filter(id=film.id).update(
-            slogan=response['slogan'],
-            description=response['description'],
-            filmLength=response['filmLength'],
-            type=response['type'],
-            ratingAgeLimits=response['ratingAgeLimits'],
-            premiereRu=response['premiereRu'],
-            premiereWorld=response['premiereWorld'],
-            premiereDigital=response['premiereDigital'],
-            premiereWorldCountry=response['premiereWorldCountry'],
-        )
+    response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v2.1/films/{film.filmId}',
+                            headers=headers)
+    response = response.json()['data']
+    Film.objects.filter(id=film.id).update(
+        slogan=response['slogan'],
+        description=response['description'],
+        filmLength=response['filmLength'],
+        type=response['type'],
+        ratingAgeLimits=response['ratingAgeLimits'],
+        premiereRu=response['premiereRu'],
+        premiereWorld=response['premiereWorld'],
+        premiereDigital=response['premiereDigital'],
+        premiereWorldCountry=response['premiereWorldCountry'],
+    )
