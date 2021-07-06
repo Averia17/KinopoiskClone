@@ -51,3 +51,12 @@
 .item {
   flex: 3;
 }
+.div-style {
+  text-align: center;
+}
+.link-film {
+  font-family: "Century Gothic";
+  font-size: 25px;
+  color: black;
+  text-decoration: none;
+}
