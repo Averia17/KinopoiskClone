@@ -4,7 +4,7 @@ from concurrent.futures.thread import ThreadPoolExecutor
 import requests
 from requests.structures import CaseInsensitiveDict
 
-from backend.models import Film
+from backend.models import Film, Staff
 
 
 def get_top_films():
@@ -66,4 +66,24 @@ def updating_film(film):
         premiereWorld=response['premiereWorld'],
         premiereDigital=response['premiereDigital'],
         premiereWorldCountry=response['premiereWorldCountry'],
+        #genres=response['genres'],
+        #budget=response['budget']['budget'],
+    )
+
+
+def get_staff():
+    with ThreadPoolExecutor(max_workers=100) as executor:
+        for film in Film.objects.all():
+            executor.map(get_film_staff, [film])
+        executor.shutdown(wait=True)
+
+
+def get_film_staff(film):
+    headers = CaseInsensitiveDict()
+    headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
+    headers["accept"] = "application/json"
+    response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v2.1/films/{film.filmId}',
+                            headers=headers)
+    response = response.json()['data']
+    Staff.objects.filter(id=film.id).update(
     )

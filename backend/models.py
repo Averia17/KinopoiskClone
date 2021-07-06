@@ -26,10 +26,25 @@ class Film(models.Model):
     premiereWorldCountry = models.CharField(max_length=20, null=True, blank=True)
     #distributorRelease = models.CharField(max_length=20, null=True, blank=True)
     ##countries = models.CharField(max_length=20, null=True, blank=True)
-    ##genres = models.CharField(max_length=20, null=True, blank=True)
+    ##genres = models.ManyToManyField(max_length=20, null=True, blank=True)
     ##facts = models.CharField(max_length=20, null=True, blank=True)
-    ##budget = models.CharField(max_length=30, null=True, blank=True)
+    #budget = models.CharField(max_length=30, null=True, blank=True)
     objects = FilmManager()
 
     def __str__(self):
         return self.name
+
+
+class Genre(models.Model):
+    title = models.CharField(max_length=20, unique=True)
+
+
+class Staff(models.Model):
+    nameRu = models.CharField(max_length=100, null=True, blank=True)
+    staffId = models.IntegerField(unique=True, null=True, blank=True)
+    description = models.CharField(max_length=100, null=True, blank=True)
+    image = models.CharField(max_length=255, null=True, blank=True)
+    professionText = models.CharField(max_length=55, null=True, blank=True)
+    professionKey = models.CharField(max_length=55, null=True, blank=True)
+
+
