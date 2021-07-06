@@ -29,6 +29,7 @@ class Film(models.Model):
     ##genres = models.ManyToManyField(max_length=20, null=True, blank=True)
     ##facts = models.CharField(max_length=20, null=True, blank=True)
     #budget = models.CharField(max_length=30, null=True, blank=True)
+
     objects = FilmManager()
 
     def __str__(self):

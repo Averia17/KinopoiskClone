@@ -3,7 +3,6 @@
 *.pot
 *.pyc
 __pycache__
-KinopoiskClone.db
 media
 
 # Backup files # 
