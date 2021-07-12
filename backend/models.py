@@ -5,7 +5,7 @@ class FilmManager(models.Manager):
 
     def get_queryset(self):
 
-        return super().get_queryset()
+        return super().get_queryset()[:40]
 
 
 class Staff(models.Model):
