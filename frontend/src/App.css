@@ -57,11 +57,10 @@ p {
 /* film details */
 
 .film-info {
-  position: absolute;
-  top: 25px;
+  height: auto;
   display: inline-block;
-  padding-left: 600px;
-  right: 250px;
+  position: absolute;
+  padding-left: 350px;
 }
 
 .poster-details {
@@ -83,12 +82,16 @@ p {
   border-radius: 10px;
 }
 .film-details {
-  margin: 50px 250px 50px 250px;
+  margin: 50px 250px;
+  position: relative;
 }
 .film-slogan {
   font-size: 25px;
   font-weight: 600;
   line-height: 30px;
+}
+.film-actors {
+  position: relative;
 }
 .film-rating {
   position: absolute;
@@ -162,7 +165,8 @@ p {
 .navbar {
 
 }
-.navbar-item {
+.navbar-items {
+  display: inline-flex;
   list-style: none;
 }
 .link {
