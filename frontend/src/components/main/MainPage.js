@@ -16,15 +16,19 @@ function MainPage() {
     }, [])
 
     return(
-        <div>
+        <div className="main-page font-style">
             <ul className="films">
                 {film.map((f) => {
+                    if(f.ratingAgeLimits === null) {
+                        f.ratingAgeLimits = "0";
+                    }
                     return(
-                        <div className="item" key={f.id}>
-                            <img src={f.image} className="img"></img>
-                            <h1><Link className="link-film" to={{ pathname: `/films/${f.id}/`}}>{f.name}</Link></h1>
-                            <h2 className="filmInfo">{f.year}</h2>
-                            <h2 className="filmInfo">{f.rating}</h2>
+                        <div className="films-item" key={f.id}>
+                            <div className="poster-main">
+                                <img src={f.image} className="img"></img>
+                                <p className="ageLimit-poster">{f.ratingAgeLimits}+</p>
+                            </div>
+                            <h1><Link className="film-header" to={{ pathname: `/films/${f.id}/`}}>{f.name}</Link></h1>
                         </div>
                     )}
                 )}
