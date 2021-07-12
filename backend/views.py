@@ -12,3 +12,8 @@ def main_page(request):
 def film_detail(request, id):
     template_name = 'index.html'
     return render(request, template_name, {})
+
+
+def staff_detail(request, id):
+    template_name = 'index.html'
+    return render(request, template_name, {})
