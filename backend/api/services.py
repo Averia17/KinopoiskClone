@@ -27,6 +27,7 @@ def get_top_films():
 def check_if_empty_films():
     start_time = time.time()
     if Film.objects.all().count() == 0:
+        print("films empty")
         instances = [Film(
             name=film.get('nameRu'),
             year=film.get('year'),
@@ -39,11 +40,14 @@ def check_if_empty_films():
         print(time.time() - start_time)
         get_full_information()
         print(time.time() - start_time)
+        get_staff()
+        print(time.time() - start_time)
+    get_staff_full_information()
+        # print(time.time() - start_time)
 
 
 def get_full_information():
-
-    with ThreadPoolExecutor(max_workers=100) as executor:
+    with ThreadPoolExecutor(max_workers=3) as executor:
         for film in Film.objects.all():
             executor.map(updating_film, [film])
         executor.shutdown(wait=True)
@@ -55,6 +59,8 @@ def updating_film(film):
     headers["accept"] = "application/json"
     response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v2.1/films/{film.filmId}',
                             headers=headers)
+    if response.status_code == 429:
+        print("blyat suka ")
     response = response.json()['data']
     Film.objects.filter(id=film.id).update(
         slogan=response['slogan'],
@@ -66,33 +72,95 @@ def updating_film(film):
         premiereWorld=response['premiereWorld'],
         premiereDigital=response['premiereDigital'],
         premiereWorldCountry=response['premiereWorldCountry'],
-        #genres=response['genres'],
-        #budget=response['budget']['budget'],
+        # genres=response['genres'],
+        # budget=response['budget']['budget'],
     )
 
 
 def get_staff():
-    with ThreadPoolExecutor(max_workers=100) as executor:
+    with ThreadPoolExecutor(max_workers=3) as executor:
         for film in Film.objects.all():
             executor.map(get_film_staff, [film])
         executor.shutdown(wait=True)
 
 
 def get_film_staff(film):
-    headers = CaseInsensitiveDict()
-    headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
-    headers["accept"] = "application/json"
-    response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v1/staff?filmId={film.filmId}',
-                            headers=headers)
-    response = response.json()
-    s = Staff.objects.create()(
-        nameRu=response['nameRu'],
-        staffId=response['staffId'],
-        description=response['description'],
-        image=response['image'],
-        professionText=response['professionText'],
-        professionKey=response['professionKey'],
-    )
-    s.save()
+    if not Film.objects.get(pk=film.id).staff.exists():
+        headers = CaseInsensitiveDict()
+        headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
+        headers["accept"] = "application/json"
+        response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v1/staff?filmId={film.filmId}',
+                                headers=headers)
+        if response.status_code == 429:
+            print("blyat suka ")
+        response = response.json()
+        instances = []
+        for staff in response:
+            if not Staff.objects.filter(staffId=staff.get('staffId')).exists():
+                s = Staff(
+                    nameRu=staff.get('nameRu'),
+                    staffId=staff.get('staffId'),
+                    description=staff.get('description'),
+                    image=staff.get('posterUrl'),
+                    professionText=staff.get('professionText'),
+                    professionKey=staff.get('professionKey'))
+                s.save()
+            else:
+                s = Staff.objects.get(staffId=staff.get('staffId'))
+            instances.append(s)
+        # instances = [
+        #     Staff(
+        #         nameRu=staff.get('nameRu'),
+        #         staffId=staff.get('staffId'),
+        #         description=staff.get('description'),
+        #         image=staff.get('posterUrl'),
+        #         professionText=staff.get('professionText'),
+        #         professionKey=staff.get('professionKey'))
+        #     for staff in response
+        # ]
+        #instances = Staff.objects.bulk_create(instances)
+
+        current_film = Film.objects.get(pk=film.id)
+        for instance in instances:
+            current_film.staff.add(instance)
+        print(current_film)
+
+        # ThroughFilmStaffModel = Film.staff.through
+        # through_list = []
+        # for instance in instances:
+        #     print(instance.id)
+        #     film_staff = ThroughFilmStaffModel(film_id=current_film.id, staff_id=instance.id)
+        #     through_list.append(film_staff)
+        # ThroughFilmStaffModel.objects.bulk_create(through_list)
+        # Staff.objects.bulk_insert(instances)
+    else:
+        return
+##...А зори здесь тихие
 
 
+def get_staff_full_information():
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        for staff in Staff.objects.all():
+            executor.map(update_staff, [staff])
+        executor.shutdown(wait=True)
+
+
+def update_staff(staff):
+    if Staff.objects.get(pk=staff.id).birthday is None:
+        headers = CaseInsensitiveDict()
+        headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
+        headers["accept"] = "application/json"
+        response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v1/staff/{staff.staffId}',
+                                headers=headers)
+
+        response = response.json()
+
+        Staff.objects.filter(id=staff.id).update(
+            birthday=response.get('birthday'),
+            image=response.get('posterUrl'),
+            death=response.get('death'),
+            age=response.get('age'),
+            growth=response.get('growth'),
+            profession=response.get('profession'),
+
+        )
