@@ -4,7 +4,7 @@ from concurrent.futures.thread import ThreadPoolExecutor
 import requests
 from requests.structures import CaseInsensitiveDict
 
-from backend.models import Film, Staff
+from backend.models import Film, Staff, Genre
 
 
 def get_top_films():
@@ -42,8 +42,11 @@ def check_if_empty_films():
         print(time.time() - start_time)
         get_staff()
         print(time.time() - start_time)
-    get_staff_full_information()
-        # print(time.time() - start_time)
+        get_staff_full_information()
+        print(time.time() - start_time)
+        get_genres()
+        print(time.time() - start_time)
+
 
 
 def get_full_information():
@@ -154,7 +157,7 @@ def update_staff(staff):
                                 headers=headers)
 
         response = response.json()
-
+        print(staff.nameRu + ' updated')
         Staff.objects.filter(id=staff.id).update(
             birthday=response.get('birthday'),
             image=response.get('posterUrl'),
@@ -163,3 +166,19 @@ def update_staff(staff):
             growth=response.get('growth'),
             profession=response.get('profession'),
         )
+    else:
+        return
+
+
+def get_genres():
+    films = get_top_films()
+
+    genres = Genre.objects.all()
+
+    genres_titles = [genre.title for genre in genres]
+    for film in films:
+        for genre in film.get('genres'):
+            if genre['genre'] not in genres_titles:
+                print(genre['genre'])
+                g = Genre(title=genre['genre'])
+                g.save()

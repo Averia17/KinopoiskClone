@@ -54,7 +54,8 @@ class Film(models.Model):
 
 
 class Genre(models.Model):
-    title = models.CharField(max_length=20, unique=True)
+    title = models.CharField(max_length=50, unique=True)
 
-
+    def __str__(self):
+        return self.title
 
