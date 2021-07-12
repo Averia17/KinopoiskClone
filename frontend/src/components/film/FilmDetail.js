@@ -18,8 +18,8 @@ function FilmDetail({ match }) {
         })
     }, [id])
 
-    var dateRu = moment(film.premiereRu).lang("ru").format('DD MMMM YYYY');
-    var dateW = moment(film.premiereWorld).lang("ru").format('DD MMMM YYYY');
+    let dateRu = moment(film.premiereRu).lang("ru").format('DD MMMM YYYY');
+    let dateW = moment(film.premiereWorld).lang("ru").format('DD MMMM YYYY');
 
     if( film.ratingAgeLimits === null) {
         film.ratingAgeLimits = "0";
