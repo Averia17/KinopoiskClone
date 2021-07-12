@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 
-from .serializers import FilmSerializer, StaffSerializer
+from .serializers import FilmListSerializer, StaffSerializer, FilmSerializer, StaffListSerializer
 from ..models import Film, Staff
 from .services import check_if_empty_films
 
@@ -8,6 +8,17 @@ from .services import check_if_empty_films
 class FilmsViewSet(viewsets.ModelViewSet):
 
     serializer_class = FilmSerializer
+
+    action_to_serializer = {
+        "list": FilmListSerializer,
+        "retrieve": FilmSerializer,
+    }
+
+    def get_serializer_class(self):
+        return self.action_to_serializer.get(
+            self.action,
+            self.serializer_class
+        )
 
     @staticmethod
     def get_queryset():
@@ -22,13 +33,13 @@ class StaffViewSet(viewsets.ModelViewSet):
     def get_queryset():
         return Staff.objects.all()
 
-    # action_to_serializer = {
-    #     "list": FilmStaffListRetrieveSerializer,
-    #     "retrieve":FilmStaffListRetrieveSerializer,
-    # }
-    #
-    # def get_serializer_class(self):
-    #     return self.action_to_serializer.get(
-    #         self.action,
-    #         self.serializer_class
-    #     )
+    action_to_serializer = {
+        "list": StaffListSerializer,
+        "retrieve": StaffSerializer,
+    }
+
+    def get_serializer_class(self):
+        return self.action_to_serializer.get(
+            self.action,
+            self.serializer_class
+        )

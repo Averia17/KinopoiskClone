@@ -10,10 +10,24 @@ class StaffSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class StaffListSerializer(ModelSerializer):
+    class Meta:
+        model = Staff
+        fields = ('id', 'nameRu', 'professionKey')
+
+
 class FilmSerializer(ModelSerializer):
 
-    staff = StaffSerializer(many=True)
+    staff = StaffListSerializer(many=True)
 
     class Meta:
         model = Film
         fields = '__all__'
+
+
+class FilmListSerializer(ModelSerializer):
+
+    class Meta:
+        model = Film
+        fields = ('id', 'name', 'image', 'year')
+
