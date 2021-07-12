@@ -82,9 +82,17 @@ def get_film_staff(film):
     headers = CaseInsensitiveDict()
     headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
     headers["accept"] = "application/json"
-    response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v2.1/films/{film.filmId}',
+    response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v1/staff?filmId={film.filmId}',
                             headers=headers)
-    response = response.json()['data']
-    Staff.objects.filter(id=film.id).update(
+    response = response.json()
+    s = Staff.objects.create()(
+        nameRu=response['nameRu'],
+        staffId=response['staffId'],
+        description=response['description'],
+        image=response['image'],
+        professionText=response['professionText'],
+        professionKey=response['professionKey'],
     )
+    s.save()
+
 
