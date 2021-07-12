@@ -162,5 +162,4 @@ def update_staff(staff):
             age=response.get('age'),
             growth=response.get('growth'),
             profession=response.get('profession'),
-
         )

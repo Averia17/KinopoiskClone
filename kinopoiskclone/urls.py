@@ -16,13 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from backend.views import main_page, film_detail
+from backend.views import main_page, film_detail, staff_detail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('', main_page),
     path('films/<int:id>/', film_detail),
+    path('staff/<int:id>/', staff_detail),
 
     path('api/', include('backend.api.urls'))
 ]
