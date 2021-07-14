@@ -8,6 +8,20 @@ class FilmManager(models.Manager):
         return super().get_queryset()
 
 
+class Genre(models.Model):
+    title = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.title
+
+
+class Country(models.Model):
+    title = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.title
+
+
 class Staff(models.Model):
     nameRu = models.CharField(max_length=100, null=True, blank=True)
     staffId = models.IntegerField(null=True, blank=True)
@@ -20,6 +34,7 @@ class Staff(models.Model):
     age = models.IntegerField(null=True, blank=True)
     growth = models.IntegerField(null=True, blank=True)
     profession = models.CharField(max_length=55, null=True, blank=True)
+
 
     def __str__(self):
         return self.nameRu
@@ -42,10 +57,16 @@ class Film(models.Model):
     premiereDigital = models.CharField(max_length=20, null=True, blank=True)
     premiereWorldCountry = models.CharField(max_length=20, null=True, blank=True)
     #distributorRelease = models.CharField(max_length=20, null=True, blank=True)
-    ##countries = models.CharField(max_length=20, null=True, blank=True)
-    ##genres = models.ManyToManyField(max_length=20, null=True, blank=True)
-    ##facts = models.CharField(max_length=20, null=True, blank=True)
-    #budget = models.CharField(max_length=30, null=True, blank=True)
+    countries = models.ManyToManyField(Country)
+    genres = models.ManyToManyField(Genre)
+    facts = models.JSONField(default=list)
+    budget = models.CharField(max_length=30, null=True, blank=True)
+    grossRu = models.IntegerField(null=True, blank=True)
+    grossUsa = models.IntegerField(null=True, blank=True)
+    grossWorld = models.IntegerField(null=True, blank=True)
+    trailers = models.JSONField(default=list)
+    teasers = models.JSONField(default=list)
+
     staff = models.ManyToManyField(Staff)
     objects = FilmManager()
 
@@ -53,9 +74,4 @@ class Film(models.Model):
         return self.name
 
 
-class Genre(models.Model):
-    title = models.CharField(max_length=50, unique=True)
-
-    def __str__(self):
-        return self.title
 
