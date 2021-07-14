@@ -41,6 +41,8 @@ class FilmSerializer(ModelSerializer):
 
 class FilmListSerializer(ModelSerializer):
 
+    genres = GenreSerializer(many=True)
+
     class Meta:
         model = Film
         fields = ('id', 'name', 'image', 'year')
