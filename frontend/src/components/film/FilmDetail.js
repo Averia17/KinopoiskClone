@@ -3,10 +3,12 @@ import axios from 'axios';
 import moment from 'moment';
 import 'moment/locale/ru'
 import '../../App.css';
+import { Link } from 'react-router-dom'
+
 
 function FilmDetail({ match }) {
 
-    const[film, setFilm] = useState( [])
+    const[film, setFilm] = useState( []);
     const id = match.params.id;
 
     useEffect( () => {
@@ -18,19 +20,24 @@ function FilmDetail({ match }) {
         })
     }, [id])
 
-    var dateRu = moment(film.premiereRu).lang("ru").format('DD MMMM YYYY');
-    var dateW = moment(film.premiereWorld).lang("ru").format('DD MMMM YYYY');
+    let dateRu = moment(film.premiereRu).lang("ru").format('DD MMMM YYYY');
+    let dateW = moment(film.premiereWorld).lang("ru").format('DD MMMM YYYY');
 
-    if( film.ratingAgeLimits === null) {
+    if(film.ratingAgeLimits === null) {
         film.ratingAgeLimits = "0";
     }
-    if( film.premiereRu === null) {
+    if(film.premiereRu === null) {
         dateRu = "-";
     }
-    if( film.premiereWorld === null) {
+    if(film.premiereWorld === null) {
         dateW = "-";
-    }
-
+    };
+    /*var actors = film.staff.filter(function(professionKey) {
+        return professionKey === "ACTOR";
+    });*/
+    let staff = []
+    staff = film.staff;
+    console.log(staff);
     return (
         <div className="film-details font-style">
             <div className="poster-details">
@@ -70,6 +77,12 @@ function FilmDetail({ match }) {
                 <label htmlFor="star-2" title="2"></label>
                 <input type="radio" id="star-1" name="rating" value="1"/>
                 <label htmlFor="star-1" title="1"></label>
+            </div>
+            <div className="film-actors">
+                <h1>В главных ролях</h1>
+                <div>
+
+                </div>
             </div>
         </div>
     );
