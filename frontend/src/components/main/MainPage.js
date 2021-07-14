@@ -17,18 +17,23 @@ function MainPage() {
 
     return(
         <div className="main-page font-style">
-            <ul className="films">
+            <div className="films">
                 {film.map((f) => {
                     return(
                         <div className="films-item" key={f.id}>
-                            <div className="poster-main">
-                                <img src={f.image} className="img"></img>
-                            </div>
-                            <h1><Link className="film-header" to={{ pathname: `/films/${f.id}/`}}>{f.name}</Link></h1>
+                            <Link  to={{ pathname: `/films/${f.id}/`}}>
+                                <div className="poster-main">
+                                    <img src={f.image} className="img"></img>
+                                </div>
+                                <div className="film-description">
+                                    <p id="year">{f.year}</p>
+                                    <p id="name">{f.name}</p>
+                                </div>
+                            </Link>
                         </div>
                     )}
                 )}
-            </ul>
+            </div>
         </div>
 )
 }
