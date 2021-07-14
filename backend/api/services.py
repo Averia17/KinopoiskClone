@@ -1,3 +1,4 @@
+import json
 import time
 from concurrent.futures.thread import ThreadPoolExecutor
 
@@ -38,16 +39,19 @@ def check_if_empty_films():
         ]
         Film.objects.bulk_create(instances)
         print(time.time() - start_time)
-    get_full_information()
+        get_full_information()
+        print(time.time() - start_time)
+    # get_staff()
+    # print(time.time() - start_time)
+    # get_staff_full_information()
+    # print(time.time() - start_time)
+    # get_genres()
+    # print(time.time() - start_time)
+    # get_countries()
+    # print(time.time() - start_time)
+    get_films_videos()
     print(time.time() - start_time)
-        # get_staff()
-        # print(time.time() - start_time)
-        # get_staff_full_information()
-        # print(time.time() - start_time)
-        # get_genres()
-        # print(time.time() - start_time)
-        # get_countries()
-        # print(time.time() - start_time)
+
 
 
 def get_full_information():
@@ -63,8 +67,9 @@ def updating_film(film):
         headers = CaseInsensitiveDict()
         headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
         headers["accept"] = "application/json"
-        response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v2.1/films/{film.filmId}?append_to_response=BUDGET',
-                                headers=headers)
+        response = requests.get(
+            f'https://kinopoiskapiunofficial.tech/api/v2.1/films/{film.filmId}?append_to_response=BUDGET',
+            headers=headers)
         if response.status_code == 429:
             print("blyat suka ")
         response_data = response.json()['data']
@@ -87,10 +92,10 @@ def updating_film(film):
 
         genres = [genre['genre'] for genre in response_data['genres']]
         for genre in genres:
-            current_film.genres.add(Genre.objects.get(title=genre))
+            current_film.genres.add(Genre.objects.get_or_create(title=genre))
         countries = [country['country'] for country in response_data['countries']]
         for country in countries:
-            current_film.countries.add(Country.objects.get(title=country))
+            current_film.countries.add(Country.objects.get_or_create(title=country))
         current_film.save()
     else:
         print(film.name)
@@ -138,7 +143,7 @@ def get_film_staff(film):
         #         professionKey=staff.get('professionKey'))
         #     for staff in response
         # ]
-        #instances = Staff.objects.bulk_create(instances)
+        # instances = Staff.objects.bulk_create(instances)
 
         current_film = Film.objects.get(pk=film.id)
         for instance in instances:
@@ -155,6 +160,8 @@ def get_film_staff(film):
         # Staff.objects.bulk_insert(instances)
     else:
         return
+
+
 ##...А зори здесь тихие
 
 
@@ -217,3 +224,52 @@ def get_countries():
                 c.save()
                 countries = Country.objects.all()
                 countries_titles = [country.title for country in countries]
+
+
+def get_films_videos():
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        for film in Film.objects.all():
+            executor.map(get_film_video, [film])
+        executor.shutdown(wait=True)
+
+
+def get_film_video(film):
+    #if not Film.objects.get(pk=film.id).trailers:
+    headers = CaseInsensitiveDict()
+    headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
+    headers["accept"] = "application/json"
+    response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v2.1/films/{film.filmId}/videos',
+                            headers=headers)
+    response = response.json()
+    trailers_from_response = response.get('trailers')
+    teasers_from_response = response.get('teasers')
+    trailers = []
+    teasers = []
+    for trailer in trailers_from_response:
+        dict_to_append = {'name': trailer.get('name'), 'url': trailer.get('url'), 'official': ''}
+
+        if trailer.get('size') is not None:
+            dict_to_append['official'] = 'True'
+        else:
+            dict_to_append['official'] = 'False'
+        #print(dict_to_append)
+        trailers.append(dict_to_append)
+
+    for teaser in teasers_from_response:
+        dict_to_append = {'name': teaser.get('name'), 'url': teaser.get('url'), 'official': ''}
+
+        if teaser.get('size') is not None:
+            dict_to_append['official'] = 'True'
+        else:
+            dict_to_append['official'] = 'False'
+        teasers.append(dict_to_append)
+
+    current_film = Film.objects.get(pk=film.id)
+
+    current_film.trailers = trailers
+    current_film.teasers = teasers
+    current_film.save()
+    print(current_film)
+    #
+    # else:
+    #     return

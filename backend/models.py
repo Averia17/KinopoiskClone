@@ -35,6 +35,7 @@ class Staff(models.Model):
     growth = models.IntegerField(null=True, blank=True)
     profession = models.CharField(max_length=55, null=True, blank=True)
 
+
     def __str__(self):
         return self.nameRu
 
@@ -63,6 +64,8 @@ class Film(models.Model):
     grossRu = models.IntegerField(null=True, blank=True)
     grossUsa = models.IntegerField(null=True, blank=True)
     grossWorld = models.IntegerField(null=True, blank=True)
+    trailers = models.JSONField(default=list)
+    teasers = models.JSONField(default=list)
 
     staff = models.ManyToManyField(Staff)
     objects = FilmManager()
