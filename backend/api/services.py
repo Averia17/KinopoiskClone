@@ -4,7 +4,7 @@ from concurrent.futures.thread import ThreadPoolExecutor
 import requests
 from requests.structures import CaseInsensitiveDict
 
-from backend.models import Film, Staff, Genre
+from backend.models import Film, Staff, Genre, Country
 
 
 def get_top_films():
@@ -38,15 +38,16 @@ def check_if_empty_films():
         ]
         Film.objects.bulk_create(instances)
         print(time.time() - start_time)
-        get_full_information()
-        print(time.time() - start_time)
-        get_staff()
-        print(time.time() - start_time)
-        get_staff_full_information()
-        print(time.time() - start_time)
-        get_genres()
-        print(time.time() - start_time)
-
+    get_full_information()
+    print(time.time() - start_time)
+        # get_staff()
+        # print(time.time() - start_time)
+        # get_staff_full_information()
+        # print(time.time() - start_time)
+        # get_genres()
+        # print(time.time() - start_time)
+        # get_countries()
+        # print(time.time() - start_time)
 
 
 def get_full_information():
@@ -57,27 +58,43 @@ def get_full_information():
 
 
 def updating_film(film):
-    headers = CaseInsensitiveDict()
-    headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
-    headers["accept"] = "application/json"
-    response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v2.1/films/{film.filmId}',
-                            headers=headers)
-    if response.status_code == 429:
-        print("blyat suka ")
-    response = response.json()['data']
-    Film.objects.filter(id=film.id).update(
-        slogan=response['slogan'],
-        description=response['description'],
-        filmLength=response['filmLength'],
-        type=response['type'],
-        ratingAgeLimits=response['ratingAgeLimits'],
-        premiereRu=response['premiereRu'],
-        premiereWorld=response['premiereWorld'],
-        premiereDigital=response['premiereDigital'],
-        premiereWorldCountry=response['premiereWorldCountry'],
-        # genres=response['genres'],
-        # budget=response['budget']['budget'],
-    )
+    if not Film.objects.get(pk=film.id).countries.exists():
+
+        headers = CaseInsensitiveDict()
+        headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
+        headers["accept"] = "application/json"
+        response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v2.1/films/{film.filmId}?append_to_response=BUDGET',
+                                headers=headers)
+        if response.status_code == 429:
+            print("blyat suka ")
+        response_data = response.json()['data']
+        response = response.json()
+        current_film = Film.objects.get(pk=film.id)
+        current_film.slogan = response_data.get('slogan')
+        current_film.description = response_data.get('description')
+        current_film.filmLength = response_data.get('filmLength')
+        current_film.type = response_data.get('type')
+        current_film.ratingAgeLimits = response_data.get('ratingAgeLimits')
+        current_film.premiereRu = response_data.get('premiereRu')
+        current_film.premiereDigital = response_data.get('premiereDigital')
+        current_film.premiereWorld = response_data.get('premiereWorld')
+        current_film.premiereWorldCountry = response_data.get('premiereWorldCountry')
+        current_film.budget = response.get('budget').get('budget')
+        current_film.grossRu = response.get('budget').get('grossRu')
+        current_film.grossWorld = response.get('budget').get('grossWorld')
+        current_film.facts = response_data.get('facts')
+        current_film.save()
+
+        genres = [genre['genre'] for genre in response_data['genres']]
+        for genre in genres:
+            current_film.genres.add(Genre.objects.get(title=genre))
+        countries = [country['country'] for country in response_data['countries']]
+        for country in countries:
+            current_film.countries.add(Country.objects.get(title=country))
+        current_film.save()
+    else:
+        print(film.name)
+        return
 
 
 def get_staff():
@@ -182,3 +199,21 @@ def get_genres():
                 print(genre['genre'])
                 g = Genre(title=genre['genre'])
                 g.save()
+                genres = Genre.objects.all()
+                genres_titles = [genre.title for genre in genres]
+
+
+def get_countries():
+    films = get_top_films()
+
+    countries = Country.objects.all()
+
+    countries_titles = [country.title for country in countries]
+    for film in films:
+        for country in film.get('countries'):
+            if country['country'] not in countries_titles:
+                print(country['country'])
+                c = Country(title=country['country'])
+                c.save()
+                countries = Country.objects.all()
+                countries_titles = [country.title for country in countries]
