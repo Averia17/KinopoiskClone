@@ -35,7 +35,9 @@ function FilmDetail({ match }) {
     /*var actors = film.staff.filter(function(professionKey) {
         return professionKey === "ACTOR";
     });*/
-
+    let staff = []
+    staff = film.staff;
+    console.log(staff);
     return (
         <div className="film-details font-style">
             <div className="poster-details">
@@ -79,15 +81,7 @@ function FilmDetail({ match }) {
             <div className="film-actors">
                 <h1>В главных ролях</h1>
                 <div>
-                    {<ul className="actors">
-                        {film.staff.map((s) => {
-                            return(
-                                <div className="actors-item" key={s.id}>
-                                    <h1><Link className="s" to={{ pathname: `/staff/${s.id}/`}}>{s.nameRu}</Link></h1>
-                                </div>
-                            )}
-                        )}
-                    </ul>}
+
                 </div>
             </div>
         </div>
