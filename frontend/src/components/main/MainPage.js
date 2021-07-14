@@ -26,8 +26,13 @@ function MainPage() {
                                     <img src={f.image} className="img"></img>
                                 </div>
                                 <div className="film-description">
-                                    <p id="year">{f.year}</p>
-                                    <p id="name">{f.name}</p>
+                                    <div id="film-title">
+                                        <p id="genre">{f.genres[0].title}</p>
+                                        <p id="year">{f.year}</p>
+                                    </div>
+                                    <div id="name">
+                                        <p>{f.name}</p>
+                                    </div>
                                 </div>
                             </Link>
                         </div>

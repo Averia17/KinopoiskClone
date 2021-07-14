@@ -148,7 +148,6 @@ p { line-height: 24px; }
   height: auto;
   display: inline-block;
   position: relative;
-  text-decoration: none;
 }
 .film-description {
   color: white;
@@ -159,17 +158,27 @@ p { line-height: 24px; }
   text-decoration: none;
   display: inline-block;
 }
-.film-description #year {
-  text-align: right;
+
+.film-description #film-title {
+  display: inline;
   margin: 12px 0;
-  text-decoration: none;
   font-weight: 400;
   font-size: 20px;
 }
 .film-description #name {
-  text-align: left;
   font-weight: 750;
+  position: absolute;
+  font-size: 20px;
+  margin-top: 40px;
 }
+.film-description #year {
+  float: right;
+}
+.film-description #genre {
+  float: left;
+  color: #5CE9E2;
+}
+
 .poster-main {
   width: 300px;
   height: 441px;
@@ -177,6 +186,12 @@ p { line-height: 24px; }
 }
 .main-page {
   text-decoration: none;
+}
+.film-genres {
+  display: inline-flex;
+  list-style: none;
+  text-align: left;
+
 }
 /* navbar */
 
@@ -206,4 +221,7 @@ p { line-height: 24px; }
   width: auto;
   height: auto;
   cursor: pointer;
+}
+.link:hover {
+  color: #5CE9E2;
 }
