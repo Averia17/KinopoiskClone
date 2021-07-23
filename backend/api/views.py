@@ -22,8 +22,10 @@ class FilmsViewSet(viewsets.ModelViewSet):
 
     @staticmethod
     def get_queryset():
-        #check_if_empty_films()
-        return Film.objects.all()
+        check_if_empty_films()
+        return Film.objects.filter(type='FILM')
+
+
 
 
 class StaffViewSet(viewsets.ModelViewSet):
