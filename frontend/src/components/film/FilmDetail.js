@@ -26,18 +26,58 @@ function FilmDetail({ match }) {
     if(film.ratingAgeLimits === null) {
         film.ratingAgeLimits = "0";
     }
+    if(film.budget === null) {
+        film.budget = "-";
+    }
+    if(film.grossRu === null) {
+        film.grossRu = "0";
+    }
+    if(film.grossWorld === null) {
+        film.grossWorld = "0";
+    }
     if(film.premiereRu === null) {
         dateRu = "-";
     }
     if(film.premiereWorld === null) {
         dateW = "-";
     };
-    /*var actors = film.staff.filter(function(professionKey) {
-        return professionKey === "ACTOR";
-    });*/
-    let staff = []
-    staff = film.staff;
-    console.log(staff);
+    var actors = film.staff?.filter(function(f) {
+        return f.professionKey === "ACTOR";
+    });
+    var writers = film.staff?.filter(function(f) {
+        return f.professionKey === "WRITER";
+    });
+    var operators = film.staff?.filter(function(f) {
+        return f.professionKey === "OPERATOR";
+    });
+    var editors = film.staff?.filter(function(f) {
+        return f.professionKey === "EDITOR";
+    });
+    var composers = film.staff?.filter(function(f) {
+        return f.professionKey === "COMPOSER";
+    });
+    var producers_ussr = film.staff?.filter(function(f) {
+        return f.professionKey === "PRODUCER_USSR";
+    });
+    var translators = film.staff?.filter(function(f) {
+        return f.professionKey === "TRANSLATOR";
+    });
+    var directors = film.staff?.filter(function(f) {
+        return f.professionKey === "DIRECTOR";
+    });
+    var designers = film.staff?.filter(function(f) {
+        return f.professionKey === "DESIGN";
+    });
+    var producers = film.staff?.filter(function(f) {
+        return f.professionKey === "PRODUCER";
+    });
+    var voice_directors = film.staff?.filter(function(f) {
+        return f.professionKey === "VOICE_DIRECTOR";
+    });
+
+    let genres = film.genres?.map((g, index) => {return( g.title + (index != (film.genres.length-1) ? ',' : '' ))});
+    let countries = film.countries?.map((c, index) => {return( c.title + (index != (film.countries.length-1) ? ',' : '' ))});
+
     return (
         <div className="film-details font-style">
             <div className="poster-details">
@@ -45,18 +85,35 @@ function FilmDetail({ match }) {
                 <p className="ageLimit-poster">{film.ratingAgeLimits}+</p>
             </div>
             <div className="film-info">
-                <h1>{film.name} ({film.year})</h1>
-                <h2 className="film-slogan">{film.slogan}</h2>
+                <div className="info-header">
+                    <div>
+                        <h1>{film.name} ({film.year})</h1>
+                        <h2 className="film-slogan">{film.slogan}</h2>
+                    </div>
+                </div>
                 <h2>О фильме</h2>
-                <h4>Год выпуска: {film.year}</h4>
-                <h4>Страна: {film.premiereWorldCountry}</h4>
-                <h4>Премьера в России: {dateRu}</h4>
-                <h4>Премьера в мире: {dateW}</h4>
-                <h4>Время: {film.filmLength}</h4>
-                <p>{film.description}</p>
+                <p>Год выпуска: {film.year}</p>
+                <div className="film-countries-genres">
+                    <ul className="film-list">Страна: {countries?.map((c, index) => {
+                        return(
+                            <li className="list-item" key={index}>{c}</li>
+                        )
+                    })}</ul>
+                    <ul className="film-list">Жанр: {genres?.map((g, index) => {
+                        return(
+                            <li className="list-item" key={index}>{g}</li>
+                        )
+                    })}</ul>
+                </div>
+                <p>Премьера в мире: {dateW}</p>
+                <p>Премьера в России: {dateRu}</p>
+                <p>Бюджет: {film.budget}</p>
+                <p>Сборы в мире: ${film.grossWorld}</p>
+                <p>Сборы в России: ${film.grossRu}</p>
+                <p>Время: {film.filmLength}</p>
             </div>
             <div className="film-rating">
-                <h3>Рейтинг: {film.rating}</h3>
+                <h1>{film.rating}</h1>
                 <input type="radio" id="star-10" name="rating" value="10"/>
                 <label htmlFor="star-10" title="10"></label>
                 <input type="radio" id="star-9" name="rating" value="9"/>
@@ -79,9 +136,17 @@ function FilmDetail({ match }) {
                 <label htmlFor="star-1" title="1"></label>
             </div>
             <div className="film-actors">
-                <h1>В главных ролях</h1>
+                <h3>В главных ролях</h3>
                 <div>
-
+                    <ul className="actors">
+                        {film.staff?.map((s) => {
+                                return(
+                                <div className="actors-item" key={s.id}>
+                                    <p><Link className="actor" to={{ pathname: `/staff/${s.id}/`}}>{s.nameRu}</Link></p>
+                                </div>
+                            )}
+                        )}
+                    </ul>
                 </div>
             </div>
         </div>
