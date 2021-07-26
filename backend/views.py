@@ -14,6 +14,21 @@ def film_detail(request, id):
     return render(request, template_name, {})
 
 
+def serial_detail(request, id):
+    template_name = 'index.html'
+    return render(request, template_name, {})
+
+
 def staff_detail(request, id):
+    template_name = 'index.html'
+    return render(request, template_name, {})
+
+
+def serials(request):
+    template_name = 'index.html'
+    return render(request, template_name, {})
+
+
+def films(request):
     template_name = 'index.html'
     return render(request, template_name, {})
