@@ -60,6 +60,8 @@ def check_if_empty_films():
         # print(time.time() - start_time)
         # get_staff_full_information()
         # print(time.time() - start_time)
+    delete_clones()
+
 
 
 
@@ -376,3 +378,28 @@ def delete_from_db():
         n += 1
         print(n)
     #Film.objects.filter(year__lt=1990, rating__lt=7.3).delete()
+
+
+def check_is_clone(staff):
+    query = Staff.objects.filter(staffId=staff.staffId)
+    print('works')
+    if len(query) > 1:
+        try:
+            query[1].delete()
+            print(query)
+        except Exception as ex:
+            print(ex)
+
+
+def delete_clones():
+    # import sqlite3
+    # conn = sqlite3.connect('KinopoiskClone.db', isolation_level=None)
+    # conn.execute("VACUUM")
+    # conn.close()
+    with ThreadPoolExecutor(max_workers=15) as executor:
+        n = 0
+        for staff in Staff.objects.all().reverse():
+            executor.map(check_is_clone, [staff])
+            n += 1
+            print(n)
+        executor.shutdown(wait=True)

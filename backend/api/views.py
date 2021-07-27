@@ -24,15 +24,15 @@ class FilmsViewSet(viewsets.ModelViewSet):
     def get_queryset():
         #check_if_empty_films()
         # Полная дичь но слайсы нельзя делать...
-        n = 0
-        films = []
-        for film in Film.objects.filter(type='FILM').order_by('-rating'):
-            if n == 250:
-                return films
-            films.append(film)
-
-            n += 1
-        return films
+        # n = 0
+        # films = []
+        # for film in Film.objects.filter(type='FILM').order_by('-rating'):
+        #     if n == 250:
+        #         return films
+        #     films.append(film)
+        #
+        #     n += 1
+        return Film.objects.filter(type='FILM').order_by('-rating')
 
 
 class SerialsViewSet(viewsets.ModelViewSet):
@@ -54,15 +54,16 @@ class SerialsViewSet(viewsets.ModelViewSet):
     def get_queryset():
         #check_if_empty_films()
         # Полная дичь но слайсы нельзя делать...
-        n = 0
-        films = []
-        for film in Film.objects.filter(type='TV_SHOW').order_by('-rating'):
-            if n == 250:
-                return films
-            films.append(film)
-
-            n += 1
-        return films
+        # n = 0
+        # films = []
+        # for film in Film.objects.filter(type='TV_SHOW').order_by('-rating'):
+        #     if n == 250:
+        #         return films
+        #     films.append(film)
+        #
+        #     n += 1
+        #Film.objects.filter(type='TV_SHOW').order_by('-rating')
+        return Film.objects.filter(type='TV_SHOW').order_by('-rating')
 
 
 class StaffViewSet(viewsets.ModelViewSet):
