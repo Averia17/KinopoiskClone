@@ -1,7 +1,8 @@
 from rest_framework import viewsets
 
-from .serializers import FilmListSerializer, StaffSerializer, FilmSerializer, StaffListSerializer
-from ..models import Film, Staff
+from .serializers import FilmListSerializer, StaffSerializer, FilmSerializer, StaffListSerializer, GenreSerializer, \
+    CountrySerializer
+from ..models import Film, Staff, Genre, Country
 from .services import check_if_empty_films
 
 
@@ -24,15 +25,15 @@ class FilmsViewSet(viewsets.ModelViewSet):
     def get_queryset():
         #check_if_empty_films()
         # Полная дичь но слайсы нельзя делать...
-        # n = 0
-        # films = []
-        # for film in Film.objects.filter(type='FILM').order_by('-rating'):
-        #     if n == 250:
-        #         return films
-        #     films.append(film)
-        #
-        #     n += 1
-        return Film.objects.filter(type='FILM').order_by('-rating')
+        n = 0
+        films = []
+        for film in Film.objects.filter(type='FILM').order_by('-rating'):
+            if n == 50:
+                return films
+            films.append(film)
+
+            n += 1
+        return Film.objects.all()
 
 
 class SerialsViewSet(viewsets.ModelViewSet):
@@ -54,14 +55,14 @@ class SerialsViewSet(viewsets.ModelViewSet):
     def get_queryset():
         #check_if_empty_films()
         # Полная дичь но слайсы нельзя делать...
-        # n = 0
-        # films = []
-        # for film in Film.objects.filter(type='TV_SHOW').order_by('-rating'):
-        #     if n == 250:
-        #         return films
-        #     films.append(film)
-        #
-        #     n += 1
+        n = 0
+        films = []
+        for film in Film.objects.filter(type='TV_SHOW').order_by('-rating'):
+            if n == 50:
+                return films
+            films.append(film)
+
+            n += 1
         #Film.objects.filter(type='TV_SHOW').order_by('-rating')
         return Film.objects.filter(type='TV_SHOW').order_by('-rating')
 
@@ -84,4 +85,13 @@ class StaffViewSet(viewsets.ModelViewSet):
             self.serializer_class
         )
 
+
+class GenresViewSet(viewsets.ModelViewSet):
+    serializer_class = GenreSerializer
+    queryset = Genre.objects.all()
+
+
+class CountriesViewSet(viewsets.ModelViewSet):
+    serializer_class = CountrySerializer
+    queryset = Country.objects.all()
 
