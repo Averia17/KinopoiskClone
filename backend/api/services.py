@@ -55,7 +55,7 @@ def check_if_empty_films():
         # print(time.time() - start_time)
         # get_staff_full_information()
         # print(time.time() - start_time)
-    delete_clones()
+    #delete_clones()
     #list_films()
 
 

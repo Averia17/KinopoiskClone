@@ -92,8 +92,6 @@ class Staff(models.Model):
 class Film(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, null=True, blank=True)
-
-
     year = models.CharField(max_length=9)
     rating = models.FloatField(null=True, blank=True)
     image = models.CharField(max_length=255)
