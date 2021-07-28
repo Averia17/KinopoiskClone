@@ -1,4 +1,7 @@
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.db import models
+from autoslug import AutoSlugField
+from django.utils.text import slugify
 
 
 class FilmManager(models.Manager):
@@ -10,6 +13,29 @@ class FilmManager(models.Manager):
 
 class Genre(models.Model):
     title = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(unique=True, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not len(self.slug.strip()):
+            self.slug = slugify(self.title, allow_unicode=True)
+
+        _slug = self.slug
+        _count = 1
+
+        while True:
+            try:
+                Genre.objects.all().exclude(pk=self.pk).get(slug=_slug)
+            except MultipleObjectsReturned:
+                pass
+            except ObjectDoesNotExist:
+                break
+            _slug = "%s-%s" % (self.slug, _count)
+            _count += 1
+
+        self.slug = _slug
+
+        super(Genre, self).save(*args, **kwargs)
+
 
     def __str__(self):
         return self.title
@@ -17,6 +43,28 @@ class Genre(models.Model):
 
 class Country(models.Model):
     title = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(unique=True, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not len(self.slug.strip()):
+            self.slug = slugify(self.title, allow_unicode=True)
+
+        _slug = self.slug
+        _count = 1
+
+        while True:
+            try:
+                Country.objects.all().exclude(pk=self.pk).get(slug=_slug)
+            except MultipleObjectsReturned:
+                pass
+            except ObjectDoesNotExist:
+                break
+            _slug = "%s-%s" % (self.slug, _count)
+            _count += 1
+
+        self.slug = _slug
+
+        super(Country, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.title
@@ -24,6 +72,7 @@ class Country(models.Model):
 
 class Staff(models.Model):
     nameRu = models.CharField(max_length=100, null=True, blank=True)
+    slug = models.SlugField(unique=True, null=True, blank=True)
     staffId = models.IntegerField(null=True, blank=True)
     description = models.CharField(max_length=100, null=True, blank=True)
     image = models.CharField(max_length=255, null=True, blank=True)
@@ -42,6 +91,9 @@ class Staff(models.Model):
 
 class Film(models.Model):
     name = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True, null=True, blank=True)
+
+
     year = models.CharField(max_length=9)
     rating = models.FloatField(null=True, blank=True)
     image = models.CharField(max_length=255)
@@ -72,6 +124,27 @@ class Film(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not len(self.slug.strip()):
+            self.slug = slugify(self.name, allow_unicode=True)
+
+        _slug = self.slug
+        _count = 1
+
+        while True:
+            try:
+                Film.objects.all().exclude(pk=self.pk).get(slug=_slug)
+            except MultipleObjectsReturned:
+                pass
+            except ObjectDoesNotExist:
+                break
+            _slug = "%s-%s" % (self.slug, _count)
+            _count += 1
+
+        self.slug = _slug
+
+        super(Film, self).save(*args, **kwargs)
 
 
 

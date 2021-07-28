@@ -3,6 +3,7 @@ import time
 from concurrent.futures.thread import ThreadPoolExecutor
 
 import requests
+from django.utils.text import slugify
 from requests.structures import CaseInsensitiveDict
 
 from backend.models import Film, Staff, Genre, Country
@@ -46,14 +47,8 @@ def check_if_empty_films():
         # get_filters()
         # print(time.time() - start_time)
 
-        # now its useless
-        # get_genres()
-        # print(time.time() - start_time)
-        # get_countries()
-        # print(time.time() - start_time)
         # get_all_filtered_films()
         # print(time.time() - start_time)
-    #delete_from_db()
     # get_full_information()
     # print(time.time() - start_time)
         # get_staff()
@@ -61,6 +56,7 @@ def check_if_empty_films():
         # get_staff_full_information()
         # print(time.time() - start_time)
     delete_clones()
+    #list_films()
 
 
 
@@ -220,38 +216,6 @@ def update_staff(staff):
         return
 
 
-def get_genres():
-    films = get_top_films()
-
-    genres = Genre.objects.all()
-
-    genres_titles = [genre.title for genre in genres]
-    for film in films:
-        for genre in film.get('genres'):
-            if genre['genre'] not in genres_titles:
-                print(genre['genre'])
-                g = Genre(title=genre['genre'])
-                g.save()
-                genres = Genre.objects.all()
-                genres_titles = [genre.title for genre in genres]
-
-
-def get_countries():
-    films = get_top_films()
-
-    countries = Country.objects.all()
-
-    countries_titles = [country.title for country in countries]
-    for film in films:
-        for country in film.get('countries'):
-            if country['country'] not in countries_titles:
-                print(country['country'])
-                c = Country(title=country['country'])
-                c.save()
-                countries = Country.objects.all()
-                countries_titles = [country.title for country in countries]
-
-
 def get_films_videos():
     with ThreadPoolExecutor(max_workers=3) as executor:
         for film in Film.objects.all():
@@ -370,15 +334,6 @@ def get_filtered_films(yearTo):
         ratingTo += 1
 
 
-def delete_from_db():
-    print("delete functions works")
-    n = 0
-    for film in Film.objects.filter(year__lt=1990, rating__lt=7.3):
-        print(film)
-        n += 1
-        print(n)
-    #Film.objects.filter(year__lt=1990, rating__lt=7.3).delete()
-
 
 def check_is_clone(staff):
     query = Staff.objects.filter(staffId=staff.staffId)
@@ -403,3 +358,13 @@ def delete_clones():
             n += 1
             print(n)
         executor.shutdown(wait=True)
+
+
+# def list_films():
+#     for film in Film.objects.all():
+#         if not film.slug:
+#
+#             slug = slugify(film.name)
+#             film.slug = slug
+#             film.save()
+#             print(film.slug)
