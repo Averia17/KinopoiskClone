@@ -124,6 +124,10 @@ p {
   left: 915px;
   margin-top: 95px;
 }
+.film-actors #others {
+  color: #5CE9E2;
+  cursor: pointer;
+}
 .actors {
   text-align: left;
   font-size: 16px;

@@ -21,7 +21,7 @@ function MainPage() {
                 {film.map((f) => {
                     return(
                         <div className="films-item" key={f.id}>
-                            <Link  to={{ pathname: `/films/${f.id}/`}}>
+                            <Link to={{ pathname: `/films/${f.id}/`}}>
                                 <div className="poster-main">
                                     <img src={f.image} className="img"></img>
                                 </div>

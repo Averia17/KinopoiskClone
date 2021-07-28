@@ -4,6 +4,7 @@ import moment from 'moment';
 import 'moment/locale/ru'
 import '../../App.css';
 import { Link } from 'react-router-dom'
+import PersonPage from "../../components/person/PersonPage";
 
 
 function FilmDetail({ match }) {
@@ -43,36 +44,6 @@ function FilmDetail({ match }) {
     };
     var actors = film.staff?.filter(function(f) {
         return f.professionKey === "ACTOR";
-    });
-    var writers = film.staff?.filter(function(f) {
-        return f.professionKey === "WRITER";
-    });
-    var operators = film.staff?.filter(function(f) {
-        return f.professionKey === "OPERATOR";
-    });
-    var editors = film.staff?.filter(function(f) {
-        return f.professionKey === "EDITOR";
-    });
-    var composers = film.staff?.filter(function(f) {
-        return f.professionKey === "COMPOSER";
-    });
-    var producers_ussr = film.staff?.filter(function(f) {
-        return f.professionKey === "PRODUCER_USSR";
-    });
-    var translators = film.staff?.filter(function(f) {
-        return f.professionKey === "TRANSLATOR";
-    });
-    var directors = film.staff?.filter(function(f) {
-        return f.professionKey === "DIRECTOR";
-    });
-    var designers = film.staff?.filter(function(f) {
-        return f.professionKey === "DESIGN";
-    });
-    var producers = film.staff?.filter(function(f) {
-        return f.professionKey === "PRODUCER";
-    });
-    var voice_directors = film.staff?.filter(function(f) {
-        return f.professionKey === "VOICE_DIRECTOR";
     });
 
     let genres = film.genres?.map((g, index) => {return( g.title + (index != (film.genres.length-1) ? ',' : '' ))});
@@ -139,14 +110,16 @@ function FilmDetail({ match }) {
                 <h3>В главных ролях</h3>
                 <div>
                     <ul className="actors">
-                        {film.staff?.map((s) => {
-                                return(
-                                <div className="actors-item" key={s.id}>
-                                    <p><Link className="actor" to={{ pathname: `/staff/${s.id}/`}}>{s.nameRu}</Link></p>
-                                </div>
+                        {actors?.map((a, index) => {
+                                if(index < 10)
+                                    return(
+                                    <div className="actors-item" key={a.id}>
+                                        <p><Link className="actor" to={{ pathname: `/staff/${a.id}/`}}>{a.nameRu}</Link></p>
+                                    </div>
                             )}
                         )}
                     </ul>
+                    <Link key={film.id} id="others" to={{ pathname: `/films/${film.id}/staff`}}>Остальные актёры</Link>
                 </div>
             </div>
         </div>
