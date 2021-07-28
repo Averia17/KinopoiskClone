@@ -42,10 +42,10 @@ class Staff(models.Model):
 
 class Film(models.Model):
     name = models.CharField(max_length=100)
-    year = models.CharField(max_length=4)
-    rating = models.CharField(max_length=5)
+    year = models.CharField(max_length=9)
+    rating = models.FloatField(null=True, blank=True)
     image = models.CharField(max_length=255)
-    filmId = models.IntegerField(null=True, blank=True)
+    filmId = models.IntegerField(unique=True, null=True, blank=True)
     slogan = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     filmLength = models.CharField(max_length=20, null=True, blank=True)
@@ -75,3 +75,5 @@ class Film(models.Model):
 
 
 
+# class Serial(Film):
+#     episodes =

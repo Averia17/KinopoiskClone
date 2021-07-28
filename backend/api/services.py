@@ -39,30 +39,42 @@ def check_if_empty_films():
         ]
         Film.objects.bulk_create(instances)
         print(time.time() - start_time)
-        get_full_information()
-        print(time.time() - start_time)
-    # get_staff()
+
+
+        # get_films_videos()
+        # print(time.time() - start_time)
+        # get_filters()
+        # print(time.time() - start_time)
+
+        # now its useless
+        # get_genres()
+        # print(time.time() - start_time)
+        # get_countries()
+        # print(time.time() - start_time)
+        # get_all_filtered_films()
+        # print(time.time() - start_time)
+    #delete_from_db()
+    # get_full_information()
     # print(time.time() - start_time)
-    # get_staff_full_information()
-    # print(time.time() - start_time)
-    # get_genres()
-    # print(time.time() - start_time)
-    # get_countries()
-    # print(time.time() - start_time)
-    get_films_videos()
-    print(time.time() - start_time)
+        # get_staff()
+        # print(time.time() - start_time)
+        # get_staff_full_information()
+        # print(time.time() - start_time)
+    delete_clones()
+
 
 
 
 def get_full_information():
-    with ThreadPoolExecutor(max_workers=3) as executor:
+    with ThreadPoolExecutor(max_workers=20) as executor:
         for film in Film.objects.all():
             executor.map(updating_film, [film])
         executor.shutdown(wait=True)
 
 
 def updating_film(film):
-    if not Film.objects.get(pk=film.id).countries.exists():
+    current_film = Film.objects.get(pk=film.id)
+    if not current_film.countries.exists():
 
         headers = CaseInsensitiveDict()
         headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
@@ -74,7 +86,6 @@ def updating_film(film):
             print("blyat suka ")
         response_data = response.json()['data']
         response = response.json()
-        current_film = Film.objects.get(pk=film.id)
         current_film.slogan = response_data.get('slogan')
         current_film.description = response_data.get('description')
         current_film.filmLength = response_data.get('filmLength')
@@ -88,23 +99,38 @@ def updating_film(film):
         current_film.grossRu = response.get('budget').get('grossRu')
         current_film.grossWorld = response.get('budget').get('grossWorld')
         current_film.facts = response_data.get('facts')
-        current_film.save()
+        #current_film.save()
 
-        genres = [genre['genre'] for genre in response_data['genres']]
-        for genre in genres:
-            current_film.genres.add(Genre.objects.get_or_create(title=genre))
-        countries = [country['country'] for country in response_data['countries']]
-        for country in countries:
-            current_film.countries.add(Country.objects.get_or_create(title=country))
+        # ThroughGenresModel = Film.genres.through
+        # ThroughCountryModel = Film.countries.through
+        # genres = [genre['genre'] for genre in response_data['genres']]
+        # instances = []
+        # for genre in genres:
+        #     instances.append(ThroughGenresModel(film_id=current_film.id, genre_id=Genre.objects.get(title=genre).id))
+        # ThroughGenresModel.objects.bulk_create(instances)
+        # countries = [country['country'] for country in response_data['countries']]
+        # instances = []
+        # for country in countries:
+        #     instances.append(ThroughCountryModel(film_id=current_film.id, genre_id=Genre.objects.get(title=country).id))
+        # ThroughCountryModel.objects.bulk_create(instances)
+        # genres = [genre['genre'] for genre in response_data['genres']]
+        # grs = [Genre.objects.get(title=genre) for genre in genres]
+        # current_film.genres.add(*grs)
+        # countries = [country['country'] for country in response_data['countries']]
+        # cntrs = [Country.objects.get(title=country) for country in countries]
+        # current_film.countries.add(*cntrs)
+
         current_film.save()
+        print(current_film.genres.all())
     else:
         print(film.name)
         return
 
 
 def get_staff():
-    with ThreadPoolExecutor(max_workers=3) as executor:
-        for film in Film.objects.all():
+    films = Film.objects.filter(type='FILM').order_by('-year')
+    with ThreadPoolExecutor(max_workers=20) as executor:
+        for film in films:
             executor.map(get_film_staff, [film])
         executor.shutdown(wait=True)
 
@@ -146,8 +172,7 @@ def get_film_staff(film):
         # instances = Staff.objects.bulk_create(instances)
 
         current_film = Film.objects.get(pk=film.id)
-        for instance in instances:
-            current_film.staff.add(instance)
+        current_film.staff.add(*instances)
         print(current_film)
 
         # ThroughFilmStaffModel = Film.staff.through
@@ -166,14 +191,15 @@ def get_film_staff(film):
 
 
 def get_staff_full_information():
-    with ThreadPoolExecutor(max_workers=3) as executor:
+    with ThreadPoolExecutor(max_workers=15) as executor:
         for staff in Staff.objects.all():
             executor.map(update_staff, [staff])
         executor.shutdown(wait=True)
 
 
 def update_staff(staff):
-    if Staff.objects.get(pk=staff.id).birthday is None:
+    current_staff = Staff.objects.get(pk=staff.id)
+    if current_staff.birthday is None:
         headers = CaseInsensitiveDict()
         headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
         headers["accept"] = "application/json"
@@ -181,15 +207,15 @@ def update_staff(staff):
                                 headers=headers)
 
         response = response.json()
+        current_staff.birthday = response.get('birthday')
+        current_staff.image = response.get('posterUrl')
+        current_staff.death = response.get('death')
+        current_staff.age = response.get('age')
+        current_staff.growth = response.get('growth')
+        current_staff.profession = response.get('profession')
+        current_staff.save()
         print(staff.nameRu + ' updated')
-        Staff.objects.filter(id=staff.id).update(
-            birthday=response.get('birthday'),
-            image=response.get('posterUrl'),
-            death=response.get('death'),
-            age=response.get('age'),
-            growth=response.get('growth'),
-            profession=response.get('profession'),
-        )
+
     else:
         return
 
@@ -234,42 +260,146 @@ def get_films_videos():
 
 
 def get_film_video(film):
-    #if not Film.objects.get(pk=film.id).trailers:
+    current_film = Film.objects.get(pk=film.id)
+
+    if not current_film.trailers:
+        headers = CaseInsensitiveDict()
+        headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
+        headers["accept"] = "application/json"
+        response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v2.1/films/{film.filmId}/videos',
+                                headers=headers)
+        response = response.json()
+        trailers_from_response = response.get('trailers')
+        teasers_from_response = response.get('teasers')
+        trailers = []
+        teasers = []
+        for trailer in trailers_from_response:
+            dict_to_append = {'name': trailer.get('name'), 'url': trailer.get('url'), 'official': ''}
+
+            if trailer.get('size') is not None:
+                dict_to_append['official'] = 'True'
+            else:
+                dict_to_append['official'] = 'False'
+            # print(dict_to_append)
+            trailers.append(dict_to_append)
+
+        for teaser in teasers_from_response:
+            dict_to_append = {'name': teaser.get('name'), 'url': teaser.get('url'), 'official': ''}
+
+            if teaser.get('size') is not None:
+                dict_to_append['official'] = 'True'
+            else:
+                dict_to_append['official'] = 'False'
+            teasers.append(dict_to_append)
+
+
+        current_film.trailers = trailers
+        current_film.teasers = teasers
+        current_film.save()
+        print(current_film)
+
+    else:
+        return
+
+
+def get_filters():
     headers = CaseInsensitiveDict()
     headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
     headers["accept"] = "application/json"
-    response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v2.1/films/{film.filmId}/videos',
+    response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v2.1/films/filters',
                             headers=headers)
     response = response.json()
-    trailers_from_response = response.get('trailers')
-    teasers_from_response = response.get('teasers')
-    trailers = []
-    teasers = []
-    for trailer in trailers_from_response:
-        dict_to_append = {'name': trailer.get('name'), 'url': trailer.get('url'), 'official': ''}
+    genres = response['genres']
+    countries = response['countries']
 
-        if trailer.get('size') is not None:
-            dict_to_append['official'] = 'True'
-        else:
-            dict_to_append['official'] = 'False'
-        #print(dict_to_append)
-        trailers.append(dict_to_append)
+    for genre in genres:
+        print(genre['genre'])
 
-    for teaser in teasers_from_response:
-        dict_to_append = {'name': teaser.get('name'), 'url': teaser.get('url'), 'official': ''}
+        if not Genre.objects.filter(title=genre['genre']).exists():
+            g = Genre(title=genre['genre'])
+            print(genre['genre'])
+            g.save()
+    for country in countries:
+        if not Country.objects.filter(title=country['country']).exists():
+            c = Country(title=country['country'])
+            print(country['country'])
+            c.save()
 
-        if teaser.get('size') is not None:
-            dict_to_append['official'] = 'True'
-        else:
-            dict_to_append['official'] = 'False'
-        teasers.append(dict_to_append)
 
-    current_film = Film.objects.get(pk=film.id)
+def get_all_filtered_films():
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        yearTo = 1971
+        while yearTo != 2023:
+            executor.map(get_filtered_films, [yearTo])
+            yearTo += 1
+    executor.shutdown(wait=True)
 
-    current_film.trailers = trailers
-    current_film.teasers = teasers
-    current_film.save()
-    print(current_film)
-    #
-    # else:
-    #     return
+
+def get_filtered_films(yearTo):
+    headers = CaseInsensitiveDict()
+    headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
+    headers["accept"] = "application/json"
+    url = 'https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-filters?country=0&order=RATING&type=FILM&ratingFrom={ratingFrom}&ratingTo={ratingTo}&yearFrom={yearFrom}&yearTo={yearTo}&page={page}'
+
+    ratingTo = 6
+    while ratingTo != 10:
+        response = requests.get(
+            url.format(ratingFrom=ratingTo - 1, ratingTo=ratingTo, yearFrom=yearTo - 1, yearTo=yearTo, page=1),
+            headers=headers)
+        if response.status_code == 429:
+            print("blyat suka ")
+        response = response.json()
+        instances = []
+        for page in range(1, response.get('pagesCount') + 1):
+            response = requests.get(
+                url.format(ratingFrom=ratingTo - 1, ratingTo=ratingTo, yearFrom=yearTo - 1, yearTo=yearTo, page=page),
+                headers=headers)
+            response = response.json()
+            response = response.get('films')
+            for film in response:
+                if not Film.objects.filter(filmId=film.get('filmId')).exists():
+                    f = Film(
+                        name=film.get('nameRu'),
+                        year=film.get('year'),
+                        rating=film.get('rating'),
+                        image=film.get('posterUrl'),
+                        filmId=film.get('filmId'))
+                    instances.append(f)
+                    print(film.get('nameRu'))
+        Film.objects.bulk_create(instances)
+        ratingTo += 1
+
+
+def delete_from_db():
+    print("delete functions works")
+    n = 0
+    for film in Film.objects.filter(year__lt=1990, rating__lt=7.3):
+        print(film)
+        n += 1
+        print(n)
+    #Film.objects.filter(year__lt=1990, rating__lt=7.3).delete()
+
+
+def check_is_clone(staff):
+    query = Staff.objects.filter(staffId=staff.staffId)
+    print('works')
+    if len(query) > 1:
+        try:
+            query[1].delete()
+            print(query)
+        except Exception as ex:
+            print(ex)
+
+
+def delete_clones():
+    # import sqlite3
+    # conn = sqlite3.connect('KinopoiskClone.db', isolation_level=None)
+    # conn.execute("VACUUM")
+    # conn.close()
+    with ThreadPoolExecutor(max_workers=15) as executor:
+        n = 0
+        for staff in Staff.objects.all().reverse():
+            executor.map(check_is_clone, [staff])
+            n += 1
+            print(n)
+        executor.shutdown(wait=True)
