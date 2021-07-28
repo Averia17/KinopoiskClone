@@ -18,6 +18,11 @@ class NavBar extends Component {
                     <li><Link className="link" to={{ pathname: `/films/`}}>Фильмы</Link></li>
                     <li><Link className="link" to={{ pathname: `/films/`}}>Сериалы</Link></li>
                     <li><Link className="link" to={{ pathname: `/films/`}}>Фильмы</Link></li>
+                    <div>
+                        <input className="search-txt" type="search" name="" placeholder="Нажмите для поиска"/>
+                        <a className="search-btn" href="#"></a>
+                    </div>
+                    <li className="search-box"></li>
                 </ul>
             </nav>
         )

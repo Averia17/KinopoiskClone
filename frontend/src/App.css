@@ -61,7 +61,10 @@ p {
 }
 
 /* film details */
-
+.genres {
+  margin-top: 440px;
+  position: absolute;
+}
 .film-info {
   height: auto;
   display: inline-block;
@@ -263,4 +266,13 @@ p {
   min-width: 112px;
   min-height: 47px;
   cursor: pointer;
+}
+.search-box {
+
+}
+
+/*  staff page */
+
+.film-staff {
+  text-align: center;
 }

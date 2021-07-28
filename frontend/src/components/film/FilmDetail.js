@@ -10,6 +10,8 @@ import PersonPage from "../../components/person/PersonPage";
 function FilmDetail({ match }) {
 
     const[film, setFilm] = useState( []);
+    const[genre, setGenre] = useState( []);
+    const[country, setCountry] = useState( []);
     const id = match.params.id;
 
     useEffect( () => {
@@ -20,6 +22,23 @@ function FilmDetail({ match }) {
             setFilm(response.data)
         })
     }, [id])
+
+    useEffect( () => {
+        axios({
+            method: "GET",
+            url: `http://127.0.0.1:8000/api/genres/`,
+        }).then(response => {
+            setGenre(response.data)
+        })
+    })
+    useEffect( () => {
+        axios({
+            method: "GET",
+            url: `http://127.0.0.1:8000/api/countries/`,
+        }).then(response => {
+            setCountry(response.data)
+        })
+    })
 
     let dateRu = moment(film.premiereRu).lang("ru").format('DD MMMM YYYY');
     let dateW = moment(film.premiereWorld).lang("ru").format('DD MMMM YYYY');
@@ -122,7 +141,30 @@ function FilmDetail({ match }) {
                     <Link key={film.id} id="others" to={{ pathname: `/films/${film.id}/staff`}}>Остальные актёры</Link>
                 </div>
             </div>
+            <div>
+                <div className="genres">
+                    <ul className="actors">
+                        {genre?.map((a, index) => {
+                            return(
+                                <div className="actors-item" key={a.id}>
+                                    <p><Link className="actor" to={{ pathname: `/genres/${a.slug}/`}}>{a.title}</Link></p>
+                                </div>
+                            )}
+                        )}
+                    </ul>
+                    <ul className="actors">
+                        {country?.map((a, index) => {
+                            return(
+                                <div className="actors-item" key={a.id}>
+                                    <p><Link className="actor" to={{ pathname: `/countries/${a.slug}/`}}>{a.title}</Link></p>
+                                </div>
+                            )}
+                        )}
+                    </ul>
+                </div>
+            </div>
         </div>
+
     );
 }
 
