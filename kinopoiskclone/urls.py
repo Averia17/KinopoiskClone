@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from backend.views import main_page, film_detail, staff_detail, serials, films
+from backend.views import main_page, film_detail, staff_detail, serials, films, genre_detail, country_detail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +27,8 @@ urlpatterns = [
     path('serials/<int:id>/', serials),
     path('films/', films),
     path('serials/', serials),
+    path('genres/<str:slug>', genre_detail),
+    path('countries/<str:slug>', country_detail),
 
     path('api/', include('backend.api.urls'))
 ]

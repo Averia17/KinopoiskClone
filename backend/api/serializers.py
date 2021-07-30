@@ -4,7 +4,6 @@ from rest_framework.serializers import ModelSerializer, Serializer
 from backend.models import Film, Staff, Country, Genre
 
 
-
 class CountrySerializer(ModelSerializer):
     class Meta:
         model = Country
@@ -15,6 +14,7 @@ class GenreSerializer(ModelSerializer):
     class Meta:
         model = Genre
         fields = '__all__'
+
 
 class StaffSerializer(ModelSerializer):
     class Meta:
@@ -46,5 +46,6 @@ class FilmListSerializer(ModelSerializer):
     class Meta:
         model = Film
         fields = ('id', 'name', 'image', 'year', 'genres')
+
 
 

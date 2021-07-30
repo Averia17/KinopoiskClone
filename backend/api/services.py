@@ -3,7 +3,7 @@ import time
 from concurrent.futures.thread import ThreadPoolExecutor
 
 import requests
-from django.utils.text import slugify
+from pytils.translit import slugify
 from requests.structures import CaseInsensitiveDict
 
 from backend.models import Film, Staff, Genre, Country
@@ -360,11 +360,11 @@ def delete_clones():
         executor.shutdown(wait=True)
 
 
-# def list_films():
-#     for film in Film.objects.all():
-#         if not film.slug:
-#
-#             slug = slugify(film.name)
-#             film.slug = slug
-#             film.save()
-#             print(film.slug)
+def list_films():
+    for film in Film.objects.all():
+        if not film.slug:
+
+            slug = slugify(film.name)
+            film.slug = slug
+            film.save()
+            print(film.slug)
