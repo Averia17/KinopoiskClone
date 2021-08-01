@@ -1,5 +1,6 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 from .serializers import FilmListSerializer, StaffSerializer, FilmSerializer, StaffListSerializer, GenreSerializer, \
     CountrySerializer
@@ -11,6 +12,8 @@ class FilmsViewSet(viewsets.ModelViewSet):
 
     serializer_class = FilmSerializer
     #lookup_field = 'slug'
+    filter_backends = (SearchFilter, OrderingFilter)
+    search_fields = ('name', 'year', 'genres__title')
 
     action_to_serializer = {
         "list": FilmListSerializer,
@@ -108,4 +111,6 @@ class CountriesViewSet(viewsets.ModelViewSet):
         queryset = Film.objects.filter(countries__slug=kwargs['slug'])
         serializer = FilmListSerializer(queryset, many=True)
         return Response(serializer.data)
+
+
 
