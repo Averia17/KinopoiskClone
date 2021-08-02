@@ -1,4 +1,6 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 from .serializers import FilmListSerializer, StaffSerializer, FilmSerializer, StaffListSerializer, GenreSerializer, \
     CountrySerializer
@@ -9,6 +11,9 @@ from .services import check_if_empty_films
 class FilmsViewSet(viewsets.ModelViewSet):
 
     serializer_class = FilmSerializer
+    #lookup_field = 'slug'
+    filter_backends = (SearchFilter, OrderingFilter)
+    search_fields = ('name', 'year', 'genres__title')
 
     action_to_serializer = {
         "list": FilmListSerializer,
@@ -87,11 +92,25 @@ class StaffViewSet(viewsets.ModelViewSet):
 
 
 class GenresViewSet(viewsets.ModelViewSet):
-    serializer_class = GenreSerializer
+    lookup_field = 'slug'
     queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        queryset = Film.objects.filter(genres__slug=kwargs['slug'])
+        serializer = FilmListSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class CountriesViewSet(viewsets.ModelViewSet):
     serializer_class = CountrySerializer
     queryset = Country.objects.all()
+    lookup_field = 'slug'
+
+    def retrieve(self, request, *args, **kwargs):
+        queryset = Film.objects.filter(countries__slug=kwargs['slug'])
+        serializer = FilmListSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
 

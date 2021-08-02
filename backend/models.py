@@ -1,7 +1,7 @@
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.db import models
 from autoslug import AutoSlugField
-from django.utils.text import slugify
+from pytils.translit import slugify
 
 
 class FilmManager(models.Manager):

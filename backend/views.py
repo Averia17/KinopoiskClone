@@ -32,3 +32,13 @@ def serials(request):
 def films(request):
     template_name = 'index.html'
     return render(request, template_name, {})
+
+
+def country_detail(request, slug):
+    template_name = 'index.html'
+    return render(request, template_name, {})
+
+
+def genre_detail(request, slug):
+    template_name = 'index.html'
+    return render(request, template_name, {})
