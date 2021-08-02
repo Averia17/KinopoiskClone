@@ -4,21 +4,25 @@ import '../../App.css';
 import { Link } from 'react-router-dom'
 
 function PersonPage({ match }) {
-    const[film, setFilm] = useState( []);
+    const[person, setPerson] = useState( []);
     const id = match.params.id;
 
     useEffect( () => {
         axios({
             method: "GET",
-            url: `http://127.0.0.1:8000/api/films/${id}/`,
+            url: `http://127.0.0.1:8000/api/staff/${id}/`,
         }).then(response => {
-            setFilm(response.data)
+            setPerson(response.data)
         })
     }, [id])
 
-    const staff = film.staff;
     return(
-        <div></div>
+        <div>
+            <p>{person.nameRu}</p>
+            <div className="poster-details">
+                <img src={person.image}/>
+            </div>
+        </div>
     )
 }
 

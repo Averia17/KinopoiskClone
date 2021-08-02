@@ -61,10 +61,6 @@ p {
 }
 
 /* film details */
-.genres {
-  margin-top: 440px;
-  position: absolute;
-}
 .film-info {
   height: auto;
   display: inline-block;
@@ -117,8 +113,14 @@ p {
   margin-right: 5px;
   position: relative;
 }
+.list-item::after {
+  content: ",";
+}
 .list-item:first-child {
   margin-left: 5px;
+}
+.list-item:last-child::after {
+  content: none;
 }
 .film-actors {
   position: absolute;

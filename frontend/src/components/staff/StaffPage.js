@@ -1,6 +1,7 @@
 import React, { useEffect, useState} from 'react';
 import axios from 'axios';
 import '../../App.css';
+import { Link } from 'react-router-dom';
 
 function StaffPage({ match }) {
     const[film, setFilm] = useState( []);
@@ -64,7 +65,7 @@ function StaffPage({ match }) {
                 {directors?.map((d) => {
                     return (
                         <div key={d.id}>
-                            <p>{d.nameRu}</p>
+                            <Link to={{ pathname: `/staff/${d.id}/`}}>{d.nameRu}</Link>
                         </div>
                     )
                 })}
@@ -74,7 +75,7 @@ function StaffPage({ match }) {
                 {actors?.map((a) => {
                     return (
                         <div key={a.id}>
-                            <p>{a.nameRu}</p>
+                            <Link to={{ pathname: `/staff/${a.id}/`}}>{a.nameRu}</Link>
                         </div>
                     )
                 })}
@@ -84,17 +85,17 @@ function StaffPage({ match }) {
                 {producers?.map((p) => {
                     return (
                         <div key={p.id}>
-                            <p>{p.nameRu}</p>
+                            <Link to={{ pathname: `/staff/${p.id}/`}}>{p.nameRu}</Link>
                         </div>
                     )
                 })}
             </div>
             <div className="film-producers">
                 <h3>Продюсеры</h3>
-                {translators?.map((d) => {
+                {directors?.map((d) => {
                     return (
                         <div key={d.id}>
-                            <p>{d.nameRu}</p>
+                            <Link to={{ pathname: `/staff/${d.id}/`}}>{d.nameRu}</Link>
                         </div>
                     )
                 })}

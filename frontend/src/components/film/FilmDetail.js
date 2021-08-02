@@ -4,7 +4,6 @@ import moment from 'moment';
 import 'moment/locale/ru'
 import '../../App.css';
 import { Link } from 'react-router-dom'
-import PersonPage from "../../components/person/PersonPage";
 
 
 function FilmDetail({ match }) {
@@ -30,7 +29,7 @@ function FilmDetail({ match }) {
         }).then(response => {
             setGenre(response.data)
         })
-    })
+    }, [])
     useEffect( () => {
         axios({
             method: "GET",
@@ -38,7 +37,7 @@ function FilmDetail({ match }) {
         }).then(response => {
             setCountry(response.data)
         })
-    })
+    }, [])
 
     let dateRu = moment(film.premiereRu).lang("ru").format('DD MMMM YYYY');
     let dateW = moment(film.premiereWorld).lang("ru").format('DD MMMM YYYY');
@@ -65,7 +64,6 @@ function FilmDetail({ match }) {
         return f.professionKey === "ACTOR";
     });
 
-    let genres = film.genres?.map((g, index) => {return( g.title + (index != (film.genres.length-1) ? ',' : '' ))});
     let countries = film.countries?.map((c, index) => {return( c.title + (index != (film.countries.length-1) ? ',' : '' ))});
 
     return (
@@ -84,14 +82,14 @@ function FilmDetail({ match }) {
                 <h2>О фильме</h2>
                 <p>Год выпуска: {film.year}</p>
                 <div className="film-countries-genres">
-                    <ul className="film-list">Страна: {countries?.map((c, index) => {
+                    <ul className="film-list">Страна: {film.countries?.map((с, index) => {
                         return(
-                            <li className="list-item" key={index}>{c}</li>
+                            <Link className="list-item" key={index} to={{ pathname: `/countries/${с.slug}/`}}>{с.title}</Link>
                         )
                     })}</ul>
-                    <ul className="film-list">Жанр: {genres?.map((g, index) => {
+                    <ul className="film-list">Жанр: {film.genres?.map((g, index) => {
                         return(
-                            <li className="list-item" key={index}>{g}</li>
+                            <Link className="list-item" key={index} to={{ pathname: `/genres/${g.slug}/`}}>{g.title}</Link>
                         )
                     })}</ul>
                 </div>
@@ -133,34 +131,12 @@ function FilmDetail({ match }) {
                                 if(index < 10)
                                     return(
                                     <div className="actors-item" key={a.id}>
-                                        <p><Link className="actor" to={{ pathname: `/staff/${a.id}/`}}>{a.nameRu}</Link></p>
+                                        <p><Link key={a.id} className="actor" to={{ pathname: `/staff/${a.id}/`}}>{a.nameRu}</Link></p>
                                     </div>
                             )}
                         )}
                     </ul>
                     <Link key={film.id} id="others" to={{ pathname: `/films/${film.id}/staff`}}>Остальные актёры</Link>
-                </div>
-            </div>
-            <div>
-                <div className="genres">
-                    <ul className="actors">
-                        {genre?.map((a, index) => {
-                            return(
-                                <div className="actors-item" key={a.id}>
-                                    <p><Link className="actor" to={{ pathname: `/genres/${a.slug}/`}}>{a.title}</Link></p>
-                                </div>
-                            )}
-                        )}
-                    </ul>
-                    <ul className="actors">
-                        {country?.map((a, index) => {
-                            return(
-                                <div className="actors-item" key={a.id}>
-                                    <p><Link className="actor" to={{ pathname: `/countries/${a.slug}/`}}>{a.title}</Link></p>
-                                </div>
-                            )}
-                        )}
-                    </ul>
                 </div>
             </div>
         </div>
