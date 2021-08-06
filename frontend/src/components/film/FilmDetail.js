@@ -30,6 +30,7 @@ function FilmDetail({ match }) {
             setGenre(response.data)
         })
     }, [])
+
     useEffect( () => {
         axios({
             method: "GET",
@@ -60,6 +61,7 @@ function FilmDetail({ match }) {
     if(film.premiereWorld === null) {
         dateW = "-";
     };
+
     var actors = film.staff?.filter(function(f) {
         return f.professionKey === "ACTOR";
     });
