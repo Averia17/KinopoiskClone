@@ -7,7 +7,6 @@ from pytils.translit import slugify
 class FilmManager(models.Manager):
 
     def get_queryset(self):
-
         return super().get_queryset()
 
 
@@ -35,7 +34,6 @@ class Genre(models.Model):
         self.slug = _slug
 
         super(Genre, self).save(*args, **kwargs)
-
 
     def __str__(self):
         return self.title
@@ -84,7 +82,6 @@ class Staff(models.Model):
     growth = models.IntegerField(null=True, blank=True)
     profession = models.CharField(max_length=55, null=True, blank=True)
 
-
     def __str__(self):
         return self.nameRu
 
@@ -102,11 +99,11 @@ class Film(models.Model):
     type = models.CharField(max_length=20, null=True, blank=True)
     ratingAgeLimits = models.CharField(max_length=20, null=True, blank=True)
     premiereRu = models.CharField(max_length=20, null=True, blank=True)
-    #distributors = models.CharField(max_length=20, null=True, blank=True)
+    # distributors = models.CharField(max_length=20, null=True, blank=True)
     premiereWorld = models.CharField(max_length=20, null=True, blank=True)
     premiereDigital = models.CharField(max_length=20, null=True, blank=True)
     premiereWorldCountry = models.CharField(max_length=20, null=True, blank=True)
-    #distributorRelease = models.CharField(max_length=20, null=True, blank=True)
+    # distributorRelease = models.CharField(max_length=20, null=True, blank=True)
     countries = models.ManyToManyField(Country)
     genres = models.ManyToManyField(Genre)
     facts = models.JSONField(default=list)
@@ -119,6 +116,11 @@ class Film(models.Model):
 
     staff = models.ManyToManyField(Staff)
     objects = FilmManager()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['rating', 'type']),
+        ]
 
     def __str__(self):
         return self.name
@@ -143,8 +145,6 @@ class Film(models.Model):
         self.slug = _slug
 
         super(Film, self).save(*args, **kwargs)
-
-
 
 # class Serial(Film):
 #     episodes =
