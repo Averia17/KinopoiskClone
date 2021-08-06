@@ -16,6 +16,12 @@ class GenreSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class GenreNameSerializer(ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = ('title', )
+
+
 class StaffSerializer(ModelSerializer):
     class Meta:
         model = Staff
@@ -25,7 +31,7 @@ class StaffSerializer(ModelSerializer):
 class StaffListSerializer(ModelSerializer):
     class Meta:
         model = Staff
-        fields = ('id', 'nameRu', 'professionKey')
+        fields = ('id', 'nameRu', 'professionKey', 'professionText')
 
 
 class FilmSerializer(ModelSerializer):
@@ -41,11 +47,8 @@ class FilmSerializer(ModelSerializer):
 
 class FilmListSerializer(ModelSerializer):
 
-    genres = GenreSerializer(many=True)
+    genres = GenreNameSerializer(many=True)
 
     class Meta:
         model = Film
         fields = ('id', 'name', 'image', 'year', 'genres')
-
-
-
