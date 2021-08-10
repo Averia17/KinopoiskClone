@@ -1,3 +1,4 @@
+import serpy
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, Serializer
 
@@ -16,10 +17,6 @@ class GenreSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class GenreNameSerializer(ModelSerializer):
-    class Meta:
-        model = Genre
-        fields = ('title', )
 
 
 class StaffSerializer(ModelSerializer):
@@ -45,6 +42,9 @@ class FilmSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class GenreNameSerializer(serpy.Serializer):
+    title = serpy.Field()
+
 class FilmListSerializer(ModelSerializer):
 
     genres = GenreNameSerializer(many=True)
@@ -52,3 +52,20 @@ class FilmListSerializer(ModelSerializer):
     class Meta:
         model = Film
         fields = ('id', 'name', 'image', 'year', 'genres')
+        read_only_fields = fields
+
+
+
+
+class FilmListSerpySerializer(serpy.Serializer):
+    #genres = GenreNameSerializer(many=True, attr="genres.all", call=True) #attr="groups.all", call=True
+
+    id = serpy.IntField()
+    name = serpy.Field(required=False)
+    image = serpy.Field(required=False)
+    year = serpy.Field(required=False)
+    # class Meta:
+    #     model = Film
+    #     fields = ('id', 'name', 'image', 'year', 'genres')
+    #     read_only_fields = fields
+
