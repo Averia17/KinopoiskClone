@@ -10,15 +10,20 @@ from ..models import Film, Staff, Genre, Country
 from .services import check_if_empty_films
 
 
-class FilmsViewSet(APIView):
+class FilmsViewSet(viewsets.ViewSet):
     #serializer_class = FilmListSerpySerializer
     # lookup_field = 'slug'
     #queryset = Film.objects.filter(type='FILM').order_by('-rating')
 
-    def get(self, request):
+    def list(self, request):
         queryset = Film.objects.filter(type='FILM').order_by('-rating')
         serializer = FilmListSerpySerializer(queryset, many=True)
         #print(serializer.data)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        film = Film.objects.get(pk=pk)
+        serializer = FilmSerializer(film)
         return Response(serializer.data)
     # @staticmethod
     # def get_queryset():

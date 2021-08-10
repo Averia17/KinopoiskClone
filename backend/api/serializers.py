@@ -45,6 +45,8 @@ class FilmSerializer(ModelSerializer):
 class GenreNameSerializer(serpy.Serializer):
     title = serpy.Field()
 
+
+
 class FilmListSerializer(ModelSerializer):
 
     genres = GenreNameSerializer(many=True)
