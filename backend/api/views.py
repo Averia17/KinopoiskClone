@@ -16,7 +16,12 @@ class FilmsViewSet(viewsets.ViewSet):
     #queryset = Film.objects.filter(type='FILM').order_by('-rating')
 
     def list(self, request):
-        queryset = Film.objects.filter(type='FILM').order_by('-rating')
+        queryset = Film.objects.filter(type='FILM').\
+            order_by('-rating').values_list('id', 'image', 'name', 'year', 'genres__title', named=True)
+        # for item in queryset:
+        # for item in queryset:
+        #     print(item)
+        #     print(getattr(item.genres.first(), 'title', None))
         serializer = FilmListSerpySerializer(queryset, many=True)
         #print(serializer.data)
         return Response(serializer.data)

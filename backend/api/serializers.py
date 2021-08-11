@@ -43,7 +43,7 @@ class FilmSerializer(ModelSerializer):
 
 
 class GenreNameSerializer(serpy.Serializer):
-    title = serpy.Field()
+    title = serpy.Field(required=False)
 
 
 
@@ -66,6 +66,12 @@ class FilmListSerpySerializer(serpy.Serializer):
     name = serpy.Field(required=False)
     image = serpy.Field(required=False)
     year = serpy.Field(required=False)
+    genres__title = serpy.Field(required=False)
+
+    # def get_genre(self, obj):
+    #     print(obj.genres.first())
+    #     #return GenreNameSerializer(obj.genres.first()).data
+    #     return obj.genres.first() if obj.genres.first() else None
     # class Meta:
     #     model = Film
     #     fields = ('id', 'name', 'image', 'year', 'genres')
