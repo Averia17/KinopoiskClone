@@ -1,3 +1,5 @@
+import json
+
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.db import models
 from autoslug import AutoSlugField
@@ -37,6 +39,9 @@ class Genre(models.Model):
 
     def __str__(self):
         return self.title
+
+    def toJSON(self):
+        return json.dumps(self.title)
 
 
 class Country(models.Model):
@@ -145,6 +150,8 @@ class Film(models.Model):
         self.slug = _slug
 
         super(Film, self).save(*args, **kwargs)
+
+
 
 # class Serial(Film):
 #     episodes =
