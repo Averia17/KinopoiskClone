@@ -27,7 +27,7 @@ function MainPage() {
                                 </div>
                                 <div className="film-description">
                                     <div id="film-title">
-                                        <p id="genre">{f.genres[0]?.title}</p>
+                                        <p id="genre">{f.genres__title}</p>
                                         <p id="year">{f.year}</p>
                                     </div>
                                     <div id="name">

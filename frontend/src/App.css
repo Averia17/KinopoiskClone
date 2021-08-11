@@ -69,6 +69,7 @@ p {
   display: inline-block;
   column-count: 3;
   position: relative;
+  top: 100px;
 }
 .film-info {
   height: auto;
@@ -245,6 +246,7 @@ p {
   top: 100px;
   left: 0;
 }
+
 /* navbar */
 
 .navbar {
@@ -264,7 +266,6 @@ p {
   text-align: center;
   align-items: center;
 }
-
 .link {
   color: white;
   font-size: 18px;
