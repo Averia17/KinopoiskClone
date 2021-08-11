@@ -75,11 +75,9 @@ function FilmDetail({ match }) {
                 <p className="ageLimit-poster">{film.ratingAgeLimits}+</p>
             </div>
             <div className="film-info">
-                <div className="info-header">
-                    <div>
-                        <h1>{film.name} ({film.year})</h1>
-                        <h2 className="film-slogan">{film.slogan}</h2>
-                    </div>
+                <div>
+                    <h1>{film.name} ({film.year})</h1>
+                    <h2 className="film-slogan">{film.slogan}</h2>
                 </div>
                 <h2>О фильме</h2>
                 <p>Год выпуска: {film.year}</p>

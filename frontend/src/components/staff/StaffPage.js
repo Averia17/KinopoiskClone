@@ -17,11 +17,11 @@ function StaffPage({ match }) {
     }, [id])
 
     const grouped = film.staff?.reduce((acc, item) => {
-        if(acc[item.professionKey]) {
-            acc[item.professionKey].push(item);
+        if(acc[item.professionText]) {
+            acc[item.professionText].push(item);
         }
         else {
-            acc[item.professionKey] = [item];
+            acc[item.professionText] = [item];
         }
         return acc;
     }, {})
@@ -29,14 +29,16 @@ function StaffPage({ match }) {
     return(
         <div className="film-staff font-style">
             <div>
-                <h1>{film.name}</h1>
+                <h1>Персоны и команда / {film.name}</h1>
             </div>
             <div>
                 {(grouped && Object.keys(grouped)) ? Object.keys(grouped).map(profession => {
-                    return <div key={profession.id}>
+                    return <div key={profession.id} className="staff-subdivision">
                         <h3 key={profession.id}>{profession}</h3>
                         {grouped[profession].map(item => {
-                            return <p key={item.id}>{item.nameRu}</p>
+                            return <div>
+                                <Link to={{pathname: `/staff/${item.id}/`}} key={item.id}>{item.nameRu}</Link>
+                            </div>
                         })}
                     </div>
                 }) : []}
