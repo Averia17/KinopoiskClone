@@ -10,9 +10,11 @@ from ..models import Film, Staff, Genre, Country
 from .services import check_if_empty_films
 
 
-class FilmsViewSet(viewsets.ViewSet):
+class FilmsViewSet(viewsets.ModelViewSet):
     #serializer_class = FilmListSerpySerializer
     # lookup_field = 'slug'
+    filter_backends = (SearchFilter, OrderingFilter)
+    search_fields = ('name', 'year', 'genres__title')
     #queryset = Film.objects.filter(type='FILM').order_by('-rating')
 
     def list(self, request):
@@ -40,7 +42,8 @@ class FilmsViewSet(viewsets.ViewSet):
 
 class SerialsViewSet(viewsets.ModelViewSet):
     serializer_class = FilmSerializer
-
+    filter_backends = (SearchFilter, OrderingFilter)
+    search_fields = ('name', 'year', 'genres__title')
     action_to_serializer = {
         "list": FilmListSerializer,
         "retrieve": FilmSerializer,
