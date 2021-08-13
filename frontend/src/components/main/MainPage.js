@@ -7,6 +7,7 @@ function MainPage() {
     const [film, setFilm] = useState( [])
 
     useEffect( () => {
+        document.title = "Главная страница";
         axios({
             method: "GET",
             url: 'http://127.0.0.1:8000/api/films/',
