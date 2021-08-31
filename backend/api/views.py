@@ -11,20 +11,31 @@ from .services import check_if_empty_films
 
 
 class FilmsViewSet(viewsets.ModelViewSet):
-    serializer_class = FilmListSerializer
+    serializer_class = FilmSerializer
     # lookup_field = 'slug'
     filter_backends = (SearchFilter, OrderingFilter)
     search_fields = ('name', 'year')
     queryset = Film.objects.filter(type='FILM').order_by('-rating').prefetch_related('genres')
 
-    def retrieve(self, *args, **kwargs):
-        return super(FilmsViewSet, self).retrieve(*args, **kwargs)
+    action_to_serializer = {
+        "list": FilmListSerpySerializer,
+        "retrieve": FilmSerializer,
+    }
 
-    def list(self, request):
-        queryset = Film.objects.filter(type='FILM').order_by('-rating').prefetch_related('genres')
-        serializer = FilmListSerpySerializer(queryset, many=True)
-        #print(serializer.data)
-        return Response(serializer.data)
+    def get_serializer_class(self):
+        return self.action_to_serializer.get(
+            self.action,
+            self.serializer_class
+        )
+    #
+    # def retrieve(self, *args, **kwargs):
+    #     return super(FilmsViewSet, self).retrieve(*args, **kwargs)
+    #
+    # def list(self, request):
+    #     queryset = Film.objects.filter(type='FILM').order_by('-rating').prefetch_related('genres')
+    #     serializer = FilmListSerpySerializer(queryset, many=True)
+    #     #print(serializer.data)
+    #     return Response(serializer.data)
 
 
 class SerialsViewSet(viewsets.ModelViewSet):
