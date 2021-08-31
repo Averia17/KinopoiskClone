@@ -11,33 +11,20 @@ from .services import check_if_empty_films
 
 
 class FilmsViewSet(viewsets.ModelViewSet):
-    #serializer_class = FilmListSerpySerializer
+    serializer_class = FilmListSerializer
     # lookup_field = 'slug'
     filter_backends = (SearchFilter, OrderingFilter)
-    search_fields = ('name', 'year', 'genres__title')
-    #queryset = Film.objects.filter(type='FILM').order_by('-rating')
+    search_fields = ('name', 'year')
+    queryset = Film.objects.filter(type='FILM').order_by('-rating').prefetch_related('genres')
+
+    def retrieve(self, *args, **kwargs):
+        return super(FilmsViewSet, self).retrieve(*args, **kwargs)
 
     def list(self, request):
-        queryset = Film.objects.filter(type='FILM').\
-            order_by('-rating').values_list('id', 'image', 'name', 'year', 'genres__title', named=True)
-        # maybe i will remove this and make normal queryset
-        existing_slots = []
-        new_queryset = []
-        for placeholder in queryset:
-            if placeholder.id in existing_slots:
-                continue
-            else:
-                existing_slots.append(placeholder.id)
-                new_queryset.append(placeholder)
-
-        serializer = FilmListSerpySerializer(new_queryset, many=True)
+        queryset = Film.objects.filter(type='FILM').order_by('-rating').prefetch_related('genres')
+        serializer = FilmListSerpySerializer(queryset, many=True)
+        #print(serializer.data)
         return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        film = Film.objects.get(pk=pk)
-        serializer = FilmSerializer(film)
-        return Response(serializer.data)
-
 
 
 class SerialsViewSet(viewsets.ModelViewSet):
