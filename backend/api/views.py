@@ -1,3 +1,5 @@
+import time
+
 from django.core.cache import cache
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -13,8 +15,6 @@ from .services import check_if_empty_films
 class FilmsViewSet(viewsets.ModelViewSet):
     serializer_class = FilmSerializer
     # lookup_field = 'slug'
-    filter_backends = (SearchFilter, OrderingFilter)
-    search_fields = ('name', 'year')
     queryset = Film.objects.filter(type='FILM').order_by('-rating').prefetch_related('genres')
 
     action_to_serializer = {
@@ -40,10 +40,11 @@ class FilmsViewSet(viewsets.ModelViewSet):
 
 class SerialsViewSet(viewsets.ModelViewSet):
     serializer_class = FilmSerializer
-    filter_backends = (SearchFilter, OrderingFilter)
-    search_fields = ('name', 'year', 'genres__title')
+
+    queryset = Film.objects.filter(type='TV_SHOW').order_by('-rating').prefetch_related('genres')
+
     action_to_serializer = {
-        "list": FilmListSerializer,
+        "list": FilmListSerpySerializer,
         "retrieve": FilmSerializer,
     }
 
@@ -52,21 +53,6 @@ class SerialsViewSet(viewsets.ModelViewSet):
             self.action,
             self.serializer_class
         )
-
-    @staticmethod
-    def get_queryset():
-        # check_if_empty_films()
-        # Полная дичь но слайсы нельзя делать...
-        # n = 0
-        # films = []
-        # for film in Film.objects.filter(type='TV_SHOW').order_by('-rating'):
-        #     if n == 50:
-        #         return films
-        #     films.append(film)
-        #
-        #     n += 1
-        # Film.objects.filter(type='TV_SHOW').order_by('-rating')
-        return Film.objects.filter(type='TV_SHOW').order_by('-rating')
 
 
 class StaffViewSet(viewsets.ModelViewSet):
@@ -90,21 +76,41 @@ class StaffViewSet(viewsets.ModelViewSet):
 
 class GenresViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
-    queryset = Genre.objects.all()
+    #queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        queryset = Film.objects.filter(genres__slug=kwargs['slug'])
-        serializer = FilmListSerializer(queryset, many=True)
+        queryset = Film.objects.filter(genres__slug=kwargs['slug']).prefetch_related('genres')
+        serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
 
 
 class CountriesViewSet(viewsets.ModelViewSet):
     serializer_class = CountrySerializer
-    queryset = Country.objects.all()
+    #queryset = Country.objects.all()
     lookup_field = 'slug'
 
     def retrieve(self, request, *args, **kwargs):
-        queryset = Film.objects.filter(countries__slug=kwargs['slug'])
-        serializer = FilmListSerializer(queryset, many=True)
+        queryset = Film.objects.filter(countries__slug=kwargs['slug']).prefetch_related('countries')
+        serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class AllMoviesViewSet(viewsets.ModelViewSet):
+    serializer_class = FilmSerializer
+    # lookup_field = 'slug'
+
+    filter_backends = (SearchFilter, OrderingFilter)
+    search_fields = ('name', 'year', 'genres__title')
+    queryset = Film.objects.order_by('-rating').prefetch_related('genres')
+
+    action_to_serializer = {
+        "list": FilmListSerpySerializer,
+        "retrieve": FilmSerializer,
+    }
+
+    def get_serializer_class(self):
+        return self.action_to_serializer.get(
+            self.action,
+            self.serializer_class
+        )
