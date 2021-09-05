@@ -4,16 +4,24 @@ services:
     image: postgres
     restart: always
     environment:
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=KinopoiskClone
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   backend:
-    container_name: code
+    container_name: backend
     restart: always
+
     build:
       context: ./backend/
       dockerfile: Dockerfile
-    command: python ../../manage.py runserver 0.0.0.0:8000
+    command: bash -c "
+                      python manage.py migrate &&
+                      python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./backend:/backend
     env_file:
       - ./backend/settings.ini
     ports:
@@ -23,12 +31,16 @@ services:
   frontend:
     restart: always
     command: npm start
-    container_name: front
+    container_name: frontend
     build:
       context: ./frontend/
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    volumes:
+      - ./frontend:/frontend
     stdin_open: true
     depends_on:
       - backend
+volumes:
+   postgres_data:
