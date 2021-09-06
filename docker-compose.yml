@@ -1,46 +1,53 @@
-version: "3.2"
+version: "3.7"
+
 services:
-  db:
-    image: postgres
-    restart: always
-    environment:
-      - POSTGRES_DB=KinopoiskClone
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=123
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  backend:
-    container_name: backend
-    restart: always
-
+  django:
     build:
-      context: ./backend/
+      context: ./backend
       dockerfile: Dockerfile
-    command: bash -c "
-                      python manage.py migrate &&
-                      python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - ./backend:/backend
+      - django_static_volume:/app/static
+    expose:
+      - 8000
     env_file:
-      - ./backend/settings.ini
-    ports:
-      - "8000:8000"
+      - ./backend/.env
+    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
     depends_on:
       - db
-  frontend:
-    restart: always
-    command: npm start
-    container_name: frontend
-    build:
-      context: ./frontend/
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
+  db:
+    image: postgres:13.0-alpine
     volumes:
-      - ./frontend:/frontend
-    stdin_open: true
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./postgres/.env
+  react:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - API_SERVER=${ENV_API_SERVER}
+    volumes:
+      - react_static_volume:/app/build/static
+    expose:
+      - 3000
+    env_file:
+      - .env
+    command: serve -s build -l 3000
     depends_on:
-      - backend
+      - django
+
+  nginx:
+    restart: always
+    build: ./nginx
+    volumes:
+      - django_static_volume:/app/django_files/static
+      - react_static_volume:/app/react_files/static
+    ports:
+      - 80:80
+    depends_on:
+      - react
+
 volumes:
-   postgres_data:
+  postgres_data:
+  django_static_volume:
+  react_static_volume:

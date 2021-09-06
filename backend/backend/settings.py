@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-8c#p0c17$zs$+-kt%y28rnv$9ea1q=#z01se@b*ynaa8ci%ha_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'localhost']
 
 
 # Application definition
@@ -62,7 +62,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # 'DIRS': [BASE_DIR / 'templates']
         #[BASE_DIR / 'frontend/build'],
-        'DIRS': [os.path.join(REACT_APP_DIR, 'build')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -137,9 +137,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-STATICFILES_DIRS = (
-    os.path.join(REACT_APP_DIR, "build", "static"),  # update the STATICFILES_DIRS
-)
+# STATICFILES_DIRS = (
+#     os.path.join(REACT_APP_DIR, "build", "static"),  # update the STATICFILES_DIRS
+# )
 # STATICFILES_DIRS = (
 #     (BASE_DIR / 'frontend/build/static'),
 # )
