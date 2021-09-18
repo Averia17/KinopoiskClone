@@ -16,8 +16,6 @@ class GenreSerializer(ModelSerializer):
         fields = '__all__'
 
 
-
-
 class StaffSerializer(ModelSerializer):
     class Meta:
         model = Staff

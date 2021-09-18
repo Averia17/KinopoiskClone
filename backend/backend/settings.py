@@ -62,7 +62,8 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # 'DIRS': [BASE_DIR / 'templates']
         #[BASE_DIR / 'frontend/build'],
-        'DIRS': [],
+        #os.path.join(REACT_APP_DIR,'build')
+        'DIRS': [os.path.join(REACT_APP_DIR,'build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -89,7 +90,11 @@ DATABASES = {
         'PASSWORD': '123',
         'HOST': 'db',
         'PORT': '5432',
-    }
+    },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': 'KinopoiskClone.db',
+    # }
 }
 # DATABASES = {
 #     'default': {

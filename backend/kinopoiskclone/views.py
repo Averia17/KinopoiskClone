@@ -8,7 +8,6 @@ from backend.settings import BASE_DIR
 def main_page(request):
     template_name = 'index.html'
 
-    print(BASE_DIR)
     return render(request, template_name, {})
 
 
