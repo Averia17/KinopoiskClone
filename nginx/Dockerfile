@@ -1,6 +1,7 @@
-FROM nginx:1.19.0-alpine
+FROM nginx:stable-alpine
 
 RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d
 
-WORKDIR /app
+COPY /include.websocket /etc/nginx/app/include.websocket
+COPY /include.forwarded /etc/nginx/app/include.forwarded
+COPY /nginx.conf /etc/nginx/conf.d

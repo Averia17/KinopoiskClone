@@ -1,44 +1,32 @@
-FROM python:3.7.9-slim-stretch as builder
+FROM python:3.8.3-alpine
 
 # set work directory
-WORKDIR /app
+WORKDIR /srv/app
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # install dependencies
+RUN pip install --upgrade pip
 COPY ./requirements.txt .
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
-
-
-#########
-# FINAL #
-#########
-
-# pull official base image
-FROM python:3.7.9-slim-stretch
-
-# installing netcat (nc) since we are using that to listen to postgres server in entrypoint.sh
-RUN apt-get update && apt-get install -y --no-install-recommends netcat && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# install dependencies
-COPY --from=builder /app/wheels /wheels
-COPY --from=builder /app/requirements.txt .
-RUN pip install --no-cache /wheels/*
-
-# set work directory
-WORKDIR /app
+RUN apk add --update --no-cache postgresql-client
+# install temp dependencies for build of pyscopg2 etc
+RUN apk add --update --no-cache --virtual .tmp-build-deps \
+  gcc \
+  libc-dev \
+  linux-headers \
+  postgresql-dev \
+  musl-dev \
+  zlib zlib-dev \
+  && pip install -r requirements.txt \
+  && apk del --no-cache .tmp-build-deps
 
 # copy entrypoint.sh
-COPY ./entrypoint.sh /app/entrypoint.sh
-
-# copy our django project
-COPY . .
-
-# run entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
-ENTRYPOINT ["/app/entrypoint.sh"]
+#COPY ./entrypoint.sh .
+#
+## copy project
+#COPY . .
+#
+## run entrypoint.sh
+#ENTRYPOINT ["/srv/app/entrypoint.sh"]

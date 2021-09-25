@@ -5,7 +5,7 @@
 __pycache__
 backend/KinopoiskClone.db
 backend/data.json
-
+backend/static
 media
 
 # Backup files # 
