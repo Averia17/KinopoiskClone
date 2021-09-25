@@ -12,5 +12,5 @@ $ docker-compose up
 ```
 
 ## Creators
-Frontend by [@katyamotolyanets](https://github.com/katyamotolyanets)
-Backend by [@Averia17](https://github.com/Averia17)
+- Frontend by [@katyamotolyanets](https://github.com/katyamotolyanets)
+- Backend by [@Averia17](https://github.com/Averia17)
