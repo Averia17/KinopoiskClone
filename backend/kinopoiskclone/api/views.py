@@ -71,7 +71,7 @@ class StaffViewSet(viewsets.ModelViewSet):
 
 class GenresViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
-    #queryset = Genre.objects.all()
+    # queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 
     def retrieve(self, request, *args, **kwargs):
@@ -82,7 +82,7 @@ class GenresViewSet(viewsets.ModelViewSet):
 
 class CountriesViewSet(viewsets.ModelViewSet):
     serializer_class = CountrySerializer
-    #queryset = Country.objects.all()
+    # queryset = Country.objects.all()
     lookup_field = 'slug'
 
     def retrieve(self, request, *args, **kwargs):

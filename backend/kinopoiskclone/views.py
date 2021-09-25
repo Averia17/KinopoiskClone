@@ -1,9 +1,5 @@
 from django.shortcuts import render
 
-# Create your views here.
-from django.views.generic import TemplateView
-from backend.settings import BASE_DIR
-
 
 def main_page(request):
     template_name = 'index.html'

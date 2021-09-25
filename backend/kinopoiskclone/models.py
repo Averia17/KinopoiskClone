@@ -2,7 +2,6 @@ import json
 
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.db import models
-from autoslug import AutoSlugField
 from pytils.translit import slugify
 
 
@@ -150,8 +149,5 @@ class Film(models.Model):
         self.slug = _slug
 
         super(Film, self).save(*args, **kwargs)
-
-
-
 # class Serial(Film):
 #     episodes =

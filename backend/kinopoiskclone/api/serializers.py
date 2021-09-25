@@ -64,17 +64,7 @@ class FilmListSerpySerializer(serpy.Serializer):
     name = serpy.Field(required=False)
     image = serpy.Field(required=False)
     year = serpy.Field(required=False)
-    genres = GenreNameSerializer(many=True, attr="genres.all", call=True) #attr="groups.all", call=True
+    genres = GenreNameSerializer(many=True, attr="genres.all", call=True)  # attr="groups.all", call=True
 
-    #genres = serpy.MethodField(required=False)
-
-    # @staticmethod
-    # def get_genres(self, obj):
-    #     #print(obj.genres.first())
-    #     #return GenreNameSerializer(obj.genres.first()).data
-    #     return obj.genres.all()
-    # class Meta:
-    #     model = Film
-    #     fields = ('id', 'name', 'image', 'year', 'genres')
-    #     read_only_fields = fields
-
+    class Meta:
+        fields = ('id', 'name', 'image', 'year', 'genres')

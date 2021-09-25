@@ -39,25 +39,21 @@ def check_if_empty_films():
         ]
         Film.objects.bulk_create(instances)
         print(time.time() - start_time)
+    # get_films_videos()
+    # print(time.time() - start_time)
+    # get_filters()
+    # print(time.time() - start_time)
 
-
-        # get_films_videos()
-        # print(time.time() - start_time)
-        # get_filters()
-        # print(time.time() - start_time)
-
-        # get_all_filtered_films()
-        # print(time.time() - start_time)
+    # get_all_filtered_films()
+    # print(time.time() - start_time)
     # get_full_information()
     # print(time.time() - start_time)
-        # get_staff()
-        # print(time.time() - start_time)
-        # get_staff_full_information()
-        # print(time.time() - start_time)
-    #delete_clones()
-    #list_films()
-
-
+    # get_staff()
+    # print(time.time() - start_time)
+    # get_staff_full_information()
+    # print(time.time() - start_time)
+    # delete_clones()
+    # list_films()
 
 
 def get_full_information():
@@ -94,8 +90,7 @@ def updating_film(film):
         current_film.grossRu = response.get('budget').get('grossRu')
         current_film.grossWorld = response.get('budget').get('grossWorld')
         current_film.facts = response_data.get('facts')
-        #current_film.save()
-
+        # current_film.save()
         # ThroughGenresModel = Film.genres.through
         # ThroughCountryModel = Film.countries.through
         # genres = [genre['genre'] for genre in response_data['genres']]
@@ -106,7 +101,8 @@ def updating_film(film):
         # countries = [country['country'] for country in response_data['countries']]
         # instances = []
         # for country in countries:
-        #     instances.append(ThroughCountryModel(film_id=current_film.id, genre_id=Genre.objects.get(title=country).id))
+        #     instances.append(ThroughCountryModel(film_id=current_film.id,
+        #                                          genre_id=Genre.objects.get(title=country).id))
         # ThroughCountryModel.objects.bulk_create(instances)
         # genres = [genre['genre'] for genre in response_data['genres']]
         # grs = [Genre.objects.get(title=genre) for genre in genres]
@@ -182,9 +178,6 @@ def get_film_staff(film):
         return
 
 
-##...А зори здесь тихие
-
-
 def get_staff_full_information():
     with ThreadPoolExecutor(max_workers=15) as executor:
         for staff in Staff.objects.all():
@@ -255,7 +248,6 @@ def get_film_video(film):
                 dict_to_append['official'] = 'False'
             teasers.append(dict_to_append)
 
-
         current_film.trailers = trailers
         current_film.teasers = teasers
         current_film.save()
@@ -269,7 +261,7 @@ def get_filters():
     headers = CaseInsensitiveDict()
     headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
     headers["accept"] = "application/json"
-    response = requests.get(f'https://kinopoiskapiunofficial.tech/api/v2.1/films/filters',
+    response = requests.get('https://kinopoiskapiunofficial.tech/api/v2.1/films/filters',
                             headers=headers)
     response = response.json()
     genres = response['genres']
@@ -303,7 +295,6 @@ def get_filtered_films(yearTo):
     headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
     headers["accept"] = "application/json"
     url = 'https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-filters?country=0&order=RATING&type=FILM&ratingFrom={ratingFrom}&ratingTo={ratingTo}&yearFrom={yearFrom}&yearTo={yearTo}&page={page}'
-
     ratingTo = 6
     while ratingTo != 10:
         response = requests.get(
@@ -331,7 +322,6 @@ def get_filtered_films(yearTo):
                     print(film.get('nameRu'))
         Film.objects.bulk_create(instances)
         ratingTo += 1
-
 
 
 def check_is_clone(staff):
@@ -362,7 +352,6 @@ def delete_clones():
 def list_films():
     for film in Film.objects.all():
         if not film.slug:
-
             slug = slugify(film.name)
             film.slug = slug
             film.save()
