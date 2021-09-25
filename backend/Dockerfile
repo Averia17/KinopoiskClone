@@ -22,11 +22,11 @@ RUN apk add --update --no-cache --virtual .tmp-build-deps \
   && pip install -r requirements.txt \
   && apk del --no-cache .tmp-build-deps
 
-# copy entrypoint.sh
-#COPY ./entrypoint.sh .
-#
-## copy project
-#COPY . .
-#
-## run entrypoint.sh
-#ENTRYPOINT ["/srv/app/entrypoint.sh"]
+## copy entrypoint.sh
+COPY ./entrypoint.sh .
+
+# copy project
+COPY . .
+
+# run entrypoint.sh
+ENTRYPOINT ["/srv/app/entrypoint.sh"]
