@@ -1,3 +1,6 @@
+import time
+from datetime import datetime
+
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -13,7 +16,6 @@ class FilmsViewSet(viewsets.ModelViewSet):
     queryset = Film.objects.filter(type='FILM').order_by('-rating').prefetch_related('genres')
 
     action_to_serializer = {
-        "list": FilmListSerpySerializer,
         "retrieve": FilmSerializer,
     }
 
@@ -26,11 +28,12 @@ class FilmsViewSet(viewsets.ModelViewSet):
     # def retrieve(self, *args, **kwargs):
     #     return super(FilmsViewSet, self).retrieve(*args, **kwargs)
     #
-    # def list(self, request):
-    #     queryset = Film.objects.filter(type='FILM').order_by('-rating').prefetch_related('genres')
-    #     serializer = FilmListSerpySerializer(queryset, many=True)
-    #     #print(serializer.data)
-    #     return Response(serializer.data)
+    def list(self, request):
+        queryset = Film.objects.filter(type='FILM').distinct('id', 'name', 'year', 'image').values_list(
+            'id', 'name', 'year', 'image', 'genres__title', named=True
+        )
+        serializer = FilmListSerpySerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class SerialsViewSet(viewsets.ModelViewSet):
@@ -39,7 +42,6 @@ class SerialsViewSet(viewsets.ModelViewSet):
     queryset = Film.objects.filter(type='TV_SHOW').order_by('-rating').prefetch_related('genres')
 
     action_to_serializer = {
-        "list": FilmListSerpySerializer,
         "retrieve": FilmSerializer,
     }
 
@@ -48,7 +50,12 @@ class SerialsViewSet(viewsets.ModelViewSet):
             self.action,
             self.serializer_class
         )
-
+    def list(self, request):
+        queryset = Film.objects.filter(type='FILM').distinct('id', 'name', 'year', 'image').values_list(
+            'id', 'name', 'year', 'image', 'genres__title', named=True
+        )
+        serializer = FilmListSerpySerializer(queryset, many=True)
+        return Response(serializer.data)
 
 class StaffViewSet(viewsets.ModelViewSet):
     serializer_class = StaffSerializer

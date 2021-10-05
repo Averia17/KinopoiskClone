@@ -64,7 +64,6 @@ class FilmListSerpySerializer(serpy.Serializer):
     name = serpy.Field(required=False)
     image = serpy.Field(required=False)
     year = serpy.Field(required=False)
-    genres = GenreNameSerializer(many=True, attr="genres.all", call=True)  # attr="groups.all", call=True
+    genres__title = serpy.Field(required=False)
+    #genres = GenreNameSerializer(many=True, attr="genres.all", call=True)  # attr="groups.all", call=True
 
-    class Meta:
-        fields = ('id', 'name', 'image', 'year', 'genres')
