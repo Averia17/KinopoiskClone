@@ -1,19 +1,17 @@
-import time
-from datetime import datetime
-
 from rest_framework import viewsets
-from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.response import Response
 
-from .serializers import StaffSerializer, FilmSerializer, StaffListSerializer, GenreSerializer, \
-    CountrySerializer, FilmListSerpySerializer
-from kinopoiskclone.models import Film, Staff
+from kinopoiskclone.models import Film, Staff, Country, Genre
+from .serializers import StaffSerializer, FilmSerializer, GenreSerializer, \
+    CountrySerializer, FilmListSerpySerializer, StaffListSerpySerializer
+from .services import serialize_value_list_films
 
 
 class FilmsViewSet(viewsets.ModelViewSet):
     serializer_class = FilmSerializer
     # lookup_field = 'slug'
-    queryset = Film.objects.filter(type='FILM').order_by('-rating').prefetch_related('genres')
+    queryset = Film.objects.filter(type='FILM').prefetch_related('genres')
 
     action_to_serializer = {
         "retrieve": FilmSerializer,
@@ -29,17 +27,15 @@ class FilmsViewSet(viewsets.ModelViewSet):
     #     return super(FilmsViewSet, self).retrieve(*args, **kwargs)
     #
     def list(self, request):
-        queryset = Film.objects.filter(type='FILM').distinct('id', 'name', 'year', 'image').values_list(
-            'id', 'name', 'year', 'image', 'genres__title', named=True
-        )
-        serializer = FilmListSerpySerializer(queryset, many=True)
+        serializer = serialize_value_list_films(self.queryset)
+
         return Response(serializer.data)
 
 
 class SerialsViewSet(viewsets.ModelViewSet):
     serializer_class = FilmSerializer
 
-    queryset = Film.objects.filter(type='TV_SHOW').order_by('-rating').prefetch_related('genres')
+    queryset = Film.objects.filter(type='TV_SHOW').prefetch_related('genres')
 
     action_to_serializer = {
         "retrieve": FilmSerializer,
@@ -50,22 +46,18 @@ class SerialsViewSet(viewsets.ModelViewSet):
             self.action,
             self.serializer_class
         )
+
     def list(self, request):
-        queryset = Film.objects.filter(type='FILM').distinct('id', 'name', 'year', 'image').values_list(
-            'id', 'name', 'year', 'image', 'genres__title', named=True
-        )
-        serializer = FilmListSerpySerializer(queryset, many=True)
+        serializer = serialize_value_list_films(self.queryset)
         return Response(serializer.data)
+
 
 class StaffViewSet(viewsets.ModelViewSet):
     serializer_class = StaffSerializer
-
-    @staticmethod
-    def get_queryset():
-        return Staff.objects.all()
+    queryset = Staff.objects.all()
 
     action_to_serializer = {
-        "list": StaffListSerializer,
+        "list": StaffListSerpySerializer,
         "retrieve": StaffSerializer,
     }
 
@@ -78,23 +70,23 @@ class StaffViewSet(viewsets.ModelViewSet):
 
 class GenresViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
-    # queryset = Genre.objects.all()
+    queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 
     def retrieve(self, request, *args, **kwargs):
         queryset = Film.objects.filter(genres__slug=kwargs['slug']).prefetch_related('genres')
-        serializer = FilmListSerpySerializer(queryset, many=True)
+        serializer = serialize_value_list_films(queryset)
         return Response(serializer.data)
 
 
 class CountriesViewSet(viewsets.ModelViewSet):
     serializer_class = CountrySerializer
-    # queryset = Country.objects.all()
+    queryset = Country.objects.all()
     lookup_field = 'slug'
 
     def retrieve(self, request, *args, **kwargs):
         queryset = Film.objects.filter(countries__slug=kwargs['slug']).prefetch_related('countries')
-        serializer = FilmListSerpySerializer(queryset, many=True)
+        serializer = serialize_value_list_films(queryset)
         return Response(serializer.data)
 
 

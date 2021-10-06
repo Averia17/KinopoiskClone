@@ -5,7 +5,15 @@ import requests
 from pytils.translit import slugify
 from requests.structures import CaseInsensitiveDict
 
+from kinopoiskclone.api.serializers import FilmListSerpySerializer
 from kinopoiskclone.models import Film, Staff, Genre, Country
+
+
+def serialize_value_list_films(qs):
+    queryset = qs.distinct('id', 'name', 'year', 'image').values_list(
+        'id', 'name', 'year', 'image', 'genres__title', named=True
+    )
+    return FilmListSerpySerializer(queryset, many=True)
 
 
 def get_top_films():

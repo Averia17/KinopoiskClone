@@ -28,9 +28,15 @@ class StaffListSerializer(ModelSerializer):
         fields = ('id', 'nameRu', 'professionKey', 'professionText')
 
 
-class FilmSerializer(ModelSerializer):
+class StaffListSerpySerializer(serpy.Serializer):
+    id = serpy.IntField()
+    nameRu = serpy.Field(required=False)
+    professionKey = serpy.Field(required=False)
+    professionText = serpy.Field(required=False)
 
-    staff = StaffListSerializer(many=True)
+
+class FilmSerializer(ModelSerializer):
+    staff = StaffListSerializer(many=True)  # attr="groups.all", call=True
     genres = GenreSerializer(many=True)
     countries = CountrySerializer(many=True)
 
@@ -41,12 +47,6 @@ class FilmSerializer(ModelSerializer):
 
 class GenreNameSerializer(serpy.Serializer):
     title = serpy.Field(required=False)
-
-# class GenreNameSerializer(serpy.Serializer):
-#
-#     class Meta:
-#         model = Genre
-#         fields = ('title',)
 
 
 class FilmListSerializer(ModelSerializer):
@@ -65,5 +65,3 @@ class FilmListSerpySerializer(serpy.Serializer):
     image = serpy.Field(required=False)
     year = serpy.Field(required=False)
     genres__title = serpy.Field(required=False)
-    #genres = GenreNameSerializer(many=True, attr="genres.all", call=True)  # attr="groups.all", call=True
-
