@@ -1,7 +1,8 @@
 import serpy
+from django.contrib.auth.models import User
 from rest_framework.serializers import ModelSerializer
 
-from ..models import Film, Staff, Country, Genre
+from ..models import Film, Staff, Country, Genre, UserProfile
 
 
 class CountrySerializer(ModelSerializer):
@@ -45,23 +46,34 @@ class FilmSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class GenreNameSerializer(serpy.Serializer):
-    title = serpy.Field(required=False)
-
-
-class FilmListSerializer(ModelSerializer):
-
-    genres = GenreNameSerializer(many=True)
-
-    class Meta:
-        model = Film
-        fields = ('id', 'name', 'image', 'year', 'genres')
-        read_only_fields = fields
-
-
 class FilmListSerpySerializer(serpy.Serializer):
     id = serpy.IntField()
     name = serpy.Field(required=False)
     image = serpy.Field(required=False)
     year = serpy.Field(required=False)
     genres__title = serpy.Field(required=False)
+
+
+class GenreSeprySerializer(serpy.Serializer):
+    id = serpy.IntField()
+    title = serpy.Field()
+
+
+class FilmFullListSerpySerializer(serpy.Serializer):
+    id = serpy.IntField()
+    name = serpy.Field(required=False)
+    image = serpy.Field(required=False)
+    year = serpy.Field(required=False)
+    genres = GenreSeprySerializer(many=True, call=True, attr='genres.all')
+
+
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+
+class UserProfileSerializer(serpy.Serializer):
+    id = serpy.IntField()
+    saved_films = FilmFullListSerpySerializer(many=True, call=True, attr='saved_films.all')
+    user = UserSerializer()

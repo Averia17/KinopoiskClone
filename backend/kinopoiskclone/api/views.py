@@ -1,10 +1,12 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from kinopoiskclone.models import Film, Staff, Country, Genre
+from kinopoiskclone.models import Film, Staff, Country, Genre, UserProfile
 from .serializers import StaffSerializer, FilmSerializer, GenreSerializer, \
-    CountrySerializer, FilmListSerpySerializer, StaffListSerpySerializer
+    CountrySerializer, FilmListSerpySerializer, StaffListSerpySerializer, UserProfileSerializer
 from .services import serialize_value_list_films
 
 
@@ -28,8 +30,14 @@ class FilmsViewSet(viewsets.ModelViewSet):
     #
     def list(self, request):
         serializer = serialize_value_list_films(self.queryset)
-
         return Response(serializer.data)
+
+    @action(methods=['post'], detail=True, permission_classes=(IsAuthenticated,))
+    def save_film(self, request, pk=None):
+        userprofile = self.request.user.userprofile
+        film = Film.objects.get(pk=pk)
+        userprofile.saved_films.add(film)
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class SerialsViewSet(viewsets.ModelViewSet):
@@ -108,3 +116,17 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
             self.action,
             self.serializer_class
         )
+
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = UserProfileSerializer
+    queryset = UserProfile.objects.all().prefetch_related('saved_films')
+    permission_classes = (IsAuthenticated,)
+
+    @action(methods=['delete'], detail=False)
+    def delete_saved_film(self, request):
+        userprofile = self.request.user.userprofile
+        pk = self.request.data.get('id')
+        film = Film.objects.get(pk=pk)
+        userprofile.saved_films.remove(film)
+        return Response(status=status.HTTP_200_OK)
