@@ -134,7 +134,8 @@ class Film(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=['rating', 'type']),
+            models.Index(fields=['type']),
+            models.Index(fields=['id', 'name', 'year', 'image']),
         ]
 
     def __str__(self):
@@ -171,3 +172,5 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
     instance.userprofile.save()
+
+# docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' dev-db

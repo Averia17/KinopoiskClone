@@ -16,6 +16,13 @@ def serialize_value_list_films(qs):
     return FilmListSerpySerializer(queryset, many=True)
 
 
+def delete_saved_users_film(self):
+    userprofile = self.request.user.userprofile
+    pk = self.request.data.get('id')
+    film = Film.objects.get(pk=pk)
+    userprofile.saved_films.remove(film)
+
+
 def get_top_films():
     headers = CaseInsensitiveDict()
     headers["X-API-KEY"] = "3b1e332f-f435-484a-acda-e9b053640444"
