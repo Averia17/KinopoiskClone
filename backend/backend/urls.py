@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import debug_toolbar
 from django.contrib import admin
 from django.urls import path, include
 
@@ -29,6 +30,6 @@ urlpatterns = [
     path('serials/', serials),
     path('genres/<str:slug>', genre_detail),
     path('countries/<str:slug>', country_detail),
-
+    path('__debug__/', include(debug_toolbar.urls)),
     path('api/', include('kinopoiskclone.api.urls'))
 ]
