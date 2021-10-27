@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from kinopoiskclone.models import Film, Staff, Country, Genre, UserProfile
 from .serializers import StaffSerializer, FilmSerializer, GenreSerializer, \
-    CountrySerializer, FilmListSerpySerializer, StaffListSerpySerializer, UserProfileSerializer
+    CountrySerializer, FilmListSerpySerializer, StaffListSerpySerializer, UserProfileSerializer, FilmListSerializer
 from .services import serialize_value_list_films, delete_saved_users_film
 
 
@@ -108,10 +108,10 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
 
     filter_backends = (SearchFilter, OrderingFilter)
     search_fields = ('name', 'year', 'genres__title')
-    queryset = Film.objects.order_by('-rating').prefetch_related('genres')
+    queryset = Film.objects.prefetch_related('genres')
 
     action_to_serializer = {
-        "list": FilmListSerpySerializer,
+        "list": FilmListSerializer,
         "retrieve": FilmSerializer,
     }
 
@@ -120,6 +120,7 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
             self.action,
             self.serializer_class
         )
+
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):

@@ -10,9 +10,12 @@ from kinopoiskclone.models import Film, Staff, Genre, Country
 
 
 def serialize_value_list_films(qs):
+    print(qs[:100])
     queryset = qs.distinct('id', 'name', 'year', 'image').values_list(
         'id', 'name', 'year', 'image', 'genres__title', named=True
     )
+    print(queryset[:100])
+
     return FilmListSerpySerializer(queryset, many=True)
 
 

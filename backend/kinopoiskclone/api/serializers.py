@@ -1,6 +1,6 @@
 import serpy
 from django.contrib.auth.models import User
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, CharField
 
 from ..models import Film, Staff, Country, Genre, UserProfile
 
@@ -44,6 +44,21 @@ class FilmSerializer(ModelSerializer):
     class Meta:
         model = Film
         fields = '__all__'
+
+
+class GenreNameSerializer(ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = ('title',)
+
+
+class FilmListSerializer(ModelSerializer):
+    genres__title = CharField(source='genres.first', max_length=1024)
+
+    class Meta:
+        model = Film
+        fields = ('id', 'name', 'image', 'year', 'genres__title')
+        read_only_fields = fields
 
 
 class FilmListSerpySerializer(serpy.Serializer):
