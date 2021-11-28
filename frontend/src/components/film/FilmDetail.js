@@ -72,10 +72,12 @@ function FilmDetail({ match }) {
 
     const star = (film.rating / 0.1)
 
+    var emptiness = []
+
     return (
         <div className="film-details font-style">
             <div className="poster-details">
-                <img src={film.image}/>
+                <img className="poster-img" src={film.image}/>
                 <p className="ageLimit-poster">{film.ratingAgeLimits}+</p>
             </div>
             <div className="film-info">
@@ -115,16 +117,17 @@ function FilmDetail({ match }) {
                     <h3>В главных ролях</h3>
                     <div>
                         <ul className="actors">
-                            {actors?.map((a, index) => {
+                            {actors ? actors?.map((a, index) => {
                                     if(index < 10)
                                         return(
                                         <div className="actors-item" key={a.id}>
                                             <p><Link key={a.id} className="actor" to={{ pathname: `/staff/${a.id}/`}}>{a.nameRu}</Link></p>
                                         </div>
                                 )}
-                            )}
+                            ) :  emptiness.unshift("gecnj")}
                         </ul>
-                        <Link key={film.id} id="others" to={{ pathname: `/films/${film.id}/staff`}}>Остальные актёры</Link>
+                        <p>{emptiness[0]}</p>
+                        <Link key={film.id} id="others" to={{ pathname: `/films/${film.id}/staff`}}>Остальные персоны</Link>
                     </div>
                 </div>
             </div>

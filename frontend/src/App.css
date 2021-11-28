@@ -37,6 +37,17 @@
   }
 }
 body { background: #1F1F1F; }
+h1 {
+  font-size: calc(24px + 7 * (100vw / 1170));
+}
+@media (max-width: 767px) {
+  h1 {
+    font-size: calc(24px + (7 + 7 * 0.7) * ((100vw - 320) / 1270));
+  }
+  p {
+    font-size: calc(7px + (10 + 10 * 0.7) * ((100vw - 320) / 1270));
+  }
+}
 a {
   text-decoration: none;
   color: white;
@@ -46,18 +57,12 @@ a:hover {
 }
 .font-style {
   font-family: Graphik Kinopoisk LC Web,Arial,Tahoma,Verdana,sans-serif;
-  font-size: 17px;
   letter-spacing: -.5px;
   color: white;
 }
-img {
-  display: flex;
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: 2%;
-}
 p {
   line-height: 24px;
+  font-size: 17px;
   font-weight: 400;
 }
 
@@ -78,7 +83,8 @@ p {
   left: 0;
   margin: 120px;
   padding: 50px;
-  max-width: 1170px;
+  max-width: 1270px;
+  min-width: 320px;
 }
 .film-info {
   max-width: 440px;
@@ -90,24 +96,32 @@ p {
   left: 0;
 }
 .poster-details {
-  max-width: 300px;
-  max-height: 450px;
-  margin-top: 30px;
-  margin-left: 10px;
+  margin: 30px 60px 0 10px;
   position: relative;
+  overflow: hidden;
+  padding: 0 0 120% 0;
+}
+.poster-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 2%;
 }
 .ageLimit-poster {
   position: absolute;
-  top: 390px;
-  left: 241px;
-  min-width: 40px;
-  height: 25px;
+  top: 87%;
+  left: 81%;
+  max-width: 40px;
+  max-height: 25px;
   color: white;
   opacity: 50%;
   background: black;
   text-align: center;
-  padding: 5px;
-  border-radius: 10px;
+  padding: 1.7% 4%;
+  border-radius: 18%;
 }
 .film-slogan {
   font-size: 22px;
@@ -197,11 +211,10 @@ p {
 
 }
 
-
 /* main */
 
 .films {
-  margin: 0;
+  margin: 50px 0 0 0 ;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -244,14 +257,30 @@ p {
   color: #5CE9E2;
 }
 .poster-main {
-  width: 300px;
-  height: 441px;
-  text-decoration: none;
+  margin: 0;
+  padding: 0 0 140% 0;
+  position: relative;
 }
 .main-page {
+  background: #262626;
   position: relative;
-  top: 120px;
+  top: 0;
   left: 0;
+  margin: 120px;
+  max-width: 1270px;
+  min-width: 320px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.main-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 2%;
 }
 
 /* navbar */

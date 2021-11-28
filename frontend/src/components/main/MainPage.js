@@ -16,6 +16,7 @@ function MainPage() {
         })
     }, [])
 
+
     return(
         <div className="main-page font-style">
             <div className="films">
@@ -24,7 +25,7 @@ function MainPage() {
                         <div className="films-item" key={f.id}>
                             <Link to={{ pathname: `/films/${f.id}/`}}>
                                 <div className="poster-main">
-                                    <img src={f.image} className="img"></img>
+                                    <img src={f.image} className="main-img"></img>
                                 </div>
                                 <div className="film-description">
                                     <div id="film-title">
