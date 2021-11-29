@@ -2,7 +2,7 @@ import serpy
 from django.contrib.auth.models import User
 from rest_framework.serializers import ModelSerializer, CharField
 
-from ..models import Film, Staff, Country, Genre, UserProfile
+from ..models import Film, Staff, Country, Genre
 
 
 class CountrySerializer(ModelSerializer):
@@ -53,7 +53,7 @@ class GenreNameSerializer(ModelSerializer):
 
 
 class FilmListSerializer(ModelSerializer):
-    genres__title = CharField(source='genres.first', max_length=1024)
+    genres__title = CharField(source='genres.first', max_length=1024, required=False)
 
     class Meta:
         model = Film
