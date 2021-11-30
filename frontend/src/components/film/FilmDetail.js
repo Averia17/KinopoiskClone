@@ -15,7 +15,7 @@ function FilmDetail({ match }) {
     useEffect( () => {
         axios({
             method: "GET",
-            url: `http://127.0.0.1:8000/api/films/${id}/`,
+            url: `http://localhost:8080/api/films/${id}/`,
         }).then(response => {
             setFilm(response.data)
         })
@@ -24,7 +24,7 @@ function FilmDetail({ match }) {
     useEffect( () => {
         axios({
             method: "GET",
-            url: `http://127.0.0.1:8000/api/genres/`,
+            url: `http://localhost:8080/api/genres/`,
         }).then(response => {
             setGenre(response.data)
         })
@@ -33,7 +33,7 @@ function FilmDetail({ match }) {
     useEffect( () => {
         axios({
             method: "GET",
-            url: `http://127.0.0.1:8000/api/countries/`,
+            url: `http://localhost:8080/api/countries/`,
         }).then(response => {
             setCountry(response.data)
         })

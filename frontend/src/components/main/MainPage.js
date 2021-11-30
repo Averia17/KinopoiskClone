@@ -10,7 +10,7 @@ function MainPage() {
         document.title = "Главная страница";
         axios({
             method: "GET",
-            url: 'http://127.0.0.1:8000/api/films/',
+            url: 'http://localhost:8080/api/films/',
         }).then(response => {
             setFilm(response.data)
         })

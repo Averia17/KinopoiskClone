@@ -10,7 +10,7 @@ import StaffPage from "./components/staff/StaffPage";
 import GenreFilms from "./components/genres/GenreFilms";
 
 if (window.location.origin === "http://localhost:3000") {
-    axios.defaults.baseURL = "http://127.0.0.1:8000/api/films/";
+    axios.defaults.baseURL = "http://localhost:8080/api/films/";
 }
 
 class App extends Component {

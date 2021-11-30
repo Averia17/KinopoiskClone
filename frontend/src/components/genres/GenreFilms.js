@@ -10,7 +10,7 @@ function GenreFilms({ match }) {
     useEffect( () => {
         axios({
             method: "GET",
-            url: `http://127.0.0.1:8000/api/genres/${slug}/`,
+            url: `http://localhost:8080/api/genres/${slug}/`,
         }).then(response => {
             setGenre(response.data)
         })
