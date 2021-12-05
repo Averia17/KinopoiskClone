@@ -10,7 +10,7 @@ function StaffPage({ match }) {
     useEffect( () => {
         axios({
             method: "GET",
-            url: `http://127.0.0.1:8000/api/films/${id}/`,
+            url: `http://localhost:8080/api/films/${id}/`,
         }).then(response => {
             setFilm(response.data)
         })

@@ -10,7 +10,7 @@ function PersonPage({ match }) {
     useEffect( () => {
         axios({
             method: "GET",
-            url: `http://127.0.0.1:8000/api/staff/${id}/`,
+            url: `http://localhost:8080/api/staff/${id}/`,
         }).then(response => {
             setPerson(response.data)
         })

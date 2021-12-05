@@ -7,10 +7,10 @@ WORKDIR /srv/app/
 ENV PATH /srv/app/node_modules/.bin:$PATH
 
 # install app dependencies
-COPY package.json ./
-COPY package-lock.json ./
+COPY package.json /srv/app
+COPY package-lock.json /srv/app
 RUN npm install
-RUN npm install react-scripts@3.4.1 -g 
+RUN npm install react-scripts@3.4.1 -g
 
 # add app
-COPY . ./
+COPY . /srv/app
