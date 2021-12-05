@@ -28,7 +28,6 @@ services:
       - CHOKIDAR_USEPOLLING=true
     volumes:
       - ./frontend/:/srv/app
-      - ./frontend/node_modules:/srv/app/node_modules
     depends_on:
       - django
   db:

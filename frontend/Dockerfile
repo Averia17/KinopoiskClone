@@ -10,7 +10,6 @@ ENV PATH /srv/app/node_modules/.bin:$PATH
 COPY package.json /srv/app
 COPY package-lock.json /srv/app
 RUN npm install
-RUN npm install react-scripts@3.4.1 -g
 
 # add app
 COPY . /srv/app

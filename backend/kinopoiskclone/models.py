@@ -1,19 +1,61 @@
 import json
 
-from django.contrib.auth.models import User
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
-from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from pytils.translit import slugify
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    saved_films = models.ManyToManyField('Film')
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.db import models
+
+
+class MyUserManager(BaseUserManager):
+    def create_user(self, email, password=None):
+        if not email:
+            raise ValueError("The email must be set")
+        if not password:
+            raise ValueError("The password must be set")
+
+        user = self.model(
+            email=self.normalize_email(email),
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None):
+        user = self.create_user(
+            email,
+            password=password,
+        )
+        user.is_staff = True
+        user.save(using=self._db)
+        return user
+
+
+class User(AbstractBaseUser):
+    saved_books = models.ManyToManyField('Film')
+    email = models.EmailField(db_index=True, unique=True, default=None, null=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    USERNAME_FIELD = "email"
+
+    objects = MyUserManager()
+
+    def get_full_name(self):
+        return self.email
+
+    def get_short_name(self):
+        return self.email
 
     def __str__(self):
-        return self.user.username
+        return self.email
+
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
 
 
 class FilmManager(models.Manager):
@@ -167,10 +209,10 @@ class Film(models.Model):
 #     episodes =
 
 #
-@receiver(post_save, sender=User)
-def create_or_update_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
-    instance.userprofile.save()
+# @receiver(post_save, sender=User)
+# def create_or_update_user_profile(sender, instance, created, **kwargs):
+#     if created:
+#         UserProfile.objects.create(user=instance)
+#     instance.userprofile.save()
 
 # docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' dev-db

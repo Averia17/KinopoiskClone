@@ -4,10 +4,10 @@ import Tokens from "./auth-header";
 const API_URL = "http://localhost:8080/api/";
 
 class AuthService {
-    login(username, password) {
+    login(email, password) {
         return axios
             .post(API_URL + "login/", {
-                username,
+                email,
                 password
             })
             .then(response => {
@@ -29,9 +29,9 @@ class AuthService {
             });
     }
 
-    register(username, password) {
-        return axios.post(API_URL + "auth/", {
-            username,
+    register(email, password) {
+        return axios.post(API_URL + "register/", {
+            email,
             password
         });
     }

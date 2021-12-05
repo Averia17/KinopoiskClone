@@ -4,10 +4,32 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from kinopoiskclone.models import Film, Staff, Country, Genre, UserProfile
+from kinopoiskclone.models import Film, Staff, Country, Genre
 from .serializers import StaffSerializer, FilmSerializer, GenreSerializer, \
-    CountrySerializer, FilmListSerpySerializer, StaffListSerpySerializer, UserProfileSerializer, FilmListSerializer
+    CountrySerializer, FilmListSerpySerializer, StaffListSerpySerializer, UserProfileSerializer, FilmListSerializer, \
+    UserRegisterSerializer
 from .services import serialize_value_list_films, delete_saved_users_film
+
+
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .serializers import UserSerializer
+
+
+class RegisterUser(APIView):
+    def post(self, request):
+        print(request.data)
+        serializer = UserRegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except Exception:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class FilmsViewSet(viewsets.ModelViewSet):
@@ -114,11 +136,11 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
         )
 
 
-class UserProfileViewSet(viewsets.ModelViewSet):
-    serializer_class = UserProfileSerializer
-    queryset = UserProfile.objects.all().prefetch_related('saved_films')
-    permission_classes = (IsAuthenticated,)
-    http_method_names = ['get', 'head', 'options', 'delete']
+# class UserProfileViewSet(viewsets.ModelViewSet):
+#     serializer_class = UserProfileSerializer
+#     queryset = UserProfile.objects.all().prefetch_related('saved_films')
+#     permission_classes = (IsAuthenticated,)
+#     http_method_names = ['get', 'head', 'options', 'delete']
 
 
 class FavoritesViewSet(viewsets.ModelViewSet):
