@@ -9,6 +9,8 @@ import NavBar from "./components/navbar/NavBar";
 import PersonPage from "./components/person/PersonPage";
 import StaffPage from "./components/staff/StaffPage";
 import GenreFilms from "./components/genres/GenreFilms";
+import Login from "./components/LoginRegister/Login";
+import Register from "./components/LoginRegister/Register";
 
 
 class App extends Component {
@@ -46,6 +48,8 @@ class App extends Component {
                     <Route path="/staff/:id/" exact component={PersonPage}/>
                     <Route path="/genres/:slug/" exact component={(props) => <MainPage {...props} getFilms = {(slug) => this.getByGenre(slug)}/>}/>
                     <Route path="/countries/:slug/" exact component={(props) => <MainPage {...props} getFilms = {(slug) => this.getByCountry(slug)}/>}/>
+                    <Route path="/login/" exact component={Login}/>
+                    <Route path="/register/" exact component={Register}/>
                     <Route component={() => <MainPage getFilms = {(isSerials) => this.getFilms(false)}/>}/>
                 </Switch>
             </>

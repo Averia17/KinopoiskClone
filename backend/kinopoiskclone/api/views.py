@@ -1,14 +1,35 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets, status
-from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from kinopoiskclone.models import Film, Staff, Country, Genre, UserProfile
+from kinopoiskclone.models import Film, Staff, Country, Genre
 from .serializers import StaffSerializer, FilmSerializer, GenreSerializer, \
-    CountrySerializer, FilmListSerpySerializer, StaffListSerpySerializer, UserProfileSerializer, FilmListSerializer
+    CountrySerializer, FilmListSerpySerializer, StaffListSerpySerializer, UserProfileSerializer, FilmListSerializer, \
+    UserRegisterSerializer
 from .services import serialize_value_list_films, delete_saved_users_film
+
+
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .serializers import UserSerializer
+
+
+class RegisterUser(APIView):
+    def post(self, request):
+        print(request.data)
+        serializer = UserRegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except Exception:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class FilmsViewSet(viewsets.ModelViewSet):
@@ -30,13 +51,6 @@ class FilmsViewSet(viewsets.ModelViewSet):
     def list(self, request):
         serializer = serialize_value_list_films(self.queryset)
         return Response(serializer.data)
-
-    @action(methods=['post'], detail=True, permission_classes=(IsAuthenticated,))
-    def save_film(self, request, pk=None):
-        userprofile = self.request.user.userprofile
-        film = Film.objects.get(pk=pk)
-        userprofile.saved_films.add(film)
-        return Response(status=status.HTTP_201_CREATED)
 
 
 class SerialsViewSet(viewsets.ModelViewSet):
@@ -122,18 +136,35 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
         )
 
 
+# class UserProfileViewSet(viewsets.ModelViewSet):
+#     serializer_class = UserProfileSerializer
+#     queryset = UserProfile.objects.all().prefetch_related('saved_films')
+#     permission_classes = (IsAuthenticated,)
+#     http_method_names = ['get', 'head', 'options', 'delete']
 
-class UserProfileViewSet(viewsets.ModelViewSet):
-    serializer_class = UserProfileSerializer
-    queryset = UserProfile.objects.all().prefetch_related('saved_films')
+
+class FavoritesViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
-    http_method_names = ['get', 'head', 'options', 'delete']
+    serializer_class = FilmListSerializer
 
-    @action(methods=['delete'], detail=False)
-    def delete_saved_film(self, request):
+    def get_queryset(self):
+        saved_films = self.request.user.userprofile.saved_films
+        return saved_films
+
+    def create(self, request, *args, **kwargs):
+        userprofile = self.request.user.userprofile
+        pk = self.request.data.get('id')
+        film = Film.objects.get(pk=pk)
+        userprofile.saved_films.add(film)
+        serializer = serialize_value_list_films(userprofile.saved_films)
+        return Response(serializer.data)
+
+    def destroy(self, request, pk=None, *args, **kwargs):
         try:
-            delete_saved_users_film(self)
+            userprofile = self.request.user.userprofile
+            saved_films = delete_saved_users_film(userprofile, pk)
+            serializer = serialize_value_list_films(saved_films)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         else:
-            return Response(status=status.HTTP_200_OK)
+            return Response(serializer.data)

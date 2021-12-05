@@ -28,12 +28,13 @@ services:
       - CHOKIDAR_USEPOLLING=true
     volumes:
       - ./frontend/:/srv/app
-      - /srv/app/node_modules
     depends_on:
       - django
   db:
     image: postgres:13.0-alpine
     container_name: dev-db
+    env_file:
+      - postgres/.env
     ports:
       - 5432:5432
     volumes:

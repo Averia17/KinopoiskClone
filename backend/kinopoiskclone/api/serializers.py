@@ -1,8 +1,27 @@
 import serpy
-from django.contrib.auth.models import User
+from kinopoiskclone.models import User
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, CharField
+from rest_framework.validators import UniqueValidator
 
-from ..models import Film, Staff, Country, Genre, UserProfile
+from ..models import Film, Staff, Country, Genre
+
+
+class UserRegisterSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(
+        required=True, validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    password = serializers.CharField(min_length=8)
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            validated_data["email"], validated_data["password"]
+        )
+        return user
+
+    class Meta:
+        model = User
+        fields = ("id", "email", "password")
 
 
 class CountrySerializer(ModelSerializer):
@@ -53,7 +72,7 @@ class GenreNameSerializer(ModelSerializer):
 
 
 class FilmListSerializer(ModelSerializer):
-    genres__title = CharField(source='genres.first', max_length=1024)
+    genres__title = CharField(source='genres.first', max_length=1024, required=False)
 
     class Meta:
         model = Film

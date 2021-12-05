@@ -10,20 +10,16 @@ from kinopoiskclone.models import Film, Staff, Genre, Country
 
 
 def serialize_value_list_films(qs):
-    print(qs[:100])
     queryset = qs.distinct('id', 'name', 'year', 'image').values_list(
         'id', 'name', 'year', 'image', 'genres__title', named=True
     )
-    print(queryset[:100])
-
     return FilmListSerpySerializer(queryset, many=True)
 
 
-def delete_saved_users_film(self):
-    userprofile = self.request.user.userprofile
-    pk = self.request.data.get('id')
+def delete_saved_users_film(userprofile, pk):
     film = Film.objects.get(pk=pk)
     userprofile.saved_films.remove(film)
+    return userprofile.saved_films
 
 
 def get_top_films():
