@@ -1,20 +1,18 @@
 import React, { useEffect, useState} from 'react';
 import axios from 'axios';
 import '../../App.css';
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
-function MainPage() {
-    const [film, setFilm] = useState( [])
-
-    useEffect( () => {
+function MainPage(props) {
+    const [film, setFilm] = useState([]);
+    const slug = props?.match?.params?.slug;
+    useEffect(() => {
         document.title = "Главная страница";
-        axios({
-            method: "GET",
-            url: 'http://localhost:8080/api/films/',
-        }).then(response => {
+        props.getFilms(slug).then(response => {
             setFilm(response.data)
         })
     }, [])
+
 
 
     return(

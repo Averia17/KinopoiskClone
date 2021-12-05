@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { withRouter } from "react-router";
 import axios from "axios"
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
@@ -9,26 +10,47 @@ import PersonPage from "./components/person/PersonPage";
 import StaffPage from "./components/staff/StaffPage";
 import GenreFilms from "./components/genres/GenreFilms";
 
-if (window.location.origin === "http://localhost:3000") {
-    axios.defaults.baseURL = "http://localhost:8080/api/films/";
-}
 
 class App extends Component {
+
+    getFilms(isSerials) {
+        let url = 'http://localhost:8080/api/films/';
+        if(isSerials) url = 'http://localhost:8080/api/serials/'
+        return axios({
+            method: "GET",
+            url: url,
+        })
+    }
+    getByGenre(slug) {
+        return axios({
+            method: "GET",
+            url: `http://localhost:8080/api/genres/${slug}/`,
+        })
+    }
+    getByCountry(slug) {
+        return axios({
+            method: "GET",
+            url: `http://localhost:8080/api/countries/${slug}/`,
+        })
+    }
     render() {
         return (
-            <Router>
+            <>
                 <NavBar/>
                 <Switch>
                     <Route path="/films/:id/" exact component={FilmDetail}/>
-                    <Route path="/films/" exact component={MainPage}/>
+                    <Route path="/serials/:id/" exact component={FilmDetail}/>
+                    <Route path="/films/" exact component={() => <MainPage getFilms = {(isSerials) => this.getFilms(false)}/>}/>
+                    <Route path="/serials/" exact component={() => <MainPage getFilms = {(isSerials) => this.getFilms(true)}/>}/>
                     <Route path="/films/:id/staff" exact component={StaffPage}/>
                     <Route path="/staff/:id/" exact component={PersonPage}/>
-                    <Route path="/genres/:slug/" exact component={GenreFilms}/>
-                    <Route component={MainPage}/>
+                    <Route path="/genres/:slug/" exact component={(props) => <MainPage {...props} getFilms = {(slug) => this.getByGenre(slug)}/>}/>
+                    <Route path="/countries/:slug/" exact component={(props) => <MainPage {...props} getFilms = {(slug) => this.getByCountry(slug)}/>}/>
+                    <Route component={() => <MainPage getFilms = {(isSerials) => this.getFilms(false)}/>}/>
                 </Switch>
-            </Router>
+            </>
         );
     }
 }
 
-export default App;
+export default withRouter(App);

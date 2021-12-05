@@ -3,16 +3,14 @@ import axios from 'axios';
 import moment from 'moment';
 import 'moment/locale/ru'
 import '../../App.css';
-import { Link } from 'react-router-dom'
-
+import { Link, useParams } from 'react-router-dom'
 
 function FilmDetail({ match }) {
-    const[film, setFilm] = useState( []);
-    const[genre, setGenre] = useState( []);
-    const[country, setCountry] = useState( []);
+    const [film, setFilm] = useState( []);
     const id = match.params.id;
 
-    useEffect( () => {
+    useEffect(() => {
+        document.title = `${film.name}`;
         axios({
             method: "GET",
             url: `http://localhost:8080/api/films/${id}/`,
@@ -20,65 +18,22 @@ function FilmDetail({ match }) {
             setFilm(response.data)
         })
     }, [id])
-
-    useEffect( () => {
-        axios({
-            method: "GET",
-            url: `http://localhost:8080/api/genres/`,
-        }).then(response => {
-            setGenre(response.data)
-        })
-    }, [])
-
-    useEffect( () => {
-        axios({
-            method: "GET",
-            url: `http://localhost:8080/api/countries/`,
-        }).then(response => {
-            setCountry(response.data)
-        })
-    }, [])
-
-    useEffect(() => {
-        document.title = `${film.name}`;
-    })
-    let dateRu = moment(film.premiereRu).lang("ru").format('DD MMMM YYYY');
-    let dateW = moment(film.premiereWorld).lang("ru").format('DD MMMM YYYY');
-
-    if(film.ratingAgeLimits === null) {
-        film.ratingAgeLimits = "0";
-    }
-    if(film.budget === null) {
-        film.budget = "-";
-    }
-    if(film.grossRu === null) {
-        film.grossRu = "0";
-    }
-    if(film.grossWorld === null) {
-        film.grossWorld = "0";
-    }
-    if(film.premiereRu === null) {
-        dateRu = "-";
-    }
-    if(film.premiereWorld === null) {
-        dateW = "-";
-    };
-
-    var actors = film.staff?.filter(function(f) {
+    const dateRu = moment(film.premiereRu).lang("ru").format('DD MMMM YYYY');
+    const dateWorld = moment(film.premiereWorld).lang("ru").format('DD MMMM YYYY');
+    const actors = film.staff?.filter(function(f) {
         return f.professionKey === "ACTOR";
     });
-
-    let countries = film.countries?.map((c, index) => {return( c.title + (index != (film.countries.length-1) ? ',' : '' ))});
-
-    const star = (film.rating / 0.1)
-
-    var emptiness = []
-
+    const countries = film.countries?.map((c, index) => {
+        return( c.title + (index != (film.countries.length - 1) ? ',' : '' ))
+    });
+    let emptiness = [];
     return (
         <div className="film-details font-style">
             <div className="poster-details">
                 <img className="poster-img" src={film.image}/>
-                <p className="ageLimit-poster">{film.ratingAgeLimits}+</p>
+                <p className="ageLimit-poster">{
+                    film?.ratingAgeLimits ? film?.ratingAgeLimits : 0 }+
+                </p>
             </div>
             <div className="film-info">
                 <div>
@@ -99,18 +54,33 @@ function FilmDetail({ match }) {
                         )
                     })}</ul>
                 </div>
-                <p>Премьера в мире: {dateW}</p>
-                <p>Премьера в России: {dateRu}</p>
-                <p>Бюджет: {film.budget}</p>
-                <p>Сборы в мире: ${film.grossWorld}</p>
-                <p>Сборы в России: ${film.grossRu}</p>
-                <p>Время: {film.filmLength}</p>
+                <p>Премьера в мире: {
+                    dateWorld ? dateWorld : "-"
+                }
+                </p>
+                <p>Премьера в России: {
+                    dateRu ? dateRu : "-"
+                }
+                </p>
+                <p>Бюджет: {
+                    film?.budget ? film?.budget : "-"
+                }
+                </p>
+                <p>Сборы в мире: ${
+                    film?.grossWorld ? film?.grossWorld : 0
+                }
+                </p>
+                <p>Сборы в России: ${
+                    film?.grossRu ? film?.grossRu : 0
+                }
+                </p>
+                <p>Время: {film?.filmLength}</p>
             </div>
             <div className="rating-and-actors">
                 <div className="film-rating">
                     <h1>{film.rating}</h1>
                     <div className="rating-body">
-                        <div className="rating-active" style={{width: `${star}%`}}></div>
+                        <div className="rating-active" style={{width: `${film.rating / 0.1}%`}}></div>
                     </div>
                 </div>
                 <div className="film-actors">
@@ -124,7 +94,7 @@ function FilmDetail({ match }) {
                                             <p><Link key={a.id} className="actor" to={{ pathname: `/staff/${a.id}/`}}>{a.nameRu}</Link></p>
                                         </div>
                                 )}
-                            ) :  emptiness.unshift("gecnj")}
+                            ) : emptiness.unshift("gecnj")}
                         </ul>
                         <p>{emptiness[0]}</p>
                         <Link key={film.id} id="others" to={{ pathname: `/films/${film.id}/staff`}}>Остальные персоны</Link>
@@ -132,7 +102,6 @@ function FilmDetail({ match }) {
                 </div>
             </div>
         </div>
-
     );
 }
 

@@ -4,9 +4,10 @@ import '../../App.css';
 import { Link } from 'react-router-dom'
 
 function GenreFilms({ match }) {
-    const[genre, setGenre] = useState( []);
+    const [genre, setGenre] = useState( []);
     const slug = match.params.slug;
 
+    console.log(slug)
     useEffect( () => {
         axios({
             method: "GET",
