@@ -85,6 +85,7 @@ class FilmListSerpySerializer(serpy.Serializer):
     name = serpy.Field(required=False)
     image = serpy.Field(required=False)
     year = serpy.Field(required=False)
+    distance = serpy.Field(required=False)
     genres__title = serpy.Field(required=False)
 
 

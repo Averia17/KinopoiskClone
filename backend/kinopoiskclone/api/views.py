@@ -1,10 +1,12 @@
+from django.contrib.postgres.search import TrigramSimilarity, SearchRank, SearchQuery, SearchVector, TrigramDistance
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Value, Q, F
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
-from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
-from kinopoiskclone.models import Film, Staff, Country, Genre
+from kinopoiskclone.models import Film, Staff, Country, Genre, User
+from .filters import FilmFilter
 from .serializers import StaffSerializer, FilmSerializer, GenreSerializer, \
     CountrySerializer, FilmListSerpySerializer, StaffListSerpySerializer, UserProfileSerializer, FilmListSerializer, \
     UserRegisterSerializer
@@ -20,7 +22,6 @@ from .serializers import UserSerializer
 
 class RegisterUser(APIView):
     def post(self, request):
-        print(request.data)
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
             try:
@@ -119,10 +120,10 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
     serializer_class = FilmSerializer
     # lookup_field = 'slug'
     http_method_names = ['get', 'head', 'options']
-
-    filter_backends = (SearchFilter, OrderingFilter)
-    search_fields = ('name', 'year', 'genres__title')
-    queryset = Film.objects.prefetch_related('genres')
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = FilmFilter
+    # search_fields = ('name', 'year', 'genres__title')
+    queryset = Film.objects.all().prefetch_related('genres')
 
     action_to_serializer = {
         "list": FilmListSerializer,
@@ -136,11 +137,29 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
         )
 
 
-# class UserProfileViewSet(viewsets.ModelViewSet):
-#     serializer_class = UserProfileSerializer
-#     queryset = UserProfile.objects.all().prefetch_related('saved_films')
-#     permission_classes = (IsAuthenticated,)
-#     http_method_names = ['get', 'head', 'options', 'delete']
+class TestSearch(APIView):
+    def get(self, request):
+        films = Film.objects.all().prefetch_related('genres')
+        query = request.query_params.get('name')
+        search_query = SearchQuery(query, config='russian')
+        qs = Film.objects.annotate(
+            rank=SearchRank(F('vector_name'), search_query),
+            similarity=TrigramSimilarity('name', query)
+            # similarity=TrigramSimilarity('name', query) + TrigramSimilarity('description', query)
+        ).filter(Q(rank__gte=0.2) | Q(similarity__gt=0.2)).order_by('-similarity')
+
+        queryset = qs.distinct('id', 'name', 'year', 'image', 'similarity').values_list(
+              'id', 'name', 'year', 'image', 'genres__title', 'similarity', named=True
+        )
+        serializer = FilmListSerpySerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    serializer_class = UserProfileSerializer
+    queryset = User.objects.all().prefetch_related('saved_films')
+    permission_classes = (IsAuthenticated,)
+    http_method_names = ['get', 'head', 'options', 'delete']
 
 
 class FavoritesViewSet(viewsets.ModelViewSet):

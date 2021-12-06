@@ -2,7 +2,8 @@ import json
 
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from pytils.translit import slugify
-
+from django.contrib.postgres.search import SearchVectorField
+from django.contrib.postgres.indexes import GinIndex
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
@@ -170,6 +171,7 @@ class Film(models.Model):
     grossWorld = models.BigIntegerField(null=True, blank=True)
     trailers = models.JSONField(default=list)
     teasers = models.JSONField(default=list)
+    vector_name = SearchVectorField(null=True)
 
     staff = models.ManyToManyField(Staff)
     objects = FilmManager()
@@ -178,6 +180,9 @@ class Film(models.Model):
         indexes = [
             models.Index(fields=['type']),
             models.Index(fields=['id', 'name', 'year', 'image']),
+            GinIndex(fields=[
+                "vector_name",
+            ]),
         ]
 
     def __str__(self):

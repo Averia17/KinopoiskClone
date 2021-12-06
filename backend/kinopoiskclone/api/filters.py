@@ -1,18 +1,14 @@
-import django_filters
+from django_filters import rest_framework as filters
 
 from kinopoiskclone.models import Film
 
 
-class FilmFilter(django_filters.FilterSet):
-    genres = django_filters.CharFilter(
-        name='genres__title',
-        lookup_type='contains',
-    )
-    countries = django_filters.CharFilter(
-        name='countries__title',
-        lookup_type='contains',
+class FilmFilter(filters.FilterSet):
+    name = filters.CharFilter(
+        field_name='name',
+        lookup_expr='icontains',
     )
 
     class Meta:
         model = Film
-        fields = ('genres', 'countries')
+        fields = ('name', )
