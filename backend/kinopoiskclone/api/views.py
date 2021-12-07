@@ -137,24 +137,6 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
         )
 
 
-class TestSearch(APIView):
-    def get(self, request):
-        films = Film.objects.all().prefetch_related('genres')
-        query = request.query_params.get('name')
-        search_query = SearchQuery(query, config='russian')
-        qs = Film.objects.annotate(
-            rank=SearchRank(F('vector_name'), search_query),
-            similarity=TrigramSimilarity('name', query)
-            # similarity=TrigramSimilarity('name', query) + TrigramSimilarity('description', query)
-        ).filter(Q(rank__gte=0.2) | Q(similarity__gt=0.2)).order_by('-similarity')
-
-        queryset = qs.distinct('id', 'name', 'year', 'image', 'similarity').values_list(
-              'id', 'name', 'year', 'image', 'genres__title', 'similarity', named=True
-        )
-        serializer = FilmListSerpySerializer(queryset, many=True)
-        return Response(serializer.data)
-
-
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserProfileSerializer
     queryset = User.objects.all().prefetch_related('saved_films')

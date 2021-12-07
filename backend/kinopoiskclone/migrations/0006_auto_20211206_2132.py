@@ -2,6 +2,7 @@
 
 import django.contrib.postgres.indexes
 import django.contrib.postgres.search
+from django.contrib.postgres.operations import TrigramExtension
 from django.db import migrations
 from django.contrib.postgres.search import SearchVector
 
@@ -19,6 +20,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        TrigramExtension(),
         migrations.AddField(
             model_name='film',
             name='vector_name',
