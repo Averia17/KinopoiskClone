@@ -1,12 +1,12 @@
 from django.contrib.postgres.search import TrigramSimilarity, SearchRank, SearchQuery, SearchVector, TrigramDistance
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, FieldError
 from django.db.models import Value, Q, F
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 
 from kinopoiskclone.models import Film, Staff, Country, Genre, User
-from .filters import FilmFilter
+from .filters import FilmSearchFilter
 from .serializers import StaffSerializer, FilmSerializer, GenreSerializer, \
     CountrySerializer, FilmListSerpySerializer, StaffListSerpySerializer, UserProfileSerializer, FilmListSerializer, \
     UserRegisterSerializer
@@ -121,12 +121,12 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
     # lookup_field = 'slug'
     http_method_names = ['get', 'head', 'options']
     filter_backends = (DjangoFilterBackend,)
-    filter_class = FilmFilter
+    filter_class = FilmSearchFilter
     # search_fields = ('name', 'year', 'genres__title')
     queryset = Film.objects.all().prefetch_related('genres')
 
     action_to_serializer = {
-        "list": FilmListSerializer,
+        "list": FilmListSerpySerializer,
         "retrieve": FilmSerializer,
     }
 
@@ -135,6 +135,11 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
             self.action,
             self.serializer_class
         )
+
+    def list(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -149,11 +154,11 @@ class FavoritesViewSet(viewsets.ModelViewSet):
     serializer_class = FilmListSerializer
 
     def get_queryset(self):
-        saved_films = self.request.user.userprofile.saved_films
+        saved_films = self.request.user.saved_films
         return saved_films
 
     def create(self, request, *args, **kwargs):
-        userprofile = self.request.user.userprofile
+        userprofile = self.request.user
         pk = self.request.data.get('id')
         film = Film.objects.get(pk=pk)
         userprofile.saved_films.add(film)
@@ -162,7 +167,7 @@ class FavoritesViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, pk=None, *args, **kwargs):
         try:
-            userprofile = self.request.user.userprofile
+            userprofile = self.request.user
             saved_films = delete_saved_users_film(userprofile, pk)
             serializer = serialize_value_list_films(saved_films)
         except ObjectDoesNotExist:
