@@ -35,7 +35,7 @@ class MyUserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-    saved_books = models.ManyToManyField('Film')
+    saved_films = models.ManyToManyField('Film')
     email = models.EmailField(db_index=True, unique=True, default=None, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

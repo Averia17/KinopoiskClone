@@ -50,7 +50,8 @@ class FilmsViewSet(viewsets.ModelViewSet):
         )
 
     def list(self, request):
-        serializer = serialize_value_list_films(self.queryset)
+        queryset = serialize_value_list_films(self.queryset)
+        serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
 
 
@@ -71,7 +72,8 @@ class SerialsViewSet(viewsets.ModelViewSet):
         )
 
     def list(self, request):
-        serializer = serialize_value_list_films(self.queryset)
+        queryset = serialize_value_list_films(self.queryset)
+        serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
 
 
@@ -100,7 +102,8 @@ class GenresViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         queryset = Film.objects.filter(genres__slug=kwargs['slug']).prefetch_related('genres')
-        serializer = serialize_value_list_films(queryset)
+        queryset = serialize_value_list_films(queryset)
+        serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
 
 
@@ -112,7 +115,8 @@ class CountriesViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         queryset = Film.objects.filter(countries__slug=kwargs['slug']).prefetch_related('countries')
-        serializer = serialize_value_list_films(queryset)
+        queryset = serialize_value_list_films(queryset)
+        serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
 
 
@@ -138,7 +142,7 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
 
     def list(self, request):
         queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
+        serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
 
 
@@ -158,18 +162,20 @@ class FavoritesViewSet(viewsets.ModelViewSet):
         return saved_films
 
     def create(self, request, *args, **kwargs):
-        userprofile = self.request.user
+        user = self.request.user
         pk = self.request.data.get('id')
         film = Film.objects.get(pk=pk)
-        userprofile.saved_films.add(film)
-        serializer = serialize_value_list_films(userprofile.saved_films)
+        user.saved_films.add(film)
+        queryset = serialize_value_list_films(user.saved_films)
+        serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
 
     def destroy(self, request, pk=None, *args, **kwargs):
         try:
-            userprofile = self.request.user
-            saved_films = delete_saved_users_film(userprofile, pk)
-            serializer = serialize_value_list_films(saved_films)
+            user = self.request.user
+            saved_films = delete_saved_users_film(user, pk)
+            queryset = serialize_value_list_films(saved_films)
+            serializer = FilmListSerpySerializer(queryset, many=True)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         else:
