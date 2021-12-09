@@ -4,6 +4,7 @@ from django.db.models import Value, Q, F
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
+from django.db import connection
 
 from kinopoiskclone.models import Film, Staff, Country, Genre, User
 from .filters import FilmSearchFilter
@@ -50,7 +51,9 @@ class FilmsViewSet(viewsets.ModelViewSet):
         )
 
     def list(self, request):
-        serializer = serialize_value_list_films(self.queryset)
+        #queryset = serialize_value_list_films(self.queryset)
+        queryset = Film.objects.raw("SELECT * FROM select_movies_by_type('FILM')")
+        serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
 
 
@@ -71,7 +74,9 @@ class SerialsViewSet(viewsets.ModelViewSet):
         )
 
     def list(self, request):
-        serializer = serialize_value_list_films(self.queryset)
+        # queryset = serialize_value_list_films(self.queryset)
+        queryset = Film.objects.raw("SELECT * FROM select_movies_by_type('TV_SHOW')")
+        serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
 
 
@@ -99,8 +104,10 @@ class GenresViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'head', 'options']
 
     def retrieve(self, request, *args, **kwargs):
-        queryset = Film.objects.filter(genres__slug=kwargs['slug']).prefetch_related('genres')
-        serializer = serialize_value_list_films(queryset)
+        # queryset = Film.objects.filter(genres__slug=kwargs['slug']).prefetch_related('genres')
+        # queryset = serialize_value_list_films(queryset)
+        queryset = Film.objects.raw(f"SELECT * FROM select_movies_by_genre('{kwargs['slug']}')")
+        serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
 
 
@@ -111,8 +118,10 @@ class CountriesViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'head', 'options']
 
     def retrieve(self, request, *args, **kwargs):
-        queryset = Film.objects.filter(countries__slug=kwargs['slug']).prefetch_related('countries')
-        serializer = serialize_value_list_films(queryset)
+        # queryset = Film.objects.filter(countries__slug=kwargs['slug']).prefetch_related('countries')
+        # queryset = serialize_value_list_films(queryset)
+        queryset = Film.objects.raw(f"SELECT * FROM select_movies_by_country('{kwargs['slug']}')")
+        serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
 
 
@@ -158,18 +167,22 @@ class FavoritesViewSet(viewsets.ModelViewSet):
         return saved_films
 
     def create(self, request, *args, **kwargs):
-        userprofile = self.request.user
+        user = self.request.user
         pk = self.request.data.get('id')
-        film = Film.objects.get(pk=pk)
-        userprofile.saved_films.add(film)
-        serializer = serialize_value_list_films(userprofile.saved_films)
+        # film = Film.objects.get(pk=pk)
+        # user.saved_films.add(film)
+        # queryset = serialize_value_list_films(user.saved_films)
+        queryset = Film.objects.raw(f"SELECT * FROM insert_saved_film({user.pk}, {pk})")
+        serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
 
     def destroy(self, request, pk=None, *args, **kwargs):
         try:
-            userprofile = self.request.user
-            saved_films = delete_saved_users_film(userprofile, pk)
-            serializer = serialize_value_list_films(saved_films)
+            user = self.request.user
+            # saved_films = delete_saved_users_film(user, pk)
+            # queryset = serialize_value_list_films(saved_films)
+            queryset = Film.objects.raw(f"SELECT * FROM delete_saved_film({user.pk}, {pk})")
+            serializer = FilmListSerpySerializer(queryset, many=True)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         else:
