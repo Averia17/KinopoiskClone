@@ -103,12 +103,8 @@ class FilmFullListSerpySerializer(serpy.Serializer):
 
 
 class UserSerializer(ModelSerializer):
+    saved_films = FilmFullListSerpySerializer(many=True, call=True, attr='saved_films.all')
+
     class Meta:
         model = User
         fields = '__all__'
-
-
-class UserProfileSerializer(serpy.Serializer):
-    id = serpy.IntField()
-    saved_films = FilmFullListSerpySerializer(many=True, call=True, attr='saved_films.all')
-    user = UserSerializer()

@@ -14,7 +14,9 @@ import Register from "./components/LoginRegister/Register";
 
 
 class App extends Component {
-
+    state = {
+        favorites: []
+    }
     getFilms(isSerials) {
         let url = 'http://localhost:8080/api/films/';
         if(isSerials) url = 'http://localhost:8080/api/serials/'
@@ -35,6 +37,7 @@ class App extends Component {
             url: `http://localhost:8080/api/countries/${slug}/`,
         })
     }
+
     render() {
         return (
             <>

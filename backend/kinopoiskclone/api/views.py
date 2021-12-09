@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from kinopoiskclone.models import Film, Staff, Country, Genre, User
 from .filters import FilmSearchFilter
 from .serializers import StaffSerializer, FilmSerializer, GenreSerializer, \
-    CountrySerializer, FilmListSerpySerializer, StaffListSerpySerializer, UserProfileSerializer, FilmListSerializer, \
+    CountrySerializer, FilmListSerpySerializer, StaffListSerpySerializer, UserSerializer, FilmListSerializer, \
     UserRegisterSerializer
 from .services import serialize_value_list_films, delete_saved_users_film
 
@@ -16,8 +16,6 @@ from .services import serialize_value_list_films, delete_saved_users_film
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from .serializers import UserSerializer
 
 
 class RegisterUser(APIView):
@@ -147,7 +145,7 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    serializer_class = UserProfileSerializer
+    serializer_class = UserSerializer
     queryset = User.objects.all().prefetch_related('saved_films')
     permission_classes = (IsAuthenticated,)
     http_method_names = ['get', 'head', 'options', 'delete']
@@ -166,17 +164,19 @@ class FavoritesViewSet(viewsets.ModelViewSet):
         pk = self.request.data.get('id')
         film = Film.objects.get(pk=pk)
         user.saved_films.add(film)
-        queryset = serialize_value_list_films(user.saved_films)
-        serializer = FilmListSerpySerializer(queryset, many=True)
-        return Response(serializer.data)
+        favorite_ids = user.saved_films.values_list('id', flat=True)
+        #queryset = serialize_value_list_films(user.saved_films)
+        #serializer = FilmListSerpySerializer(queryset, many=True)
+        return Response(favorite_ids)
 
     def destroy(self, request, pk=None, *args, **kwargs):
         try:
             user = self.request.user
             saved_films = delete_saved_users_film(user, pk)
-            queryset = serialize_value_list_films(saved_films)
-            serializer = FilmListSerpySerializer(queryset, many=True)
+            favorite_ids = user.saved_films.values_list('id', flat=True)
+            # queryset = serialize_value_list_films(saved_films)
+            # serializer = FilmListSerpySerializer(queryset, many=True)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         else:
-            return Response(serializer.data)
+            return Response(favorite_ids)
