@@ -3,14 +3,14 @@ import { withRouter } from "react-router";
 import axios from "axios"
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import FilmDetail from "./components/film/FilmDetail";
-import MainPage from "./components/main/MainPage";
-import NavBar from "./components/navbar/NavBar";
-import PersonPage from "./components/person/PersonPage";
-import StaffPage from "./components/staff/StaffPage";
-import GenreFilms from "./components/genres/GenreFilms";
+import FilmDetail from "./components/Film/FilmDetail";
+import MainPage from "./components/Main/MainPage";
+import NavBar from "./components/Navbar/NavBar";
+import PersonPage from "./components/Person/PersonPage";
+import StaffPage from "./components/Staff/StaffPage";
 import Login from "./components/LoginRegister/Login";
 import Register from "./components/LoginRegister/Register";
+import Filter from "./components/Filter/Filter";
 
 
 class App extends Component {
@@ -53,6 +53,7 @@ class App extends Component {
                     <Route path="/countries/:slug/" exact component={(props) => <MainPage {...props} getFilms = {(slug) => this.getByCountry(slug)}/>}/>
                     <Route path="/login/" exact component={Login}/>
                     <Route path="/register/" exact component={Register}/>
+                    <Route path="/filter/" exact component={Filter}/>
                     <Route component={() => <MainPage getFilms = {(isSerials) => this.getFilms(false)}/>}/>
                 </Switch>
             </>
