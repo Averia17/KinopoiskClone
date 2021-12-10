@@ -139,7 +139,10 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
         )
 
     def list(self, request):
-        queryset = self.filter_queryset(self.get_queryset())
+        if len(request.query_params) > 0:
+            queryset = self.filter_queryset(self.get_queryset())
+        else:
+            queryset = serialize_value_list_films(self.queryset)
         serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
 
