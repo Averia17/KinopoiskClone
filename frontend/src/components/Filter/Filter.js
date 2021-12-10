@@ -29,8 +29,10 @@ function FilterForm() {
     const [countries__title, setCountryTitle] = useState([]);
     const [genres__title, setGenreTitle] = useState([]);
     const query = new URLSearchParams(useLocation().search)
-    console.log('LINK ' + query.get('max_year'))
-    console.log('LINK ' + query)
+    const removeEmptyParams = () => {
+        return query.toString().replace(/[^=&]+=(?:&|$)/g, "");
+    }
+    console.log('LINK ' + removeEmptyParams())
     useEffect( () => {
         axios({
             method: "GET",
@@ -93,7 +95,7 @@ function FilterForm() {
                             <label>Максимальный рейтинг</label>
                             <Input type="text" name="max_rating"
                                    onChange={maxRatingHandleChange}
-                                   value={max_year}/>
+                                   value={max_rating}/>
                         </div>
                         <div className="filter-form-group-inputs">
                             <label>Минимальный год</label>
