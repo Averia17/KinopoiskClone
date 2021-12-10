@@ -53,7 +53,7 @@ function MainPage(props) {
                     return(
                         <div className="films-item" key={f.id}>
                             <button onClick={() => moveToFavorites(f.id, isFavorite)} style={{background: 'none', border:'none'}}>
-                                <StarIcon fontSize={"large"} style={{color: isFavorite?  'orange' : 'azure'}}/>
+                                <StarIcon fontSize={"large"} style={{color: isFavorite?  '#5CE9E2' : 'azure'}}/>
                             </button>
                             <Link to={{ pathname: `/films/${f.id}/`}}>
                                 <div className="poster-main">

@@ -108,7 +108,7 @@ function FilterForm() {
                                    onChange={maxYearHandleChange}
                                    value={max_year}/>
                         </div>
-                        <button type="submit">
+                        <button className="submit-button" type="submit">
                             Submit
                         </button>
                     </div>
