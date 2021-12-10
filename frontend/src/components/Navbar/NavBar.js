@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import '../../App.css';
 import "../../../public/logo.svg";
+import Filter from "../Filter/Filter"
 import { Link } from 'react-router-dom'
+import filter from '../../assets/filter.png'
 
 function NavBar() {
     return (
@@ -19,8 +21,17 @@ function NavBar() {
                 <li><Link className="link" to={{ pathname: `/films/`}}>Жанры</Link></li>
                 <li><Link className="link" to={{ pathname: `/films/`}}>Страны</Link></li>
                 <div>
-                    <input className="search-txt" type="search" name="" placeholder="Нажмите для поиска"/>
-                    <a className="search-btn" href="#"></a>
+                    <form>
+                        <div className="search-form">
+                            <input className="search-txt" type="search" name="" placeholder="Нажмите для поиска"/>
+                            <a className="search-btn" href="#"></a>
+                            <div>
+                                <Link to={{ pathname: `/filter/`}}>
+                                    <img id="filter-icon" src={filter}/>
+                                </Link>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <li className="search-box"></li>
             </ul>
