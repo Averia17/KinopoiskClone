@@ -281,6 +281,7 @@ p {
   left: 0;
   top: 0;
   border-radius: 2%;
+
 }
 
 /* navbar */
@@ -319,6 +320,11 @@ p {
 .search-box {
 
 }
+.search-form {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
 
 /*  staff page */
 
@@ -330,4 +336,37 @@ p {
 }
 .staff-subdivision {
   border: solid black 1px;
+}
+
+/* filter */
+#filter-icon {
+  max-width: 18px;
+  max-height: 18px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 10%;
+  right: 2%;
+}
+.filter-form {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin: 100px 0 0 0 ;
+  padding: 0 50px;
+  color: white;
+  position: relative;
+  align-content: center;
+
+}
+.filter-form-fields {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.filter-form-fields * {
+  width: 100%;
+  height: 100%;
+  max-width: 200px;
+  margin: 10px;
 }
