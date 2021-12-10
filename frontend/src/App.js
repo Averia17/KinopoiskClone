@@ -10,7 +10,7 @@ import PersonPage from "./components/Person/PersonPage";
 import StaffPage from "./components/Staff/StaffPage";
 import Login from "./components/LoginRegister/Login";
 import Register from "./components/LoginRegister/Register";
-import Filter from "./components/Filter/Filter";
+import FilterForm from "./components/Filter/Filter";
 
 
 class App extends Component {
@@ -53,7 +53,7 @@ class App extends Component {
                     <Route path="/countries/:slug/" exact component={(props) => <MainPage {...props} getFilms = {(slug) => this.getByCountry(slug)}/>}/>
                     <Route path="/login/" exact component={Login}/>
                     <Route path="/register/" exact component={Register}/>
-                    <Route path="/filter/" exact component={Filter}/>
+                    <Route path="/filter/" exact component={FilterForm}/>
                     <Route component={() => <MainPage getFilms = {(isSerials) => this.getFilms(false)}/>}/>
                 </Switch>
             </>

@@ -364,9 +364,15 @@ p {
   display: flex;
   flex-direction: column;
 }
-.filter-form-fields * {
+.filter-form-fields select, button, input {
   width: 100%;
   height: 100%;
   max-width: 200px;
   margin: 10px;
+}
+.filter-form-group-inputs {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  align-items: center;
 }
