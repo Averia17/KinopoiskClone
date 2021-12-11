@@ -150,7 +150,7 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all().prefetch_related('saved_films')
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     http_method_names = ['get', 'head', 'options', 'delete']
 
 
@@ -167,22 +167,28 @@ class FavoritesViewSet(viewsets.ModelViewSet):
         pk = self.request.data.get('id')
         film = Film.objects.get(pk=pk)
         user.saved_films.add(film)
-        favorite_ids = user.saved_films.values_list('id', flat=True)
-        #queryset = serialize_value_list_films(user.saved_films)
-        #serializer = FilmListSerpySerializer(queryset, many=True)
-        return Response(favorite_ids)
+       # favorite_ids = user.saved_films.values_list('id', flat=True)
+        queryset = serialize_value_list_films(user.saved_films)
+        serializer = FilmListSerpySerializer(queryset, many=True)
+        return Response(serializer.data)
 
     def destroy(self, request, pk=None, *args, **kwargs):
         try:
             user = self.request.user
             saved_films = delete_saved_users_film(user, pk)
-            favorite_ids = user.saved_films.values_list('id', flat=True)
-            # queryset = serialize_value_list_films(saved_films)
-            # serializer = FilmListSerpySerializer(queryset, many=True)
+           # favorite_ids = user.saved_films.values_list('id', flat=True)
+            queryset = serialize_value_list_films(saved_films)
+            serializer = FilmListSerpySerializer(queryset, many=True)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         else:
-            return Response(favorite_ids)
+            return Response(serializer.data)
+
+    def list(self, request, *args, **kwargs):
+        user = self.request.data.get('id') or self.request.user
+        serializer = FilmListSerpySerializer(user.saved_films, many=True)
+        # favorites_ids = user.saved_films.values_list('id', flat=True)
+        return Response(serializer.data)
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):

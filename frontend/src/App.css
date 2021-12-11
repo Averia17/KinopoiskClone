@@ -331,6 +331,10 @@ p {
   flex-direction: row;
   position: relative;
 }
+.logout-button {
+  background: none;
+  border: none;
+}
 
 /*  staff page */
 
@@ -381,4 +385,14 @@ p {
   flex-direction: row;
   text-align: center;
   align-items: center;
+}
+
+/* profile */
+.user-profile {
+  margin-top: 150px;
+}
+.user-profile-title {
+  color: white;
+  font-size: 24px;
+  text-align: center;
 }

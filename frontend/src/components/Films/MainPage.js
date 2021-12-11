@@ -1,11 +1,12 @@
-import React, { useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import '../../App.css';
-import { Link, useParams } from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom'
 import StarIcon from '@mui/icons-material/Star';
 import Tokens from "../../services/auth-header";
 import queryString from 'query-string';
 import {handleMoveToFavorite} from "../../services/favorite.service";
+import Film from "./Film";
 
 function MainPage(props) {
     const [film, setFilm] = useState([]);
@@ -27,55 +28,29 @@ function MainPage(props) {
                 'Authorization': accessToken
             },
         }).then(response => {
+            console.log(response.data)
             setFavorites(response.data)
         }).catch(error => {
             setFavorites([])
         })
     }, [])
-
-
-    const moveToFavorites = (key, isFavorite) => {
-        handleMoveToFavorite(key, isFavorite).then((response) => {
-            setFavorites(response.data)
-        }).catch(error => {
-            if (error.request?.status === 401) {
-                alert("You need to login")
-            } else
-                console.log(error)
-        })
+    console.log(favorites)
+    const updateFavorites = (films) => {
+        setFavorites(films);
     }
 
-    const isExists = (favoriteId) => favorites.includes(favoriteId)
-    return(
+    return (
         <div className="main-page font-style">
             <div className="films">
                 {film.map((f) => {
-                    const isFavorite = isExists(f.id)
-                    return(
-                        <div className="films-item" key={f.id}>
-                            <button onClick={() => moveToFavorites(f.id, isFavorite)} style={{background: 'none', border:'none'}}>
-                                <StarIcon fontSize={"large"} style={{color: isFavorite?  '#5CE9E2' : 'azure'}}/>
-                            </button>
-                            <Link to={{ pathname: `/films/${f.id}/`}}>
-                                <div className="poster-main">
-                                    <img src={f.image} className="main-img"></img>
-                                </div>
-                                <div className="film-description">
-                                    <div id="film-title">
-                                        <p id="genre">{f.genres__title}</p>
-                                        <p id="year">{f.year}</p>
-                                    </div>
-                                    <div id="name">
-                                        <p>{f.name}</p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    )}
+                        return (
+                            <Film key={film.id} film={f} updateFavorites={updateFavorites} favorites={favorites}/>
+                        )
+                    }
                 )}
             </div>
         </div>
-)
+    )
 }
 
 export default MainPage;

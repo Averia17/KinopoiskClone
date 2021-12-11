@@ -21,8 +21,8 @@ class AuthService {
     logout(refresh) {
         return axios
             .post(API_URL + "refresh-token/", {
-                    refresh
-                })
+                refresh
+            })
             .then(response => {
                 localStorage.removeItem("user");
                 return response.data;
@@ -39,7 +39,7 @@ class AuthService {
     // get information about current user
     getCurrentUser() {
         return axios
-            .get(API_URL, {headers: {'Authorization': Tokens.AccessTokenHeader()}})
+            .get(API_URL + 'user', {headers: {'Authorization': Tokens.AccessTokenHeader()}})
             .then(response => {
                 return response.data
             });
