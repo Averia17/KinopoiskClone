@@ -3,7 +3,7 @@ from rest_framework.routers import SimpleRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 from .views import FilmsViewSet, StaffViewSet, SerialsViewSet, GenresViewSet, CountriesViewSet, AllMoviesViewSet, \
-    FavoritesViewSet, RegisterUser, UserViewSet
+    FavoritesViewSet, RegisterUser, UserViewSet, CustomTokenObtainPairView
 
 router = SimpleRouter()
 
@@ -18,7 +18,7 @@ router.register('favorites', FavoritesViewSet, basename='favorites')
 
 urlpatterns = [
     path("register/", RegisterUser.as_view(), name="register_user"),
-    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh-token/', TokenRefreshView.as_view(), name='token_refresh'),
     path('token-verify/', TokenVerifyView.as_view(), name='token-verify'),
 ]

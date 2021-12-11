@@ -4,12 +4,12 @@ from django.db.models import Value, Q, F
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework_simplejwt.views import TokenObtainPairView
 from kinopoiskclone.models import Film, Staff, Country, Genre, User
 from .filters import FilmSearchFilter
 from .serializers import StaffSerializer, FilmSerializer, GenreSerializer, \
     CountrySerializer, FilmListSerpySerializer, StaffListSerpySerializer, UserSerializer, FilmListSerializer, \
-    UserRegisterSerializer
+    UserRegisterSerializer, CustomTokenObtainPairSerializer
 from .services import serialize_value_list_films, delete_saved_users_film
 
 
@@ -183,3 +183,8 @@ class FavoritesViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_404_NOT_FOUND)
         else:
             return Response(favorite_ids)
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    # Replace the serializer with your custom
+    serializer_class = CustomTokenObtainPairSerializer
