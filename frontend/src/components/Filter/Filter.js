@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { useLocation } from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import axios from 'axios';
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
@@ -19,8 +19,8 @@ const getQueryStringFromObject = (filter: Filter) => {
 };
 */
 
-function FilterForm() {
-    const [country, setCountry] = useState( []);
+function FilterForm(props) {
+    const [country, setCountry] = useState([]);
     const [genre, setGenre] = useState([]);
     const [min_rating, setMinRating] = useState([]);
     const [max_rating, setMaxRating] = useState([]);
@@ -33,7 +33,7 @@ function FilterForm() {
         return query.toString().replace(/[^=&]+=(?:&|$)/g, "");
     }
     console.log('LINK ' + removeEmptyParams())
-    useEffect( () => {
+    useEffect(() => {
         axios({
             method: "GET",
             url: `http://localhost:8080/api/countries/`,
@@ -41,7 +41,7 @@ function FilterForm() {
             setCountry(response.data)
         })
     }, [])
-    useEffect( () => {
+    useEffect(() => {
         axios({
             method: "GET",
             url: `http://localhost:8080/api/genres/`,
@@ -67,53 +67,62 @@ function FilterForm() {
     const genreHandleChange = (event) => {
         setGenreTitle(event.target.value);
     }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        let qs = removeEmptyParams()
+        console.log(qs)
+        console.log(e.target.max_year.value)
+        props.history.push(`/movies/${qs}`)
+    }
     return (
         <div className="filter-form">
             <h1>Искать фильм</h1>
-                <Form>
-                    <div className="filter-form-fields">
-                        <div className="filter-form-group-inputs">
-                            <p>Страна</p>
-                            <select name="countries__title">
-                                {country.map((c) =>
+            <Form onSubmit={handleSubmit}>
+                <div className="filter-form-fields">
+                    <div className="filter-form-group-inputs">
+                        <p>Страна</p>
+                        <select name="countries__title">
+                            {country.map((c) =>
                                 <option value={c.title} onChange={countryHandleChange}>{c.title}</option>)}
-                            </select>
-                        </div>
-                        <div className="filter-form-group-inputs">
-                            <p>Жанр</p>
-                            <select name="genres__title">
-                                {genre.map((g) =>
-                                <option value={g.title} onChange={genreHandleChange}>{g.title}</option>)}
-                            </select>
-                        </div>
-                        <div className="filter-form-group-inputs">
-                            <label>Минимальный рейтинг</label>
-                            <Input type="text" name="min_rating"
-                                   onChange={minRatingHandleChange}
-                                   value={min_rating}/>
-                            <p>-</p>
-                            <label>Максимальный рейтинг</label>
-                            <Input type="text" name="max_rating"
-                                   onChange={maxRatingHandleChange}
-                                   value={max_rating}/>
-                        </div>
-                        <div className="filter-form-group-inputs">
-                            <label>Минимальный год</label>
-                            <Input type="text" name="min_year"
-                                   onChange={minYearHandleChange}
-                                   value={min_year}/>
-                            <p>- </p>
-                            <label>Максимальный год</label>
-                            <Input type="text" name="max_year"
-                                   onChange={maxYearHandleChange}
-                                   value={max_year}/>
-                        </div>
-                        <button className="submit-button" type="submit">
-                            Submit
-                        </button>
+                        </select>
                     </div>
-                </Form>
+                    <div className="filter-form-group-inputs">
+                        <p>Жанр</p>
+                        <select name="genres__title">
+                            {genre.map((g) =>
+                                <option value={g.title} onChange={genreHandleChange}>{g.title}</option>)}
+                        </select>
+                    </div>
+                    <div className="filter-form-group-inputs">
+                        <label>Минимальный рейтинг</label>
+                        <Input type="text" name="min_rating"
+                               onChange={minRatingHandleChange}
+                               value={min_rating}/>
+                        <p>-</p>
+                        <label>Максимальный рейтинг</label>
+                        <Input type="text" name="max_rating"
+                               onChange={maxRatingHandleChange}
+                               value={max_rating}/>
+                    </div>
+                    <div className="filter-form-group-inputs">
+                        <label>Минимальный год</label>
+                        <Input type="text" name="min_year"
+                               onChange={minYearHandleChange}
+                               value={min_year}/>
+                        <p>- </p>
+                        <label>Максимальный год</label>
+                        <Input type="text" name="max_year"
+                               onChange={maxYearHandleChange}
+                               value={max_year}/>
+                    </div>
+                    <button className="submit-button" type="submit">
+                        Submit
+                    </button>
+                </div>
+            </Form>
         </div>
-)}
+    )
+}
+
 export default FilterForm;
 
