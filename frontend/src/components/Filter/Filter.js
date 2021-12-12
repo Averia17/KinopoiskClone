@@ -3,21 +3,8 @@ import {useLocation} from "react-router-dom";
 import axios from 'axios';
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
+import {stringify} from "query-string";
 
-/*interface Values {
-    min_rating?: string;
-    max_rating?: string;
-    min_year?: string;
-    max_year?: string;
-    countries__title?: string;
-    genres__title?: string;
-};*/
-
-/*
-const getQueryStringFromObject = (filter: Filter) => {
-    return new URLSearchParams(filter).toString();
-};
-*/
 
 function FilterForm(props) {
     const [country, setCountry] = useState([]);
@@ -28,11 +15,7 @@ function FilterForm(props) {
     const [max_year, setMaxYear] = useState([]);
     const [countries__title, setCountryTitle] = useState([]);
     const [genres__title, setGenreTitle] = useState([]);
-    const query = new URLSearchParams(useLocation().search)
-    const removeEmptyParams = () => {
-        return query.toString().replace(/[^=&]+=(?:&|$)/g, "");
-    }
-    console.log('LINK ' + removeEmptyParams())
+
     useEffect(() => {
         axios({
             method: "GET",
@@ -62,17 +45,24 @@ function FilterForm(props) {
         setMaxYear(event.target.value);
     }
     const countryHandleChange = (event) => {
+        console.log(event.target.value)
         setCountryTitle(event.target.value);
     }
     const genreHandleChange = (event) => {
         setGenreTitle(event.target.value);
     }
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        let qs = removeEmptyParams()
-        console.log(qs)
-        console.log(e.target.max_year.value)
-        props.history.push(`/movies/${qs}`)
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const data = {
+            'min_rating': min_rating,
+            'max_rating': max_rating,
+            'min_year': min_year,
+            'max_year': max_year,
+            'countries__title': countries__title,
+            'genres__title': genres__title
+        };
+        let qs = stringify(data)
+        props.history.push(`/movies/?${qs}`)
     }
     return (
         <div className="filter-form">
@@ -81,37 +71,39 @@ function FilterForm(props) {
                 <div className="filter-form-fields">
                     <div className="filter-form-group-inputs">
                         <p>Страна</p>
-                        <select name="countries__title">
+                        <select name="countries__title" onChange={countryHandleChange}>
+                            <option selected="selected"> </option>
                             {country.map((c) =>
-                                <option value={c.title} onChange={countryHandleChange}>{c.title}</option>)}
+                                <option value={c.title} >{c.title}</option>)}
                         </select>
                     </div>
                     <div className="filter-form-group-inputs">
                         <p>Жанр</p>
-                        <select name="genres__title">
+                        <select name="genres__title" onChange={genreHandleChange}>
+                            <option selected="selected"> </option>
                             {genre.map((g) =>
-                                <option value={g.title} onChange={genreHandleChange}>{g.title}</option>)}
+                                <option value={g.title}>{g.title}</option>)}
                         </select>
                     </div>
                     <div className="filter-form-group-inputs">
                         <label>Минимальный рейтинг</label>
-                        <Input type="text" name="min_rating"
+                        <Input type="number" name="min_rating"
                                onChange={minRatingHandleChange}
                                value={min_rating}/>
                         <p>-</p>
                         <label>Максимальный рейтинг</label>
-                        <Input type="text" name="max_rating"
+                        <Input type="number" name="max_rating"
                                onChange={maxRatingHandleChange}
                                value={max_rating}/>
                     </div>
                     <div className="filter-form-group-inputs">
                         <label>Минимальный год</label>
-                        <Input type="text" name="min_year"
+                        <Input type="number" name="min_year"
                                onChange={minYearHandleChange}
                                value={min_year}/>
                         <p>- </p>
                         <label>Максимальный год</label>
-                        <Input type="text" name="max_year"
+                        <Input type="number" name="max_year"
                                onChange={maxYearHandleChange}
                                value={max_year}/>
                     </div>

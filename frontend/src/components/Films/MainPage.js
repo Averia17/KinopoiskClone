@@ -11,7 +11,7 @@ import Film from "./Film";
 function MainPage(props) {
     const [film, setFilm] = useState([]);
     const [favorites, setFavorites] = useState([]);
-    const slug = props?.match?.params?.slug || queryString.parse(props?.location?.search).search;
+    const slug = props?.match?.params?.slug ||  queryString.parse(props?.location?.search);
     useEffect(() => {
         document.title = "Главная страница";
         props.getFilms(slug).then(response => {

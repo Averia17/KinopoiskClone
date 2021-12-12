@@ -49,17 +49,18 @@ class App extends Component {
         })
     }
 
-    searchMovies(searchText) {
-        console.log(searchText)
+    searchMovies(params) {
+        if(params &&  params["search"] !== undefined) {
+            params.name = params.search
+            delete params.search
+        }
 
         return axios({
             method: "GET",
             headers: {
                 'Content-type': 'application/json',
             },
-            params: {
-                'name': searchText
-            },
+            params: params,
             url: `http://localhost:8080/api/movies/`,
         })
     };
