@@ -19,7 +19,7 @@ function Film(props) {
                 console.log(error)
         })
     }
-    const isFavorite = favorites.some(film)
+    const isFavorite = favorites.some((item) => item.id === film.id)
 
     return (
         <div className="films-item" >

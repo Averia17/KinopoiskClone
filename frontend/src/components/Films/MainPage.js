@@ -20,6 +20,7 @@ function MainPage(props) {
     }, [])
     useEffect(() => {
         const accessToken = Tokens.AccessTokenHeader();
+        console.log(accessToken)
         axios({
             method: "GET",
             url: `http://localhost:8080/api/favorites/`,

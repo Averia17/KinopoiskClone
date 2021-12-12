@@ -155,7 +155,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class FavoritesViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     serializer_class = FilmListSerializer
 
     def get_queryset(self):
@@ -185,8 +185,11 @@ class FavoritesViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
 
     def list(self, request, *args, **kwargs):
-        user = self.request.data.get('id') or self.request.user
-        serializer = FilmListSerpySerializer(user.saved_films, many=True)
+        queryset = []
+        if not self.request.user.is_anonymous:
+            user = self.request.data.get('id') or self.request.user
+            queryset = user.saved_films.all()
+        serializer = FilmListSerpySerializer(queryset, many=True)
         # favorites_ids = user.saved_films.values_list('id', flat=True)
         return Response(serializer.data)
 

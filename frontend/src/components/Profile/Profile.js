@@ -25,17 +25,22 @@ function Profile(props) {
     }, [id])
     useEffect(() => {
         const accessToken = Tokens.AccessTokenHeader();
+        // need test
         let headers = {
             'Content-type': 'application/json',
         }
-        if(accessToken) headers['Authorization'] = accessToken
+        let data = {
+            id: id
+        }
+        if (accessToken) {
+            headers['Authorization'] = accessToken;
+            data = {}
+        }
         axios({
             method: "GET",
             url: `http://localhost:8080/api/favorites/`,
             headers: headers,
-            data: {
-                id: id
-            }
+            data: data
         }).then(response => {
             setFavorites(response.data)
         }).catch(error => {
@@ -45,11 +50,12 @@ function Profile(props) {
     const updateFavorites = (favorites) => {
         setFavorites(favorites)
     }
+
     return (
         <div className="user-profile">
             <div className="user-profile-title">{user?.email} profile</div>
             <div className="films">
-                {user?.saved_films?.map((film) => {
+                {favorites?.map((film) => {
                     return (
                         <Film key={film.id} film={film} updateFavorites={updateFavorites} favorites={favorites}/>
                     )
