@@ -1,9 +1,8 @@
 import StarIcon from "@mui/icons-material/Star";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import React from "react";
 import '../../App.css';
 import {handleMoveToFavorite} from "../../services/favorite.service";
-
 
 function Film(props) {
     const film = props.film;
@@ -14,19 +13,18 @@ function Film(props) {
             updateFavorites(response.data)
         }).catch(error => {
             if (error.request?.status === 401) {
-                alert("You need to login")
+                alert("Вам необходимо войти")
             } else
                 console.log(error)
         })
     }
-    const isFavorite = favorites.some((item) => item.id === film.id)
-
+    const isFavorite = favorites.some((item) => item.id === film.id);
     return (
         <div className="films-item" >
             <button onClick={() => moveToFavorites(film.id, isFavorite)} style={{background: 'none', border: 'none'}}>
                 <StarIcon fontSize={"large"} style={{color: isFavorite ? '#5CE9E2' : 'azure'}}/>
             </button>
-            <Link to={{pathname: `/films/${film.id}/`}}>
+            <Link to={{pathname: `/movies/${film.id}/`}}>
                 <div className="poster-main">
                     <img src={film.image} className="main-img"/>
                 </div>

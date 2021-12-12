@@ -5,7 +5,6 @@ import AuthService from "../../services/auth.service";
 import {required, confirmPassword} from "../../utils"
 import AbstractLogRegComponent from "./AbstractLogRegComponent"
 import "./LoginRegister.css"
-import {Redirect} from "react-router-dom";
 
 class Register extends AbstractLogRegComponent {
     state = {

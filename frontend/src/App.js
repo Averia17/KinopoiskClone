@@ -2,7 +2,7 @@ import React, {Component} from "react"
 import {withRouter} from "react-router";
 import axios from "axios"
 import './App.css';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import {Switch, Route} from 'react-router-dom';
 import FilmDetail from "./components/Film/FilmDetail";
 import MainPage from "./components/Films/MainPage";
 import NavBar from "./components/Navbar/NavBar";
@@ -12,6 +12,7 @@ import Login from "./components/LoginRegister/Login";
 import Register from "./components/LoginRegister/Register";
 import FilterForm from "./components/Filter/Filter";
 import Profile from "./components/Profile/Profile";
+import GenresCountries from "./components/GenresCountries/GenresCountries";
 
 
 class App extends Component {
@@ -25,6 +26,13 @@ class App extends Component {
         return axios({
             method: "GET",
             url: url,
+        })
+    }
+
+    getMovie(id) {
+        return axios({
+            method: "GET",
+            url: `http://localhost:8080/api/movies/${id}`,
         })
     }
 
@@ -44,7 +52,7 @@ class App extends Component {
 
     getByCountry(slug) {
         return axios({
-            method: "GET",
+            method: 'GET',
             url: `http://localhost:8080/api/countries/${slug}/`,
         })
     }
@@ -54,6 +62,18 @@ class App extends Component {
             params.name = params.search
             delete params.search
         }
+
+    getTypesByGenresOrCountries(isCountries) {
+        let url = `http://localhost:8080/api/genres/`;
+        if (isCountries) url = `http://localhost:8080/api/countries/`;
+        return axios({
+            method: 'GET',
+            url: url,
+        })
+    }
+
+    searchMovies(searchText) {
+        console.log(searchText)
 
         return axios({
             method: "GET",
@@ -81,15 +101,15 @@ class App extends Component {
             <>
                 <NavBar {...this.props}/>
                 <Switch>
-                    <Route path="/films/:id/" exact component={FilmDetail}/>
-                    <Route path="/serials/:id/" exact component={FilmDetail}/>
+                    <Route path="/movies/:id/" exact
+                           component={(props) => <FilmDetail {...props} getFilms={(id) => this.getMovie(id)}/>}/>
                     <Route path="/films/" exact
                            component={() => <MainPage getFilms={(isSerials) => this.getFilms(false)}/>}/>
                     <Route path="/serials/" exact
                            component={() => <MainPage getFilms={(isSerials) => this.getFilms(true)}/>}/>
                     <Route path="/films/:id/staff" exact component={StaffPage}/>
                     <Route path="/staff/:id/" exact component={PersonPage}/>
-                     <Route path="/movies/" exact
+                    <Route path="/movies/" exact
                            component={(props) => <MainPage {...props} getFilms={(slug) => this.searchMovies(slug)}/>}/>
                     <Route path="/genres/:slug/" exact
                            component={(props) => <MainPage {...props} getFilms={(slug) => this.getByGenre(slug)}/>}/>
@@ -100,14 +120,14 @@ class App extends Component {
                     <Route path="/login/" exact component={Login}/>
                     <Route path="/register/" exact component={Register}/>
                     <Route path="/filter/" exact component={(props) => <FilterForm {...props}/>}/>
+                    <Route path="/genres/" exact component={() => <GenresCountries getFilms={(isCountries) =>
+                               this.getTypesByGenresOrCountries(false)}/>}/>
+                    <Route path="/countries/" exact component={() => <GenresCountries getFilms={(isCountries) =>
+                               this.getTypesByGenresOrCountries(true)}/>}/>
                     <Route component={() => <MainPage getFilms = {(isSerials) => this.getFilms(false)}/>}/>
-
-                    <Route component={() => <MainPage getFilms={(isSerials) => this.getFilms(false)}/>}/>
                 </Switch>
             </>
         );
-           /*<Route path="/filters/" exact*/
-                     /*       component={(props) => <MainPage {...props} getFilms={(slug) => this.filterMovies(slug)}/>}/>*/
     }
 }
 

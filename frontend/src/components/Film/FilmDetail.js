@@ -1,30 +1,27 @@
 import React, { useEffect, useState} from 'react';
-import axios from 'axios';
 import moment from 'moment';
 import 'moment/locale/ru'
 import '../../App.css';
 import { Link, useParams } from 'react-router-dom'
 
-function FilmDetail({ match }) {
+function FilmDetail(props) {
     const [film, setFilm] = useState( []);
-    const id = match.params.id;
+    const id = props?.match?.params?.id;
 
     useEffect(() => {
         document.title = `${film.name}`;
-        axios({
-            method: "GET",
-            url: `http://localhost:8080/api/films/${id}/`,
-        }).then(response => {
+        props.getFilms(id).then(response => {
             setFilm(response.data)
         })
-    }, [id])
-    const dateRu = moment(film.premiereRu).lang("ru").format('DD MMMM YYYY');
-    const dateWorld = moment(film.premiereWorld).lang("ru").format('DD MMMM YYYY');
-    const actors = film.staff?.filter(function(f) {
+    }, [])
+    const dateFormat = 'DD MMMM YYYY';
+    const dateRu = moment(film?.premiereRu).lang("ru").format(dateFormat);
+    const dateWorld = moment(film?.premiereWorld).lang("ru").format(dateFormat);
+    const actors = film?.staff?.filter(function(f) {
         return f.professionKey === "ACTOR";
     });
-    const countries = film.countries?.map((c, index) => {
-        return( c.title + (index != (film.countries.length - 1) ? ',' : '' ))
+    const countries = film?.countries?.map((c, index) => {
+        return( c.title + (index != (film?.countries.length - 1) ? ',' : '' ))
     });
     let emptiness = [];
     return (
@@ -55,11 +52,11 @@ function FilmDetail({ match }) {
                     })}</ul>
                 </div>
                 <p>Премьера в мире: {
-                    dateWorld ? dateWorld : "-"
+                    moment(dateWorld, dateFormat, true).isValid() ? dateWorld : "-"
                 }
                 </p>
                 <p>Премьера в России: {
-                    dateRu ? dateRu : "-"
+                    moment(dateRu, dateFormat, true).isValid()  ? dateRu : "-"
                 }
                 </p>
                 <p>Бюджет: {

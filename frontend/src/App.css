@@ -323,9 +323,14 @@ p {
   min-height: 47px;
   cursor: pointer;
 }
-.search-box {
-
+.wrapper-logout-favorites {
+  display: flex;
+  flex-direction: row;
+  padding-inline-start: 0;
+  list-style: none;
 }
+
+/* search */
 .search-form {
   display: flex;
   flex-direction: row;
@@ -397,3 +402,6 @@ p {
   font-size: 24px;
   text-align: center;
 }
+
+
+

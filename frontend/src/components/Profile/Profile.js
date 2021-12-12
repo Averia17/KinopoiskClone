@@ -1,9 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import moment from 'moment';
-import 'moment/locale/ru'
 import '../../App.css';
-import {Link, useParams} from 'react-router-dom'
 import Tokens from "../../services/auth-header";
 import Film from "../Films/Film";
 

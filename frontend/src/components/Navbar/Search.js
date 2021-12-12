@@ -1,5 +1,4 @@
-import axios from "axios";
-import {Link, Redirect} from "react-router-dom";
+import {Link} from "react-router-dom";
 import filter from "../../assets/filter.png";
 import React, {useState} from "react";
 

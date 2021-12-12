@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import '../../App.css';
-import {Link, useParams} from 'react-router-dom'
+import {Link, useParams, useHistory} from 'react-router-dom'
 import StarIcon from '@mui/icons-material/Star';
 import Tokens from "../../services/auth-header";
 import queryString from 'query-string';
@@ -12,6 +12,8 @@ function MainPage(props) {
     const [film, setFilm] = useState([]);
     const [favorites, setFavorites] = useState([]);
     const slug = props?.match?.params?.slug ||  queryString.parse(props?.location?.search);
+    const slug = props?.match?.params?.slug || queryString.parse(props?.location?.search).search;
+    const history = useHistory();
     useEffect(() => {
         document.title = "Главная страница";
         props.getFilms(slug).then(response => {
@@ -36,7 +38,6 @@ function MainPage(props) {
     const updateFavorites = (films) => {
         setFavorites(films);
     }
-
     return (
         <div className="main-page font-style">
             <div className="films">
