@@ -159,7 +159,10 @@ class FavoritesViewSet(viewsets.ModelViewSet):
     serializer_class = FilmListSerializer
 
     def get_queryset(self):
-        saved_films = self.request.user.saved_films
+        user = self.request.user
+        saved_films = User.saved_films.through.objects.none()
+        if not user.is_anonymous:
+            saved_films = user.saved_films
         return saved_films
 
     def create(self, request, *args, **kwargs):
@@ -184,11 +187,9 @@ class FavoritesViewSet(viewsets.ModelViewSet):
         else:
             return Response(serializer.data)
 
-    def list(self, request, *args, **kwargs):
-        queryset = []
-        if not self.request.user.is_anonymous:
-            user = self.request.data.get('id') or self.request.user
-            queryset = user.saved_films.all()
+    def retrieve(self, request, *args, **kwargs):
+        user = User.objects.get(pk=kwargs['pk'])
+        queryset = user.saved_films.all()
         serializer = FilmListSerpySerializer(queryset, many=True)
         # favorites_ids = user.saved_films.values_list('id', flat=True)
         return Response(serializer.data)

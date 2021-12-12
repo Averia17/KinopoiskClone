@@ -12,6 +12,7 @@ function Profile(props) {
     const [user, setUser] = useState([]);
     const id = props?.match?.params?.id;
     const [favorites, setFavorites] = useState([]);
+    const [userFavorites, setUserFavorites] = useState([]);
 
     useEffect(() => {
         const url = `http://localhost:8080/api/users/${id}`;
@@ -24,23 +25,28 @@ function Profile(props) {
         }).then(response => setUser(response.data))
     }, [id])
     useEffect(() => {
+
+        axios({
+            method: "GET",
+            url: `http://localhost:8080/api/favorites/${id}`,
+            headers: {
+                'Content-type': 'application/json',
+            },
+        }).then(response => {
+            setUserFavorites(response.data)
+        }).catch(error => {
+            setUserFavorites([])
+        })
+    }, [])
+    useEffect(() => {
         const accessToken = Tokens.AccessTokenHeader();
-        // need test
-        let headers = {
-            'Content-type': 'application/json',
-        }
-        let data = {
-            id: id
-        }
-        if (accessToken) {
-            headers['Authorization'] = accessToken;
-            data = {}
-        }
         axios({
             method: "GET",
             url: `http://localhost:8080/api/favorites/`,
-            headers: headers,
-            data: data
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': accessToken
+            },
         }).then(response => {
             setFavorites(response.data)
         }).catch(error => {
@@ -49,13 +55,17 @@ function Profile(props) {
     }, [])
     const updateFavorites = (favorites) => {
         setFavorites(favorites)
+        if(Tokens.getCurrentUserTokens().id.toString() === id) {
+            setUserFavorites(favorites)
+        }
     }
 
     return (
         <div className="user-profile">
             <div className="user-profile-title">{user?.email} profile</div>
+            <div className="user-profile-title">User's favorite movies </div>
             <div className="films">
-                {favorites?.map((film) => {
+                {userFavorites?.map((film) => {
                     return (
                         <Film key={film.id} film={film} updateFavorites={updateFavorites} favorites={favorites}/>
                     )

@@ -76,7 +76,7 @@ class FilmListSerializer(ModelSerializer):
 
     class Meta:
         model = Film
-        fields = ('id', 'name', 'image', 'year', 'genres__title')
+        fields = ('id', 'name', 'image', 'year', 'type', 'genres__title')
         read_only_fields = fields
 
 
@@ -85,6 +85,7 @@ class FilmListSerpySerializer(serpy.Serializer):
     name = serpy.Field(required=False)
     image = serpy.Field(required=False)
     year = serpy.Field(required=False)
+    type = serpy.Field(required=False)
     distance = serpy.Field(required=False)
     genres__title = serpy.Field(required=False)
 
@@ -99,6 +100,7 @@ class FilmFullListSerpySerializer(serpy.Serializer):
     name = serpy.Field(required=False)
     image = serpy.Field(required=False)
     year = serpy.Field(required=False)
+    type = serpy.Field(required=False)
     genres = GenreSeprySerializer(many=True, call=True, attr='genres.all')
 
 

@@ -20,7 +20,6 @@ function MainPage(props) {
     }, [])
     useEffect(() => {
         const accessToken = Tokens.AccessTokenHeader();
-        console.log(accessToken)
         axios({
             method: "GET",
             url: `http://localhost:8080/api/favorites/`,
@@ -29,13 +28,11 @@ function MainPage(props) {
                 'Authorization': accessToken
             },
         }).then(response => {
-            console.log(response.data)
             setFavorites(response.data)
         }).catch(error => {
             setFavorites([])
         })
     }, [])
-    console.log(favorites)
     const updateFavorites = (films) => {
         setFavorites(films);
     }
