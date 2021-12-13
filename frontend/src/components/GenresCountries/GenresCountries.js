@@ -29,10 +29,8 @@ function GenresCountries(props) {
                 {item.map((item) => {
                     return (
                         <div key={item.id} className='item-block'>
-                            <div className='item-image'>
-                                <img src={image}/>
-                            </div>
                             <li className='item'>
+                                <img src={image} className='item-image'/>
                                 <Link key={item.id} to={{pathname: `/${type}/${item.slug}/`}}>{item.title}</Link>
                             </li>
                         </div>
