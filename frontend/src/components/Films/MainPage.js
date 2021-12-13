@@ -11,6 +11,8 @@ import Film from "./Film";
 function MainPage(props) {
     const [film, setFilm] = useState([]);
     const [favorites, setFavorites] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(99);
     const slug = props?.match?.params?.slug ||  queryString.parse(props?.location?.search);
     useEffect(() => {
         document.title = "Главная страница";
@@ -36,10 +38,26 @@ function MainPage(props) {
     const updateFavorites = (films) => {
         setFavorites(films);
     }
+    const lastItemIndex = currentPage * itemsPerPage
+    const currentItem = film.slice(1, lastItemIndex)
+    const paginate = pageNumber => setCurrentPage(pageNumber);
+    useEffect(() => {
+        document.addEventListener('scroll', scrollHandler)
+        return function () {
+            document.removeEventListener('scroll', scrollHandler)
+        }
+    }, [currentPage])
+    const scrollHandler = (event) => {
+        if (event.target.documentElement.scrollHeight -
+            (event.target.documentElement.scrollTop + window.innerHeight) < 100) {
+            let number = currentPage + 1;
+            paginate(number)
+        }
+    }
     return (
         <div className="main-page font-style">
             <div className="films">
-                {film.map((f) => {
+                {currentItem.map((f) => {
                         return (
                             <Film key={film.id} film={f} updateFavorites={updateFavorites} favorites={favorites}/>
                         )
