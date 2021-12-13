@@ -23,10 +23,7 @@ class App extends Component {
     getFilms(isSerials) {
         let url = 'http://localhost:8080/api/films/';
         if (isSerials) url = 'http://localhost:8080/api/serials/'
-        return axios({
-            method: "GET",
-            url: url,
-        })
+        return axios.get(`${url}`)
     }
 
     getMovie(id) {
@@ -107,9 +104,9 @@ class App extends Component {
                     <Route path="/serials/:id/" exact
                            component={(props) => <FilmDetail {...props} getFilms={(id) => this.getMovie(id)}/>}/>
                     <Route path="/films/" exact
-                           component={() => <MainPage getFilms={(isSerials) => this.getFilms(false)}/>}/>
+                           component={() => <MainPage getFilms={() => this.getFilms(false)}/>}/>
                     <Route path="/serials/" exact
-                           component={() => <MainPage getFilms={(isSerials) => this.getFilms(true)}/>}/>
+                           component={() => <MainPage getFilms={() => this.getFilms(true)}/>}/>
                     <Route path="/films/:id/staff" exact component={StaffPage}/>
                     <Route path="/staff/:id/" exact component={PersonPage}/>
                     <Route path="/movies/" exact
@@ -123,11 +120,11 @@ class App extends Component {
                     <Route path="/login/" exact component={Login}/>
                     <Route path="/register/" exact component={Register}/>
                     <Route path="/filter/" exact component={(props) => <FilterForm {...props}/>}/>
-                    <Route path="/genres/" exact component={() => <GenresCountries getFilms={(isCountries) =>
+                    <Route path="/genres/" exact component={() => <GenresCountries getFilms={() =>
                         this.getTypesByGenresOrCountries(false)}/>}/>
-                    <Route path="/countries/" exact component={() => <GenresCountries getFilms={(isCountries) =>
+                    <Route path="/countries/" exact component={() => <GenresCountries getFilms={() =>
                         this.getTypesByGenresOrCountries(true)}/>}/>
-                    <Route component={() => <MainPage getFilms={(isSerials) => this.getFilms(false)}/>}/>
+                    <Route component={() => <MainPage getFilms={() => this.getFilms(false)}/>}/>
                 </Switch>
             </>
         );

@@ -73,6 +73,11 @@ p {
     max-width: 970px;
   }
 }
+.film-details-trailer {
+  padding: 3% 0 0 3%;
+  max-width: 450px;
+  width: 100%;
+}
 .film-details {
   background: #262626;
   display: inline-block;
@@ -267,6 +272,10 @@ p {
   padding: 0 0 140% 0;
   position: relative;
 }
+.films-not__found {
+  font-size: 1.5em;
+  padding-bottom: 10%;
+}
 .main-page {
   background: #262626;
   position: relative;
@@ -287,8 +296,8 @@ p {
   left: 0;
   top: 0;
   border-radius: 2%;
-
 }
+
 
 /* navbar */
 

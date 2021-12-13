@@ -1,0 +1,63 @@
+.person-page-block {
+    padding: 10% 5% 5% 5%;
+    display: flex;
+    flex-direction: row;
+    background: #262626;
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: 2% 10%;
+    max-width: 1270px;
+    min-width: 320px;
+    justify-content: center;
+    color: white;
+}
+.person-page-info {
+    display: flex;
+    flex-direction: column;
+    padding: 0 1.5em;
+    width: 45%;
+}
+.person-page-info div:not(:first-of-type) p {
+    font-size: 1.3em;
+    margin: 0;
+    padding: 7% 0 0 0;
+}
+.person-page-header p{
+    font-size: 2.5em;
+    margin: 0;
+}
+.person-poster-details {
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    max-height: 450px;
+}
+.person-poster-details img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 4%;
+}
+.person-page-info__birthday, .person-page-info__growth, .person-page-info__death {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 100%;
+}
+
+#date, #growth, #death {
+    padding-left: 1%;
+    max-width: 100%;
+}
+.person-page-info__birthday p, .person-page-info__death p{
+    max-width: 100%;
+}
+#age {
+    padding-left: 2%;
+    opacity: 0.5;
+    font-size: 1.2em;
+}
+.person-page-info__death p:nth-child(2) {
+    float: left;
+}

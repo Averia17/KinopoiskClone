@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom'
 import Search from "./Search";
 import Tokens from "../../services/auth-header";
 import AuthService from "../../services/auth.service";
+import logo from "../../assets/logo.svg"
 
 function NavBar(props) {
     const handleLogout = e => {
@@ -14,14 +15,13 @@ function NavBar(props) {
     }
     const tokens = Tokens.getCurrentUserTokens();
 
-
     return (
         <nav className="navbar font-style">
             <ul className="navbar-items">
                 <li>
                     <Link to={{pathname: `/films/`}}>
                         <div className="logo">
-                            <img src="/assets/logo.svg"/>
+                            <img src={logo}/>
                         </div>
                     </Link>
                 </li>

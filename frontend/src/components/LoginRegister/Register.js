@@ -76,11 +76,10 @@ class Register extends AbstractLogRegComponent {
                     }}>
                     {!this.state.successful && (
                         <div className="form-wrapper">
-
                             {this.getEmail()}
                             {this.getPassword()}
                             <div className="input-box">
-                                <label className="input-title"  htmlFor="confirmPassword">Confirm Password</label>
+                                <label className="input-title" htmlFor="confirmPassword">Confirm Password</label>
                                 <Input
                                     className="input"
                                     type="password"

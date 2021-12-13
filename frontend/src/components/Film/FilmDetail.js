@@ -2,7 +2,8 @@ import React, { useEffect, useState} from 'react';
 import moment from 'moment';
 import 'moment/locale/ru'
 import '../../App.css';
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import ReactPlayer from 'react-player'
 
 function FilmDetail(props) {
     const [film, setFilm] = useState( []);
@@ -24,11 +25,16 @@ function FilmDetail(props) {
     let emptiness = [];
     return (
         <div className="film-details font-style">
-            <div className="poster-details">
-                <img className="poster-img" src={film.image}/>
-                <p className="ageLimit-poster">{
-                    film?.ratingAgeLimits ? film?.ratingAgeLimits : 0 }+
-                </p>
+            <div>
+                <div className="poster-details">
+                    <img className="poster-img" src={film.image}/>
+                    <p className="ageLimit-poster">{
+                        film?.ratingAgeLimits ? film?.ratingAgeLimits : 0 }+
+                    </p>
+                </div>
+                <div className="film-details-trailer">
+                    <ReactPlayer url={film?.trailers?.map((f) => f.url)?.slice(0, 1)} width="81%" height="80%" />
+                </div>
             </div>
             <div className="film-info">
                 <div>
@@ -89,7 +95,7 @@ function FilmDetail(props) {
                                             <p><Link key={a.id} className="actor" to={{ pathname: `/staff/${a.id}/`}}>{a.nameRu}</Link></p>
                                         </div>
                                 )}
-                            ) : emptiness.unshift("gecnj")}
+                            ) : emptiness.unshift("")}
                         </ul>
                         <p>{emptiness[0]}</p>
                         <Link key={film.id} id="others" to={{ pathname: `/films/${film.id}/staff`}}>Остальные персоны</Link>

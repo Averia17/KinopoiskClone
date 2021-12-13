@@ -69,7 +69,6 @@ class Login extends AbstractLogRegComponent {
                         <Link to={{pathname: `/register/`}}>Register</Link>
                     </div>
                     {this.getSubmitButton(true)}
-
                     {this.getErrorMessages()}
                 </Form>
             </div>

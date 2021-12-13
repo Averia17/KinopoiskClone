@@ -13,13 +13,16 @@ function MainPage(props) {
     const [favorites, setFavorites] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(99);
-    const slug = props?.match?.params?.slug ||  queryString.parse(props?.location?.search);
+    const [isLoading, setLoading] = useState(false);
+    const slug = props?.match?.params?.slug || queryString.parse(props?.location?.search);
     useEffect(() => {
+        setLoading(true)
         document.title = "Главная страница";
         props.getFilms(slug).then(response => {
             setFilm(response.data)
         })
-    }, [])
+        setLoading(false)
+    }, [isLoading])
     useEffect(() => {
         const accessToken = Tokens.AccessTokenHeader();
         axios({
@@ -56,14 +59,19 @@ function MainPage(props) {
     }
     return (
         <div className="main-page font-style">
-            <div className="films">
-                {currentItem.map((f) => {
-                        return (
-                            <Film key={film.id} film={f} updateFavorites={updateFavorites} favorites={favorites}/>
-                        )
+            {currentItem.length > 0 ?
+                <div className="films">
+                    {currentItem.map((f) => {
+                            return <Film key={film.id} film={f} updateFavorites={updateFavorites} favorites={favorites}/>
+                        }
+                    )}
+                </div> :
+                <div className="films">
+                    {isLoading ?
+                        <div className="films-not__found">Загрузка..</div> :
+                        <div className="films-not__found">К сожалению, пока ничего нет :(</div>
                     }
-                )}
-            </div>
+                </div>}
         </div>
     )
 }
