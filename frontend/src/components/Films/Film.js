@@ -19,12 +19,17 @@ function Film(props) {
         })
     }
     const isFavorite = favorites.some((item) => item.id === film.id);
+    let url = 'films'
+    if (film.type === 'TV_SHOW')
+        url = 'serials'
+    console.log(film.type)
+    console.log(url)
     return (
         <div className="films-item" >
             <button onClick={() => moveToFavorites(film.id, isFavorite)} style={{background: 'none', border: 'none'}}>
                 <StarIcon fontSize={"large"} style={{color: isFavorite ? '#5CE9E2' : 'azure'}}/>
             </button>
-            <Link to={{pathname: `/movies/${film.id}/`}}>
+            <Link to={{pathname: `/${url}/${film.id}/`}}>
                 <div className="poster-main">
                     <img src={film.image} className="main-img"/>
                 </div>

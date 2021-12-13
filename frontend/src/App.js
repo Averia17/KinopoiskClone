@@ -58,10 +58,19 @@ class App extends Component {
     }
 
     searchMovies(params) {
-        if(params &&  params["search"] !== undefined) {
+        if (params && params["search"] !== undefined) {
             params.name = params.search
             delete params.search
         }
+        return axios({
+            method: "GET",
+            headers: {
+                'Content-type': 'application/json',
+            },
+            params: params,
+            url: `http://localhost:8080/api/movies/`,
+        })
+    };
 
     getTypesByGenresOrCountries(isCountries) {
         let url = `http://localhost:8080/api/genres/`;
@@ -72,18 +81,7 @@ class App extends Component {
         })
     }
 
-    searchMovies(searchText) {
-        console.log(searchText)
 
-        return axios({
-            method: "GET",
-            headers: {
-                'Content-type': 'application/json',
-            },
-            params: params,
-            url: `http://localhost:8080/api/movies/`,
-        })
-    };
     filterMovies(params) {
         console.log(params)
 
@@ -96,12 +94,17 @@ class App extends Component {
         })
     };
 
+
     render() {
         return (
             <>
                 <NavBar {...this.props}/>
                 <Switch>
                     <Route path="/movies/:id/" exact
+                           component={(props) => <FilmDetail {...props} getFilms={(id) => this.getMovie(id)}/>}/>
+                    <Route path="/films/:id/" exact
+                           component={(props) => <FilmDetail {...props} getFilms={(id) => this.getMovie(id)}/>}/>
+                    <Route path="/serials/:id/" exact
                            component={(props) => <FilmDetail {...props} getFilms={(id) => this.getMovie(id)}/>}/>
                     <Route path="/films/" exact
                            component={() => <MainPage getFilms={(isSerials) => this.getFilms(false)}/>}/>
@@ -121,10 +124,10 @@ class App extends Component {
                     <Route path="/register/" exact component={Register}/>
                     <Route path="/filter/" exact component={(props) => <FilterForm {...props}/>}/>
                     <Route path="/genres/" exact component={() => <GenresCountries getFilms={(isCountries) =>
-                               this.getTypesByGenresOrCountries(false)}/>}/>
+                        this.getTypesByGenresOrCountries(false)}/>}/>
                     <Route path="/countries/" exact component={() => <GenresCountries getFilms={(isCountries) =>
-                               this.getTypesByGenresOrCountries(true)}/>}/>
-                    <Route component={() => <MainPage getFilms = {(isSerials) => this.getFilms(false)}/>}/>
+                        this.getTypesByGenresOrCountries(true)}/>}/>
+                    <Route component={() => <MainPage getFilms={(isSerials) => this.getFilms(false)}/>}/>
                 </Switch>
             </>
         );

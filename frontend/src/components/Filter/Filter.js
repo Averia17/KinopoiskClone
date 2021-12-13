@@ -6,10 +6,7 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import {stringify} from "query-string";
 
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 function FilterForm(props) {
     const [country, setCountry] = useState([]);
     const [genre, setGenre] = useState([]);
@@ -19,8 +16,6 @@ function FilterForm(props) {
     const [max_year, setMaxYear] = useState([]);
     const [countries__title, setCountryTitle] = useState([]);
     const [genres__title, setGenreTitle] = useState([]);
-    const query = new URLSearchParams(useLocation().search);
-    const history = useHistory();
 
     useEffect(() => {
         axios({
@@ -31,12 +26,6 @@ function FilterForm(props) {
         })
     }, [])
     useEffect(() => {
-        history.push({
-            pathname: '/movies/',
-            search: '?'
-        })
-    })
-    useEffect(() => {
         axios({
             method: "GET",
             url: `http://localhost:8080/api/genres/`,
@@ -44,10 +33,6 @@ function FilterForm(props) {
             setGenre(response.data)
         })
     }, [])
-    useEffect(() => {
-        const parsed = queryString.parse(history.location.search);
-        debugger;
-    })
     const minRatingHandleChange = (event) => {
         setMinRating(event.target.value);
     }
@@ -61,7 +46,6 @@ function FilterForm(props) {
         setMaxYear(event.target.value);
     }
     const countryHandleChange = (event) => {
-        console.log(event.target.value)
         setCountryTitle(event.target.value);
     }
     const genreHandleChange = (event) => {
