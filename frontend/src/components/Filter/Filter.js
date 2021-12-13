@@ -5,6 +5,7 @@ import axios from 'axios';
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import {stringify} from "query-string";
+import {rating, year} from "../../utils";
 
 
 function FilterForm(props) {
@@ -72,15 +73,15 @@ function FilterForm(props) {
                     <div className="filter-form-group-inputs">
                         <p>Страна</p>
                         <select name="countries__title" onChange={countryHandleChange}>
-                            <option selected="selected"> </option>
+                            <option selected="selected"></option>
                             {country.map((c) =>
-                                <option value={c.title} >{c.title}</option>)}
+                                <option value={c.title}>{c.title}</option>)}
                         </select>
                     </div>
                     <div className="filter-form-group-inputs">
                         <p>Жанр</p>
                         <select name="genres__title" onChange={genreHandleChange}>
-                            <option selected="selected"> </option>
+                            <option selected="selected"></option>
                             {genre.map((g) =>
                                 <option value={g.title}>{g.title}</option>)}
                         </select>
@@ -89,23 +90,31 @@ function FilterForm(props) {
                         <label>Минимальный рейтинг</label>
                         <Input type="number" name="min_rating"
                                onChange={minRatingHandleChange}
-                               value={min_rating}/>
+                               value={min_rating}
+                               validations={[rating]}
+                        />
                         <p>-</p>
                         <label>Максимальный рейтинг</label>
                         <Input type="number" name="max_rating"
                                onChange={maxRatingHandleChange}
-                               value={max_rating}/>
+                               value={max_rating}
+                               validations={[rating]}
+                        />
                     </div>
                     <div className="filter-form-group-inputs">
                         <label>Минимальный год</label>
                         <Input type="number" name="min_year"
                                onChange={minYearHandleChange}
-                               value={min_year}/>
+                               value={min_year}
+                               validations={[year]}
+                        />
                         <p>- </p>
                         <label>Максимальный год</label>
                         <Input type="number" name="max_year"
                                onChange={maxYearHandleChange}
-                               value={max_year}/>
+                               value={max_year}
+                               validations={[year]}
+                        />
                     </div>
                     <button className="submit-button" type="submit">
                         Submit

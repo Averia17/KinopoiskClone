@@ -35,7 +35,7 @@ class FilmSearchFilter(filters.FilterSet):
         #     i.id for i in Film.objects.raw(f"SELECT * FROM search_movies_by_name('{args[0]}')")
         # ])
         # return queryset
-        return qs.distinct('id', 'name', 'year', 'image', 'type' 'similarity').values_list(
+        return qs.distinct('id', 'name', 'year', 'image', 'type', 'similarity').values_list(
             'id', 'name', 'year', 'image', 'genres__title', 'type', 'similarity', named=True
         )
 

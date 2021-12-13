@@ -20,9 +20,7 @@ function FilmDetail(props) {
     const actors = film?.staff?.filter(function(f) {
         return f.professionKey === "ACTOR";
     });
-    const countries = film?.countries?.map((c, index) => {
-        return( c.title + (index != (film?.countries.length - 1) ? ',' : '' ))
-    });
+
     let emptiness = [];
     return (
         <div className="film-details font-style">

@@ -22,8 +22,6 @@ function Film(props) {
     let url = 'films'
     if (film.type === 'TV_SHOW')
         url = 'serials'
-    console.log(film.type)
-    console.log(url)
     return (
         <div className="films-item" >
             <button onClick={() => moveToFavorites(film.id, isFavorite)} style={{background: 'none', border: 'none'}}>

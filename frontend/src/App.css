@@ -332,15 +332,37 @@ p {
 
 /* search */
 .search-form {
-  display: flex;
-  flex-direction: row;
+  width: auto;
+}
+.search-wrapper {
   position: relative;
+}
+.search-text {
+  padding: 2px 27px 2px 2px;
+  margin: 0;
+}
+.submit-search-button {
+  background: white;
+  border: none;
+  cursor: pointer;
 }
 .logout-button {
   background: none;
   border: none;
 }
-
+.search-icons {
+  max-width: 50px;
+  max-height: 18px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 10%;
+  right: 2%;
+  display: flex;
+}
+#filter-icon {
+  margin-right: 2px;
+}
 /*  staff page */
 
 .film-staff {
@@ -354,15 +376,7 @@ p {
 }
 
 /* filter */
-#filter-icon {
-  max-width: 18px;
-  max-height: 18px;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 10%;
-  right: 2%;
-}
+
 .filter-form {
   display: flex;
   flex-direction: column;
