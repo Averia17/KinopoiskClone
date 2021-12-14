@@ -9,7 +9,7 @@ function PersonPage({ match }) {
     const dateFormat = "DD MMMM YYYY";
     const dateOfBirth = moment(person?.birthday).lang("ru").format(dateFormat);
     const dateOfDeath = moment(person?.death).lang("ru").format(dateFormat);
-
+    let year;
     useEffect( () => {
         axios({
             method: "GET",
@@ -18,7 +18,12 @@ function PersonPage({ match }) {
             setPerson(response.data)
         })
     }, [id])
-
+    if (person?.birthday) {
+        if (person?.death)
+            year = new Date(person?.death).getFullYear() - new Date(person?.birthday).getFullYear()
+        else
+            year = new Date().getFullYear() - new Date(person?.birthday).getFullYear()
+    }
     return(
         <div className="person-page-block">
             <div className="person-poster-details">
@@ -34,7 +39,7 @@ function PersonPage({ match }) {
                 <div className="person-page-info__birthday">
                     <p>Дата рождения:</p>
                     <p id="date">{moment(dateOfBirth, dateFormat, true).isValid()  ? dateOfBirth : "-"}</p>
-                    <p id="age">{person?.age ? person.age : null} лет</p>
+                    <p id="age">{year ? year : null}</p>
                 </div>
                     {person?.death ?
                         <div className="person-page-info__death">

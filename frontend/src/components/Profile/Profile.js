@@ -22,7 +22,6 @@ function Profile(props) {
         }).then(response => setUser(response.data))
     }, [id])
     useEffect(() => {
-
         axios({
             method: "GET",
             url: `http://localhost:8080/api/favorites/${id}`,
@@ -34,7 +33,7 @@ function Profile(props) {
         }).catch(error => {
             setUserFavorites([])
         })
-    }, [])
+    }, [id])
     useEffect(() => {
         const accessToken = Tokens.AccessTokenHeader();
         axios({

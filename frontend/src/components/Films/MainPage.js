@@ -1,11 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import '../../App.css';
-import {Link, useParams, useHistory} from 'react-router-dom'
-import StarIcon from '@mui/icons-material/Star';
 import Tokens from "../../services/auth-header";
 import queryString from 'query-string';
-import {handleMoveToFavorite} from "../../services/favorite.service";
 import Film from "./Film";
 
 function MainPage(props) {
@@ -42,7 +39,7 @@ function MainPage(props) {
         setFavorites(films);
     }
     const lastItemIndex = currentPage * itemsPerPage
-    const currentItem = film.slice(1, lastItemIndex)
+    const currentItem = film.slice(0, lastItemIndex)
     const paginate = pageNumber => setCurrentPage(pageNumber);
     useEffect(() => {
         document.addEventListener('scroll', scrollHandler)

@@ -1,6 +1,4 @@
-import React, {useEffect, useState} from 'react';
-import {useLocation, useHistory} from "react-router-dom";
-import queryString from "query-string";
+import React, {useEffect, useRef, useState} from 'react';
 import axios from 'axios';
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
@@ -17,7 +15,7 @@ function FilterForm(props) {
     const [max_year, setMaxYear] = useState([]);
     const [countries__title, setCountryTitle] = useState([]);
     const [genres__title, setGenreTitle] = useState([]);
-
+    const formRef = useRef();
     useEffect(() => {
         axios({
             method: "GET",
@@ -68,12 +66,12 @@ function FilterForm(props) {
     return (
         <div className="filter-form">
             <h1>Искать фильм</h1>
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit} ref={formRef}>
                 <div className="filter-form-fields">
                     <div className="filter-form-group-inputs">
                         <p>Страна</p>
                         <select name="countries__title" onChange={countryHandleChange}>
-                            <option selected="selected"></option>
+                            <option selected="selected"/>
                             {country.map((c) =>
                                 <option value={c.title}>{c.title}</option>)}
                         </select>
@@ -81,7 +79,7 @@ function FilterForm(props) {
                     <div className="filter-form-group-inputs">
                         <p>Жанр</p>
                         <select name="genres__title" onChange={genreHandleChange}>
-                            <option selected="selected"></option>
+                            <option selected="selected"/>
                             {genre.map((g) =>
                                 <option value={g.title}>{g.title}</option>)}
                         </select>
@@ -116,6 +114,7 @@ function FilterForm(props) {
                                validations={[year]}
                         />
                     </div>
+
                     <button className="submit-button" type="submit">
                         Submit
                     </button>

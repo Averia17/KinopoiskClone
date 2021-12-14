@@ -74,15 +74,18 @@ p {
   }
 }
 .film-details-trailer {
-  padding: 3% 0 0 3%;
-  max-width: 450px;
+  margin-top: 50px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.all-trailers {
+  display: flex;
+  flex-wrap: wrap;
   width: 100%;
 }
 .film-details {
   background: #262626;
-  display: inline-block;
-  column-count: 3;
-  column-width: 270px;
   position: relative;
   top: 0;
   left: 0;
@@ -92,19 +95,21 @@ p {
   min-width: 320px;
 }
 .film-info {
-  max-width: 440px;
-  margin-left: -25px;
+  width: 35%;
+  padding-left: 50px;
   justify-content: left;
   display: inline-block;
   position: relative;
   top: 0;
   left: 0;
 }
+.film-info-wrapper {
+  display: flex;
+}
 .poster-details {
-  margin: 30px 60px 0 10px;
   position: relative;
   overflow: hidden;
-  padding: 0 0 120% 0;
+  width: 30%;
 }
 .poster-img {
   position: absolute;
@@ -160,13 +165,17 @@ p {
   content: none;
 }
 .rating-and-actors {
-  max-width: 270px;
   position: relative;
-  margin-left: 80px;
+  text-align: center;
 }
 .film-actors {
-  padding-top: 15px;
+  width: 100%;
+  margin-top: 10px;
+  text-align: center;
+}
+.film-actors-info {
   display: inline-block;
+  width: auto;
 }
 .film-actors #others {
   color: #5CE9E2;
@@ -178,6 +187,11 @@ p {
   font-weight: 400;
   margin:0;
   padding: 0;
+}
+.link-to-other-actors {
+  margin: 0;
+  padding: 0;
+  text-align: left;
 }
 .film-rating {
   max-height: 100px;
@@ -281,8 +295,7 @@ p {
   position: relative;
   top: 0;
   left: 0;
-  margin: 120px;
-  max-width: 1270px;
+  margin: 90px;
   min-width: 320px;
   display: flex;
   flex-wrap: wrap;

@@ -1,5 +1,5 @@
 import StarIcon from "@mui/icons-material/Star";
-import {Link, useHistory} from "react-router-dom";
+import {Link} from "react-router-dom";
 import React from "react";
 import '../../App.css';
 import {handleMoveToFavorite} from "../../services/favorite.service";
@@ -29,7 +29,7 @@ function Film(props) {
             </button>
             <Link to={{pathname: `/${url}/${film.id}/`}}>
                 <div className="poster-main">
-                    <img src={film.image} className="main-img"/>
+                    <img src={film.image} className="main-img" alt=""/>
                 </div>
                 <div className="film-description">
                     <div id="film-title">
