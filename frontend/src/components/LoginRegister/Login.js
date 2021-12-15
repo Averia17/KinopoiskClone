@@ -38,8 +38,7 @@ class Login extends AbstractLogRegComponent {
                         error.message ||
                         error.toString();
 
-                    if (error.response.status === 401)
-                    {
+                    if (error.response.status === 401) {
                         resMessage = "Email or password are not correct"
                     }
                     this.setState({
@@ -58,18 +57,21 @@ class Login extends AbstractLogRegComponent {
     render() {
         return (
             <div className="login-wrapper">
-                <Form className="form-wrapper"
+                <Form
                     onSubmit={this.handleLogin}
                     ref={c => {
                         this.form = c;
                     }}>
-                    {this.getEmail()}
-                    {this.getPassword()}
-                    <div className="link-to-register">
-                        <Link to={{pathname: `/register/`}}>Register</Link>
+                    <div className="form-wrapper">
+
+                        {this.getEmail()}
+                        {this.getPassword()}
+                        <div className="link-to-register">
+                            <Link to={{pathname: `/register/`}}>Register</Link>
+                        </div>
+                        {this.getSubmitButton(true)}
+                        {this.getErrorMessages()}
                     </div>
-                    {this.getSubmitButton(true)}
-                    {this.getErrorMessages()}
                 </Form>
             </div>
         );

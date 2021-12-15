@@ -97,6 +97,7 @@ p {
 .film-info {
   width: 35%;
   padding-left: 50px;
+  padding-right: 10px;
   justify-content: left;
   display: inline-block;
   position: relative;
@@ -252,6 +253,12 @@ p {
   top: 0;
   left: 0;
 }
+.favorite-button {
+  position: absolute;
+  z-index: 1;
+  top: 1%;
+  right: 1%;
+}
 .film-description {
   color: white;
   font-size: 22px;
@@ -321,7 +328,7 @@ p {
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 1;
+  z-index: 3;
   background-color: #1F1F1F;
   width: 100%;
 }
@@ -360,7 +367,8 @@ p {
   position: relative;
 }
 .search-text {
-  padding: 2px 27px 2px 2px;
+  padding: 2px 25px 2px 2px;
+  font-size: 14px;
   margin: 0;
 }
 .submit-search-button {
@@ -379,7 +387,7 @@ p {
   height: 100%;
   position: absolute;
   top: 10%;
-  right: 2%;
+  right: 4%;
   display: flex;
 }
 #filter-icon {
@@ -403,31 +411,62 @@ p {
   display: flex;
   flex-direction: column;
   text-align: center;
-  margin: 100px 0 0 0 ;
+  margin: 120px 0 0 0 ;
   padding: 0 50px;
   color: white;
   position: relative;
   align-content: center;
-
+}
+.filter-form-wrapper {
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 .filter-form-fields {
   position: relative;
   display: flex;
   flex-direction: column;
 }
-.filter-form-fields select, input, .submit-button {
-  width: 100%;
+.filter-form-fields select {
+  width: 70%;
   height: 100%;
   max-width: 150px;
-  margin: 10px;
+  margin: 10px 10px 10px 0;
+  display: flex;
+  justify-content: center;
+}
+.filter-input {
+    width: 70%;
+  height: 100%;
+  max-width: 150px;
+  margin: 10px 10px 10px 0;
+  display: flex;
+  justify-content: center;
+}
+.submit-button {
+  margin: 10px 0 0;
+}
+.submit-button button {
+  padding: 0 7%;
+}
+.filter-form-fields option {
+  display: flex;
 }
 .filter-form-group-inputs {
   display: flex;
   flex-direction: row;
   text-align: center;
   align-items: center;
+  width: 100%;
 }
-
+.filter-form-group-inputs p {
+  width: 10%;
+  text-align: left;
+}
+.filter-field-label {
+  width: 30%;
+  text-align: left;
+}
 /* profile */
 .user-profile {
   margin-top: 150px;
@@ -440,4 +479,7 @@ p {
 }
 
 
+.alert-message {
+  position: absolute;
+}
 

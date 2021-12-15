@@ -69,7 +69,7 @@ class Register extends AbstractLogRegComponent {
     render() {
         return (
             <div className="login-wrapper">
-                <Form className="form-wrapper"
+                <Form
                     onSubmit={this.handleRegister}
                     ref={c => {
                         this.form = c;

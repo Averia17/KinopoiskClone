@@ -4,7 +4,7 @@ import React from "react";
 export const required = value => {
     if (!value) {
         return (
-            <div role="alert">
+            <div  className="alert-message" role="alert">
                 Это обязательно поле!
             </div>
         );
@@ -15,7 +15,7 @@ export const required = value => {
 export const email = value => {
     if (!isEmail(value)) {
         return (
-            <div role="alert">
+            <div  className="alert-message" role="alert">
                 Некорректный email
             </div>
         );
@@ -26,7 +26,7 @@ export const email = value => {
 export const password = value => {
     if (value.length < 8) {
         return (
-            <div role="alert">
+            <div className="alert-message" role="alert">
                 Пароль должен быть длиннее 8 символов
             </div>
         );
@@ -36,7 +36,7 @@ export const password = value => {
 export const confirmPassword = (value, password) => {
     if (value !== password) {
         return (
-            <div role="alert">
+            <div  className="alert-message" role="alert">
                Пароли не совпадают
             </div>
         );
@@ -46,7 +46,7 @@ export const confirmPassword = (value, password) => {
 export const rating = value => {
     if (value > 10 || value < 0) {
         return (
-            <div role="alert">
+            <div  className="alert-message" role="alert">
                 Рейтинг должен быть от 0 до 10
             </div>
         );
@@ -57,14 +57,14 @@ export const rating = value => {
 export const year = value => {
     if (value > 2030 || value < 0) {
         return (
-            <div role="alert">
+            <div  className="alert-message" role="alert">
                 Год должен быть от 0 до 2030
             </div>
         );
     }
     if (!Number.isInteger(value)) {
         return (
-            <div role="alert">
+            <div  className="alert-message" role="alert">
                 Введите целое значение
             </div>
         );

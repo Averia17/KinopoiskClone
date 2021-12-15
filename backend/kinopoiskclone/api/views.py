@@ -12,7 +12,6 @@ from .serializers import StaffSerializer, FilmSerializer, GenreSerializer, \
     UserRegisterSerializer, CustomTokenObtainPairSerializer
 from .services import serialize_value_list_films, delete_saved_users_film
 
-
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -158,6 +157,18 @@ class FavoritesViewSet(viewsets.ModelViewSet):
     # permission_classes = (IsAuthenticated,)
     serializer_class = FilmListSerializer
 
+    def get_permissions(self):
+        return [
+            permission()
+            for permission in self.permission_to_method.get(
+                self.action, self.permission_classes
+            )
+        ]
+
+    permission_to_method = {
+        "create": [IsAuthenticated],
+    }
+
     def get_queryset(self):
         user = self.request.user
         saved_films = User.saved_films.through.objects.none()
@@ -170,7 +181,7 @@ class FavoritesViewSet(viewsets.ModelViewSet):
         pk = self.request.data.get('id')
         film = Film.objects.get(pk=pk)
         user.saved_films.add(film)
-       # favorite_ids = user.saved_films.values_list('id', flat=True)
+        # favorite_ids = user.saved_films.values_list('id', flat=True)
         queryset = serialize_value_list_films(user.saved_films)
         serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
@@ -179,7 +190,7 @@ class FavoritesViewSet(viewsets.ModelViewSet):
         try:
             user = self.request.user
             saved_films = delete_saved_users_film(user, pk)
-           # favorite_ids = user.saved_films.values_list('id', flat=True)
+            # favorite_ids = user.saved_films.values_list('id', flat=True)
             queryset = serialize_value_list_films(saved_films)
             serializer = FilmListSerpySerializer(queryset, many=True)
         except ObjectDoesNotExist:

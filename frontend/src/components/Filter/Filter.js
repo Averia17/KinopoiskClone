@@ -66,60 +66,61 @@ function FilterForm(props) {
     return (
         <div className="filter-form">
             <h1>Искать фильм</h1>
-            <Form onSubmit={handleSubmit} ref={formRef}>
-                <div className="filter-form-fields">
-                    <div className="filter-form-group-inputs">
-                        <p>Страна</p>
-                        <select name="countries__title" onChange={countryHandleChange}>
-                            <option selected="selected"/>
-                            {country.map((c) =>
-                                <option value={c.title}>{c.title}</option>)}
-                        </select>
+            <div className="filter-form-wrapper">
+                <Form onSubmit={handleSubmit} ref={formRef}>
+                    <div className="filter-form-fields">
+                        <div className="filter-form-group-inputs">
+                            <p>Страна</p>
+                            <select name="countries__title" onChange={countryHandleChange}>
+                                <option selected="selected"/>
+                                {country.map((c) =>
+                                    <option value={c.title}>{c.title}</option>)}
+                            </select>
+                        </div>
+                        <div className="filter-form-group-inputs">
+                            <p>Жанр</p>
+                            <select name="genres__title" onChange={genreHandleChange}>
+                                <option selected="selected"/>
+                                {genre.map((g) =>
+                                    <option value={g.title}>{g.title}</option>)}
+                            </select>
+                        </div>
+                        <div className="filter-form-group-inputs">
+                            <label className="filter-field-label">Минимальный рейтинг</label>
+                            <Input type="number" name="min_rating" className="filter-input"
+                                   onChange={minRatingHandleChange}
+                                   value={min_rating}
+                                   validations={[rating]}
+                            />
+                            <label className="filter-field-label">Максимальный рейтинг</label>
+                            <Input type="number" name="max_rating"  className="filter-input"
+                                   onChange={maxRatingHandleChange}
+                                   value={max_rating}
+                                   validations={[rating]}
+                            />
+                        </div>
+                        <div className="filter-form-group-inputs">
+                            <label className="filter-field-label">Минимальный год</label>
+                            <Input type="number" name="min_year"  className="filter-input"
+                                   onChange={minYearHandleChange}
+                                   value={min_year}
+                                   validations={[year]}
+                            />
+                            <label className="filter-field-label">Максимальный год</label>
+                            <Input type="number" name="max_year" className="filter-input"
+                                   onChange={maxYearHandleChange}
+                                   value={max_year}
+                                   validations={[year]}
+                            />
+                        </div>
+                        <div className="submit-button">
+                            <button  type="submit">
+                                Submit
+                            </button>
+                        </div>
                     </div>
-                    <div className="filter-form-group-inputs">
-                        <p>Жанр</p>
-                        <select name="genres__title" onChange={genreHandleChange}>
-                            <option selected="selected"/>
-                            {genre.map((g) =>
-                                <option value={g.title}>{g.title}</option>)}
-                        </select>
-                    </div>
-                    <div className="filter-form-group-inputs">
-                        <label>Минимальный рейтинг</label>
-                        <Input type="number" name="min_rating"
-                               onChange={minRatingHandleChange}
-                               value={min_rating}
-                               validations={[rating]}
-                        />
-                        <p>-</p>
-                        <label>Максимальный рейтинг</label>
-                        <Input type="number" name="max_rating"
-                               onChange={maxRatingHandleChange}
-                               value={max_rating}
-                               validations={[rating]}
-                        />
-                    </div>
-                    <div className="filter-form-group-inputs">
-                        <label>Минимальный год</label>
-                        <Input type="number" name="min_year"
-                               onChange={minYearHandleChange}
-                               value={min_year}
-                               validations={[year]}
-                        />
-                        <p>- </p>
-                        <label>Максимальный год</label>
-                        <Input type="number" name="max_year"
-                               onChange={maxYearHandleChange}
-                               value={max_year}
-                               validations={[year]}
-                        />
-                    </div>
-
-                    <button className="submit-button" type="submit">
-                        Submit
-                    </button>
-                </div>
-            </Form>
+                </Form>
+            </div>
         </div>
     )
 }

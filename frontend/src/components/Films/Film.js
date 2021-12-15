@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import React from "react";
 import '../../App.css';
 import {handleMoveToFavorite} from "../../services/favorite.service";
+import withRouter from "react-router-dom/es/withRouter";
 
 function Film(props) {
     const film = props.film;
@@ -13,7 +14,7 @@ function Film(props) {
             updateFavorites(response.data)
         }).catch(error => {
             if (error.request?.status === 401) {
-                alert("Вам необходимо войти")
+                props.history.push('/login/')
             } else
                 console.log(error)
         })
@@ -24,8 +25,8 @@ function Film(props) {
         url = 'serials'
     return (
         <div className="films-item" >
-            <button onClick={() => moveToFavorites(film.id, isFavorite)} style={{background: 'none', border: 'none'}}>
-                <StarIcon fontSize={"large"} style={{color: isFavorite ? '#5CE9E2' : 'azure'}}/>
+            <button className="favorite-button" onClick={() => moveToFavorites(film.id, isFavorite)} style={{background: 'none', border: 'none'}}>
+                <StarIcon fontSize={"large"} style={{color: isFavorite ? '#5CE9E2' : '#ECECEC'}}/>
             </button>
             <Link to={{pathname: `/${url}/${film.id}/`}}>
                 <div className="poster-main">
@@ -45,4 +46,4 @@ function Film(props) {
     )
 }
 
-export default Film;
+export default withRouter(Film);
