@@ -46,7 +46,7 @@ export const confirmPassword = (value, password) => {
 export const rating = value => {
     if (value > 10 || value < 0) {
         return (
-            <div  className="alert-message" role="alert">
+            <div  className="filter-alert-message" role="alert">
                 Рейтинг должен быть от 0 до 10
             </div>
         );
@@ -57,14 +57,14 @@ export const rating = value => {
 export const year = value => {
     if (value > 2030 || value < 0) {
         return (
-            <div  className="alert-message" role="alert">
+            <div  className="filter-alert-message" role="alert">
                 Год должен быть от 0 до 2030
             </div>
         );
     }
     if (!Number.isInteger(value)) {
         return (
-            <div  className="alert-message" role="alert">
+            <div  className="filter-alert-message" role="alert">
                 Введите целое значение
             </div>
         );

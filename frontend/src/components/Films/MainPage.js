@@ -10,7 +10,7 @@ function MainPage(props) {
     const [favorites, setFavorites] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(99);
-    const [isLoading, setLoading] = useState(false);
+    const [isLoading, setLoading] = useState(true);
     const slug = props?.match?.params?.slug || queryString.parse(props?.location?.search);
     useEffect(() => {
         setLoading(true)
@@ -18,8 +18,8 @@ function MainPage(props) {
         props.getFilms(slug).then(response => {
             setFilm(response.data)
         })
-        setLoading(false)
-    }, [isLoading])
+        setTimeout(() => setLoading(false), 1000);
+    }, [])
     useEffect(() => {
         const accessToken = Tokens.AccessTokenHeader();
         axios({
@@ -65,10 +65,11 @@ function MainPage(props) {
                 </div> :
                 <div className="films">
                     {isLoading ?
-                        <div className="films-not__found">Загрузка..</div> :
+                        <div className="films-not__found">Загрузка...</div> :
                         <div className="films-not__found">К сожалению, пока ничего нет :(</div>
                     }
-                </div>}
+                </div>
+            }
         </div>
     )
 }

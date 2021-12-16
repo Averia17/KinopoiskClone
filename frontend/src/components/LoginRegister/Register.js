@@ -55,7 +55,7 @@ class Register extends AbstractLogRegComponent {
                         error.toString();
                     if (error.response.status === 400)
                     {
-                        resMessage = "Not acceptable email or password"
+                        resMessage = "Введены некорректные данные или пользователь с таким email уже существует"
                     }
                     this.setState({
                         successful: false,
@@ -90,11 +90,10 @@ class Register extends AbstractLogRegComponent {
                                 />
                             </div>
                             {this.getSubmitButton(false)}
-
+                            {this.getErrorMessages()}
                         </div>
                     )}
 
-                    {this.getErrorMessages()}
 
                 </Form>
             </div>

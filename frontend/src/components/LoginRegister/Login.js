@@ -39,7 +39,7 @@ class Login extends AbstractLogRegComponent {
                         error.toString();
 
                     if (error.response.status === 401) {
-                        resMessage = "Email or password are not correct"
+                        resMessage = "Неверный логин или пароль"
                     }
                     this.setState({
                         loading: false,
