@@ -5,7 +5,6 @@ import AuthService from "../../services/auth.service";
 import {required, confirmPassword} from "../../utils"
 import AbstractLogRegComponent from "./AbstractLogRegComponent"
 import "./LoginRegister.css"
-import {Redirect} from "react-router-dom";
 
 class Register extends AbstractLogRegComponent {
     state = {
@@ -56,7 +55,7 @@ class Register extends AbstractLogRegComponent {
                         error.toString();
                     if (error.response.status === 400)
                     {
-                        resMessage = "Not acceptable email or password"
+                        resMessage = "Введены некорректные данные или пользователь с таким email уже существует"
                     }
                     this.setState({
                         successful: false,
@@ -70,18 +69,17 @@ class Register extends AbstractLogRegComponent {
     render() {
         return (
             <div className="login-wrapper">
-                <Form className="form-wrapper"
+                <Form
                     onSubmit={this.handleRegister}
                     ref={c => {
                         this.form = c;
                     }}>
                     {!this.state.successful && (
                         <div className="form-wrapper">
-
                             {this.getEmail()}
                             {this.getPassword()}
                             <div className="input-box">
-                                <label className="input-title"  htmlFor="confirmPassword">Confirm Password</label>
+                                <label className="input-title" htmlFor="confirmPassword">Confirm Password</label>
                                 <Input
                                     className="input"
                                     type="password"
@@ -92,11 +90,10 @@ class Register extends AbstractLogRegComponent {
                                 />
                             </div>
                             {this.getSubmitButton(false)}
-
+                            {this.getErrorMessages()}
                         </div>
                     )}
 
-                    {this.getErrorMessages()}
 
                 </Form>
             </div>

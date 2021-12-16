@@ -2,8 +2,8 @@ import serpy
 from kinopoiskclone.models import User
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, CharField
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.validators import UniqueValidator
-
 from ..models import Film, Staff, Country, Genre
 
 
@@ -76,7 +76,7 @@ class FilmListSerializer(ModelSerializer):
 
     class Meta:
         model = Film
-        fields = ('id', 'name', 'image', 'year', 'genres__title')
+        fields = ('id', 'name', 'image', 'year', 'type', 'genres__title')
         read_only_fields = fields
 
 
@@ -85,6 +85,7 @@ class FilmListSerpySerializer(serpy.Serializer):
     name = serpy.Field(required=False)
     image = serpy.Field(required=False)
     year = serpy.Field(required=False)
+    type = serpy.Field(required=False)
     distance = serpy.Field(required=False)
     genres__title = serpy.Field(required=False)
 
@@ -99,16 +100,21 @@ class FilmFullListSerpySerializer(serpy.Serializer):
     name = serpy.Field(required=False)
     image = serpy.Field(required=False)
     year = serpy.Field(required=False)
+    type = serpy.Field(required=False)
     genres = GenreSeprySerializer(many=True, call=True, attr='genres.all')
 
 
 class UserSerializer(ModelSerializer):
+    saved_films = FilmListSerializer(many=True, required=False)
+
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ('id', 'email', 'saved_films')
 
 
-class UserProfileSerializer(serpy.Serializer):
-    id = serpy.IntField()
-    saved_films = FilmFullListSerpySerializer(many=True, call=True, attr='saved_films.all')
-    user = UserSerializer()
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super(CustomTokenObtainPairSerializer, self).validate(attrs)
+        # Custom data you want to include
+        data.update({'id': self.user.id})
+        return data

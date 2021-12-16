@@ -1,30 +1,23 @@
 import Tokens from "./auth-header";
 import axios from "axios";
 
-export const handleMoveToFavorite = (key, favorite, func) => {
+export const handleMoveToFavorite = (key, favorite) => {
     const accessToken = Tokens.AccessTokenHeader();
     let method = "POST";
-    if (favorite) method = "DELETE";
-    axios({
+    let url = `http://localhost:8080/api/favorites/`
+    let data =  {id: key}
+    if (favorite) {
+        method = "DELETE";
+        url = `http://localhost:8080/api/favorites/${key}/`
+        data = {}
+    }
+    return axios({
         method: method,
-        url: `http://localhost:8080/api/books/favorites/`,
+        url: url,
         headers: {
             'Content-type': 'application/json',
             'Authorization': accessToken
         },
-        data: {
-            book_id: key
-        }
-
-    }).then((response) => {
-        func(response.data.favorite)
-        }
-    ).catch(error => {
-            if (error.request?.status === 401) {
-                alert("You need to login")
-            }
-            else
-                console.log(error)
-        }
-    )
+        data: data
+    })
 }

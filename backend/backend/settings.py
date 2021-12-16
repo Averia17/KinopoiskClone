@@ -1,4 +1,5 @@
 import os
+import socket
 from datetime import timedelta
 
 from decouple import config
@@ -153,7 +154,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000'
 ]
-INTERNAL_IPS = ['127.0.0.1', '10.0.2.2', ]
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+INTERNAL_IPS = [ip[:-1] + '1' for ip in ips] + ['127.0.0.1', '10.0.2.2']
 
 
 def show_toolbar(request):

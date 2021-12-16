@@ -5,20 +5,17 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from django.db import connection
-
+from rest_framework_simplejwt.views import TokenObtainPairView
 from kinopoiskclone.models import Film, Staff, Country, Genre, User
 from .filters import FilmSearchFilter
 from .serializers import StaffSerializer, FilmSerializer, GenreSerializer, \
-    CountrySerializer, FilmListSerpySerializer, StaffListSerpySerializer, UserProfileSerializer, FilmListSerializer, \
-    UserRegisterSerializer
+    CountrySerializer, FilmListSerpySerializer, StaffListSerpySerializer, UserSerializer, FilmListSerializer, \
+    UserRegisterSerializer, CustomTokenObtainPairSerializer
 from .services import serialize_value_list_films, delete_saved_users_film
-
 
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from .serializers import UserSerializer
 
 
 class RegisterUser(APIView):
@@ -53,6 +50,7 @@ class FilmsViewSet(viewsets.ModelViewSet):
     def list(self, request):
         #queryset = serialize_value_list_films(self.queryset)
         queryset = Film.objects.raw("SELECT * FROM select_movies_by_type('FILM')")
+
         serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -146,24 +144,42 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
         )
 
     def list(self, request):
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
+        if len(request.query_params) > 0:
+            queryset = self.filter_queryset(self.get_queryset())
+        else:
+            queryset = serialize_value_list_films(self.queryset)
+        serializer = FilmListSerpySerializer(queryset, many=True)
         return Response(serializer.data)
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    serializer_class = UserProfileSerializer
+    serializer_class = UserSerializer
     queryset = User.objects.all().prefetch_related('saved_films')
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     http_method_names = ['get', 'head', 'options', 'delete']
 
 
 class FavoritesViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     serializer_class = FilmListSerializer
 
+    def get_permissions(self):
+        return [
+            permission()
+            for permission in self.permission_to_method.get(
+                self.action, self.permission_classes
+            )
+        ]
+
+    permission_to_method = {
+        "create": [IsAuthenticated],
+    }
+
     def get_queryset(self):
-        saved_films = self.request.user.saved_films
+        user = self.request.user
+        saved_films = User.saved_films.through.objects.none()
+        if not user.is_anonymous:
+            saved_films = user.saved_films
         return saved_films
 
     def create(self, request, *args, **kwargs):
@@ -187,3 +203,15 @@ class FavoritesViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_404_NOT_FOUND)
         else:
             return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        user = User.objects.get(pk=kwargs['pk'])
+        queryset = user.saved_films.all()
+        serializer = FilmListSerpySerializer(queryset, many=True)
+        # favorites_ids = user.saved_films.values_list('id', flat=True)
+        return Response(serializer.data)
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    # Replace the serializer with your custom
+    serializer_class = CustomTokenObtainPairSerializer

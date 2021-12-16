@@ -17,5 +17,8 @@ class Tokens {
             return null;
         }
     }
+    getCurrentUserTokens() {
+        return JSON.parse(localStorage.getItem('user'));
+    }
 }
 export default new Tokens();

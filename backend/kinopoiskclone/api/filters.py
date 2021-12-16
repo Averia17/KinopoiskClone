@@ -35,22 +35,22 @@ class FilmSearchFilter(filters.FilterSet):
         #     i.id for i in Film.objects.raw(f"SELECT * FROM search_movies_by_name('{args[0]}')")
         # ])
         # return queryset
-        return qs.distinct('id', 'name', 'year', 'image', 'similarity').values_list(
-            'id', 'name', 'year', 'image', 'genres__title', 'similarity', named=True
+        return qs.distinct('id', 'name', 'year', 'image', 'type', 'similarity').values_list(
+            'id', 'name', 'year', 'image', 'genres__title', 'type', 'similarity', named=True
         )
 
     def great_than(self, queryset, value, *args):
         filter_parameter = {value + '__gte': args[0]}
         queryset = queryset.filter(**filter_parameter)
-        return queryset.distinct('id', 'name', 'year', 'image').values_list(
-            'id', 'name', 'year', 'image', 'genres__title', named=True
+        return queryset.distinct('id', 'name', 'year', 'type', 'image').values_list(
+            'id', 'name', 'year', 'image', 'type', 'genres__title', named=True
         )
 
     def less_than(self, queryset, value, *args):
         filter_parameter = {value + '__lte': args[0]}
         queryset = queryset.filter(**filter_parameter)
-        return queryset.distinct('id', 'name', 'year', 'image').values_list(
-            'id', 'name', 'year', 'image', 'genres__title', named=True
+        return queryset.distinct('id', 'name', 'year', 'type', 'image').values_list(
+            'id', 'name', 'year', 'image', 'type', 'genres__title', named=True
         )
 
     class Meta:

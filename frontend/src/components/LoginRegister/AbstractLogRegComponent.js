@@ -58,6 +58,7 @@ class AbstractLogRegComponent extends Component {
             {this.state.message && (
                 <div>
                     <div
+                        className="error-message"
                         role="alert">
                         {this.state.message}
                     </div>
