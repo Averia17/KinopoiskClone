@@ -452,18 +452,6 @@ p {
     margin-right: 2px;
 }
 
-/*  staff page */
-
-.film-staff {
-    justify-content: center;
-    text-align: center;
-    padding: 0;
-    margin-left: 0;
-}
-
-.staff-subdivision {
-    border: solid black 1px;
-}
 
 /* filter */
 

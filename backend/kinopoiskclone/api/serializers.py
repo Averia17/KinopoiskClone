@@ -45,7 +45,7 @@ class StaffSerializer(ModelSerializer):
 class StaffListSerializer(ModelSerializer):
     class Meta:
         model = Staff
-        fields = ('id', 'nameRu', 'professionKey', 'professionText')
+        fields = ('id', 'nameRu', 'professionKey', 'professionText', 'image')
 
 
 class StaffListSerpySerializer(serpy.Serializer):

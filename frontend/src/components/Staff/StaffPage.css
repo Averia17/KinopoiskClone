@@ -1,0 +1,31 @@
+/*  staff page */
+.font-style {
+    font-family: Graphik Kinopoisk LC Web, Arial, Tahoma, Verdana, sans-serif;
+    letter-spacing: -.5px;
+    color: white;
+}
+.film-staff {
+    justify-content: center;
+    text-align: center;
+    padding: 0;
+    margin-left: 0;
+    margin-top: 140px;
+}
+
+.staff-subdivision {
+    border: solid black 1px;
+}
+.staff-image {
+    width: 70px;
+}
+.staff-item-wrapper {
+    display: flex;
+    margin-left: 42%;
+    margin-bottom: 10px;
+}
+.staff-item-name {
+    display: flex;
+    margin-top: 30px;
+    margin-left: 10px;
+    font-size: 20px;
+}
