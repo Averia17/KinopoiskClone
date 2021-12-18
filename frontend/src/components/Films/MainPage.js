@@ -4,6 +4,7 @@ import '../../App.css';
 import Tokens from "../../services/auth-header";
 import queryString from 'query-string';
 import Film from "./Film";
+import withRouter from "react-router-dom/es/withRouter";
 
 function MainPage(props) {
     const [film, setFilm] = useState([]);
@@ -16,7 +17,11 @@ function MainPage(props) {
         setLoading(true)
         document.title = "Главная страница";
         props.getFilms(slug).then(response => {
-            setFilm(response.data)
+            let films = response.data;
+            if(props?.location?.pathname === '/films/' || props?.location?.pathname === '/serials/')
+                // random output films
+                films = films.sort( () => Math.random() - 0.5)
+            setFilm(films)
         })
         setTimeout(() => setLoading(false), 1000);
     }, [])
@@ -74,4 +79,4 @@ function MainPage(props) {
     )
 }
 
-export default MainPage;
+export default withRouter(MainPage);

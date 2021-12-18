@@ -2,7 +2,7 @@ from django.contrib.postgres.search import SearchQuery, SearchRank, TrigramSimil
 from django.db.models import F, Q
 from django_filters import rest_framework as filters
 from kinopoiskclone.models import Film
-
+from django_filters.filters import OrderingFilter
 
 class MultiValueCharFilter(filters.BaseCSVFilter, filters.CharFilter):
     def filter(self, qs, value):
@@ -21,8 +21,17 @@ class FilmSearchFilter(filters.FilterSet):
     max_rating = filters.CharFilter(field_name="rating", method='less_than')
     min_year = filters.CharFilter(field_name="year", method='great_than')
     max_year = filters.CharFilter(field_name="year", method='less_than')
+    type = filters.CharFilter(field_name="type", lookup_expr='icontains')
     genres__title = MultiValueCharFilter(field_name="genres__title",  lookup_expr='contains')
     countries__title = filters.CharFilter(field_name="countries__title", lookup_expr='contains')
+
+    order_by_field = 'ordering'
+    ordering = OrderingFilter(
+        fields=(
+            ('year', 'year'),
+            ('rating', 'rating'),
+        )
+    )
 
     def full_text_search(self, queryset, value, *args):
         search_query = SearchQuery(value)
@@ -35,23 +44,26 @@ class FilmSearchFilter(filters.FilterSet):
         #     i.id for i in Film.objects.raw(f"SELECT * FROM search_movies_by_name('{args[0]}')")
         # ])
         # return queryset
-        return qs.distinct('id', 'name', 'year', 'image', 'type', 'similarity').values_list(
-            'id', 'name', 'year', 'image', 'genres__title', 'type', 'similarity', named=True
-        )
+        # return qs.distinct('id', 'name', 'year', 'image', 'type', 'similarity').values_list(
+        #     'id', 'name', 'year', 'image', 'genres__title', 'type', 'similarity', named=True
+        # )
+        return qs
 
     def great_than(self, queryset, value, *args):
         filter_parameter = {value + '__gte': args[0]}
         queryset = queryset.filter(**filter_parameter)
-        return queryset.distinct('id', 'name', 'year', 'type', 'image').values_list(
-            'id', 'name', 'year', 'image', 'type', 'genres__title', named=True
-        )
+        # return queryset.distinct('id', 'name', 'year', 'type', 'image').values_list(
+        #     'id', 'name', 'year', 'image', 'type', 'genres__title', named=True
+        # )
+        return queryset
 
     def less_than(self, queryset, value, *args):
         filter_parameter = {value + '__lte': args[0]}
         queryset = queryset.filter(**filter_parameter)
-        return queryset.distinct('id', 'name', 'year', 'type', 'image').values_list(
-            'id', 'name', 'year', 'image', 'type', 'genres__title', named=True
-        )
+        # return queryset.distinct('id', 'name', 'year', 'type', 'image').values_list(
+        #     'id', 'name', 'year', 'image', 'type', 'genres__title', named=True
+        # )
+        return queryset
 
     class Meta:
         model = Film

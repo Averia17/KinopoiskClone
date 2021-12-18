@@ -1,7 +1,7 @@
 from django.contrib.postgres.search import TrigramSimilarity, SearchRank, SearchQuery, SearchVector, TrigramDistance
 from django.core.exceptions import ObjectDoesNotExist, FieldError
 from django.db.models import Value, Q, F
-from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend, OrderingFilter
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -121,7 +121,8 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
     serializer_class = FilmSerializer
     # lookup_field = 'slug'
     http_method_names = ['get', 'head', 'options']
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend, )
+    ordering_fields = ('year', 'rating')
     filter_class = FilmSearchFilter
     # search_fields = ('name', 'year', 'genres__title')
     queryset = Film.objects.all().prefetch_related('genres')
@@ -140,6 +141,11 @@ class AllMoviesViewSet(viewsets.ModelViewSet):
     def list(self, request):
         if len(request.query_params) > 0:
             queryset = self.filter_queryset(self.get_queryset())
+            try:
+                queryset = serialize_value_list_films(queryset, 'rating', 'similarity')
+            except FieldError:
+                queryset = serialize_value_list_films(queryset, 'rating')
+            print(queryset.query)
         else:
             queryset = serialize_value_list_films(self.queryset)
         serializer = FilmListSerpySerializer(queryset, many=True)

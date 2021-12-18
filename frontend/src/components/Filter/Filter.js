@@ -28,15 +28,22 @@ function FilterForm(props) {
         validateOnChange: false,
         validateOnBlur: false,
         initialValues: {
+            'type': '',
             'min_rating': '',
             'max_rating': '',
             'min_year': '',
             'max_year': '',
             'countries__title': '',
-            'genres__title': ''
+            'genres__title': '',
+            'ordering': '',
+            'descending': ''
         },
         onSubmit: values => {
             values = Object.entries(values).reduce((a, [k, v]) => (v === '' ? a : (a[k] = v, a)), {})
+            if (values.ordering && values.descending === true) {
+                values.ordering = '-' + values.ordering
+                delete values.descending
+            }
             let qs = stringify(values)
             props.history.push(`/movies/?${qs}`)
         },
@@ -69,11 +76,18 @@ function FilterForm(props) {
             <h1>Искать фильм</h1>
             <div className="filter-form-wrapper">
                 <form onSubmit={formik.handleSubmit}>
-
                     <div className="filter-form-fields">
                         <div className="filter-form-group-inputs">
+                            <p>Тип</p>
+                            <select name="type" onChange={formik.handleChange} className="filter-form-fields-select">
+                                <option selected="selected"/>
+                                <option value="film">Фильмы</option>
+                                <option value="tv_show">Сериалы</option>
+                            </select>
+                        </div>
+                        <div className="filter-form-group-inputs">
                             <p>Страна</p>
-                            <select name="countries__title" onChange={formik.handleChange}>
+                            <select name="countries__title" onChange={formik.handleChange} className="filter-form-fields-select">
                                 <option selected="selected"/>
                                 {country.map((c) =>
                                     <option value={c.title}>{c.title}</option>)}
@@ -81,7 +95,7 @@ function FilterForm(props) {
                         </div>
                         <div className="filter-form-group-inputs">
                             <p>Жанр</p>
-                            <select name="genres__title" onChange={formik.handleChange}>
+                            <select name="genres__title" onChange={formik.handleChange} className="filter-form-fields-select">
                                 <option selected="selected"/>
                                 {genre.map((g) =>
                                     <option value={g.title}>{g.title}</option>)}
@@ -129,6 +143,29 @@ function FilterForm(props) {
                                     />
                                 </div>
                                 {formik.errors.max_year && <div className="error">{formik.errors.max_year}</div>}
+                            </div>
+                        </div>
+                        <div className="filter-form-group-inputs">
+                            <div className="filter-form-field-wrapper">
+                                <div className="filter-form-field">
+                                    <label className="filter-field-label">Сортировать по</label>
+                                    <select name="ordering" onChange={formik.handleChange} className="filter-input">
+                                        <option selected="selected"/>
+                                        <option value="year">Год</option>
+                                        <option value="rating">Рейтинг</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="filter-form-field-wrapper">
+                                <div className="filter-form-field">
+                                    <label className="filter-field-label">По убыванию</label>
+                                    <input type="checkbox"
+                                           name="descending"
+                                           className="filter-descending"
+                                           value={formik.values.descending}
+                                           onChange={formik.handleChange}
+                                    />
+                                </div>
                             </div>
                         </div>
                         <div className="submit-button">

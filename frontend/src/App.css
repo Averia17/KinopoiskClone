@@ -167,6 +167,7 @@ p {
 .film-list {
     display: inline-flex;
     list-style: none;
+    flex-wrap: wrap;
     margin: 0;
     padding: 0;
 }
@@ -484,14 +485,16 @@ p {
     text-align: center;
     align-items: center;
 }
+.filter-form-field {
 
+}
 .filter-form-field-wrapper {
     min-width: 50%;
     margin-bottom: 15px;
 
 }
 
-.filter-form-fields select {
+.filter-form-fields-select {
     width: 70%;
     height: 100%;
     max-width: 150px;
@@ -505,7 +508,6 @@ p {
     height: 100%;
     max-width: 150px;
     margin: 10px 10px 10px 0;
-    padding: 0 10px;
     display: flex;
     justify-content: center;
 }
@@ -536,7 +538,9 @@ p {
     width: 100%;
     text-align: left;
 }
-
+.filter-descending {
+    margin-right: 60%;
+}
 /* profile */
 .user-profile {
     margin-top: 150px;

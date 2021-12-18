@@ -9,9 +9,10 @@ from kinopoiskclone.api.serializers import FilmListSerpySerializer
 from kinopoiskclone.models import Film, Staff, Genre, Country
 
 
-def serialize_value_list_films(qs):
-    queryset = qs.distinct('id', 'name', 'year', 'type', 'image').values_list(
-        'id', 'name', 'year', 'image', 'type', 'genres__title', named=True
+def serialize_value_list_films(qs, *columns):
+    columns = 'id', 'name', 'year', 'type', 'image', *columns
+    queryset = qs.distinct(*columns).values_list(
+        *columns, 'genres__title', named=True
     )
     return queryset
 

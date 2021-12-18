@@ -58,8 +58,8 @@ function Profile(props) {
 
     return (
         <div className="user-profile">
-            <div className="user-profile-title">{user?.email} profile</div>
-            <div className="user-profile-title">User's favorite movies </div>
+            <div className="user-profile-title">{user?.email} профиль</div>
+            <div className="user-profile-title">Избранные фильмы пользователя</div>
             <div className="films">
                 {userFavorites?.map((film) => {
                     return (

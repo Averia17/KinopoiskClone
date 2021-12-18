@@ -58,7 +58,7 @@ export const year = value => {
     if (value > 2030 || value < 0) {
         return (
             <div  className="filter-alert-message" role="alert">
-                Год должен быть от 0 до 2030
+                Год должен быть от 1920 до 2030
             </div>
         );
     }
