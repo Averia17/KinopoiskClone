@@ -79,7 +79,7 @@ class Register extends AbstractLogRegComponent {
                             {this.getEmail()}
                             {this.getPassword()}
                             <div className="input-box">
-                                <label className="input-title" htmlFor="confirmPassword">Confirm Password</label>
+                                <label className="input-title" htmlFor="confirmPassword">Подтверждение пароля</label>
                                 <Input
                                     className="input"
                                     type="password"

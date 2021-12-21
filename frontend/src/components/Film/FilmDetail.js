@@ -108,20 +108,23 @@ function FilmDetail(props) {
                     </div>
                 </div>
             </div>
-
-            <div className="film-details-trailer">
-                <div className="all-trailers">
-                    {film?.trailers?.slice(0, 2)?.map((f) => {
-                            if (f.url.includes('watch')) {
-                                return (
-                                    <ReactPlayer url={f.url} width="50%"/>
-                                )
+            <div>
+                <div className="film-detail-description">
+                    {film?.description}
+                </div>
+                <div className="film-details-trailer">
+                    <div className="all-trailers">
+                        {film?.trailers?.slice(0, 2)?.map((f) => {
+                                if (f.url.includes('watch')) {
+                                    return (
+                                        <ReactPlayer controls={true} url={f.url} width="50%"/>
+                                    )
+                                }
                             }
-                        }
-                    )}
+                        )}
+                    </div>
                 </div>
             </div>
-
         </div>
 
     );

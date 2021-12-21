@@ -6,11 +6,15 @@ import {Link} from 'react-router-dom';
 function StaffPage({match}) {
     const [film, setFilm] = useState([]);
     const id = match.params.id;
+    console.log(film)
 
     useEffect(() => {
+        let url_addition = 'films';
+        if(film?.type === 'TV_SHOW')
+            url_addition = 'serials';
         axios({
             method: "GET",
-            url: `http://localhost:8080/api/films/${id}/`,
+            url: `http://localhost:8080/api/${url_addition}/${id}/`,
         }).then(response => {
             setFilm(response.data)
         })
@@ -29,10 +33,10 @@ function StaffPage({match}) {
             <div>
                 <h1>Персоны и команда / {film.name}</h1>
             </div>
-            <div>
+            <div className="film-staff-wrapper">
                 {(grouped && Object.keys(grouped)) ? Object.keys(grouped).map(profession => {
                     return <div key={profession.id} className="staff-subdivision">
-                        <h3 key={profession.id}>{profession}</h3>
+                        <h1 className="staff-group-title" key={profession.id}>{profession}</h1>
                         {grouped[profession].map(item => {
                             return <div>
                                 <div className="staff-item-wrapper">

@@ -67,7 +67,7 @@ class Login extends AbstractLogRegComponent {
                         {this.getEmail()}
                         {this.getPassword()}
                         <div className="link-to-register">
-                            <Link to={{pathname: `/register/`}}>Register</Link>
+                            <Link to={{pathname: `/register/`}}>Регистрация</Link>
                         </div>
                         {this.getSubmitButton(true)}
                         {this.getErrorMessages()}

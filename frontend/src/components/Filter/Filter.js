@@ -170,7 +170,7 @@ function FilterForm(props) {
                         </div>
                         <div className="submit-button">
                             <button type="submit">
-                                Submit
+                                Поиск
                             </button>
                         </div>
                     </div>

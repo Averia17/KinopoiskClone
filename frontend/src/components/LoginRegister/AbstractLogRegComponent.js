@@ -32,7 +32,7 @@ class AbstractLogRegComponent extends Component {
     }
     getPassword() {
         return <div className="input-box">
-            <label  className="input-title" htmlFor="password">Password</label>
+            <label  className="input-title" htmlFor="password">Пароль</label>
             <Input
                 type="password"
                 className="input"
@@ -44,8 +44,8 @@ class AbstractLogRegComponent extends Component {
         </div>
     }
     getSubmitButton(isLog) {
-        let text = "Sign up"
-        if (isLog) text = "Login"
+        let text = "Регистрация"
+        if (isLog) text = "Войти"
         return <div>
             <button className="signup-button"
                 disabled={this.state.loading}>

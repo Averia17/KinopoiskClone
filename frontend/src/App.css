@@ -310,7 +310,12 @@ p {
     text-decoration: none;
     display: inline-block;
 }
-
+.film-detail-description {
+    margin-top: 30px;
+    line-height: 24px;
+    font-size: 17px;
+    font-weight: 400;
+}
 .film-description #film-title {
     display: inline;
     margin: 12px 0;
